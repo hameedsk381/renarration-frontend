@@ -19,7 +19,6 @@ function App() {
         <Route exact path="/" element={<Home/>} />
         <Route path="/about" element={<About/>} />
         <Route path="/contact" element={<Contact/>} />
-        {/* You can also add a Route here for a 404 Not Found page */}
       </Routes>
       <Footer/>
       <SimpleBottomNavigation/>

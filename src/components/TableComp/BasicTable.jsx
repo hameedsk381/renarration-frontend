@@ -7,6 +7,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   backgroundColor: "transparent",
   color: theme.palette.common.black,
   borderBottom: '1px solid rgba(224, 224, 224, 1)',
+  fontSize: 'calc(12px + 0.5vw)',
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme, index }) => ({
@@ -17,18 +18,18 @@ const StyledTableRow = styled(TableRow)(({ theme, index }) => ({
 }));
 export default function BasicTable({ columns, data  }) {
   return (
-    <TableContainer component={Container} sx={{height:"40vh"}} >
+    <TableContainer component={Container}  >
       <Table>
         <TableHead>
           <TableRow>
             {columns.map((column, index) => (
-              <StyledTableCell key={index}>{column}</StyledTableCell>
+              <StyledTableCell key={index} sx={{ fontSize: 'calc(12px + 1vw)'}}>{column}</StyledTableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
           {data.map((row, rowIndex) => (
-            <StyledTableRow key={rowIndex} index={rowIndex}>
+            <StyledTableRow key={rowIndex} index={rowIndex} sx={{ fontSize: 'calc(12px + 0.5vw)' }}>
               {columns.map((column, columnIndex) => (
                 <TableCell key={columnIndex}> {column === 'Number of Sweets' ? 
                 <Chip label={row[column]} /> : 
