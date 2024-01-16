@@ -1,0 +1,76 @@
+header{
+    position: fixed;
+}
+
+.topBar {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: relative; /* For positioning the mobile menu */
+}
+
+.logo img {
+    width: 100px; /* Adjust according to your logo */
+}
+
+.navItems {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.navItem a {
+    color: black; /* Color for nav links */
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.menuButton {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: none; /* Initially hidden */
+}
+
+.menuButton:hover {
+    background: #0056b3;
+}
+
+/* Mobile Menu */
+.mobileMenu {
+    display: none; /* Initially hidden */
+    flex-direction: column;
+    align-items: start;
+    padding: 5px;
+    background-color: #f3f3f3;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .menuButton {
+        display: block; /* Show menu button on mobile */
+    }
+
+    .navItems {
+        display: none; /* Hide desktop nav on mobile */
+    }
+
+    .mobileMenu {
+        display: flex; /* Show mobile menu when active */
+    }
+}

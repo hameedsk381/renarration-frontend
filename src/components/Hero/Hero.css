@@ -1,0 +1,28 @@
+.main-content {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .cta-section {
+    margin-top: 20px;
+  }
+  
+  .cta-section input {
+    padding: 10px;
+    margin-right: 10px;
+    width: 60%;
+    border: 1px solid #ccc;
+  }
+  
+  .cta-section button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .cta-section button:hover {
+    background-color: #555;
+  }
+  
