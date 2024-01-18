@@ -52,7 +52,7 @@ function UrlInput({ navigateTo }) {
                     sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                     disabled={mutation.isLoading}
                 >
-                    {mutation.isLoading ? 'Loading...' : 'Re-narrate now'}
+                    {mutation.isLoading ? ' ' : 'Re-narrate now'}
                 </Button>
             </Paper>
             <Snackbar
