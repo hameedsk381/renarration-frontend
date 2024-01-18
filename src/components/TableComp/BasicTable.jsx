@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Chip } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Chip, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -16,7 +16,7 @@ const StyledTableRow = styled(TableRow)(({ theme, index }) => ({
     border: 0,
   },
 }));
-export default function BasicTable({ columns, data  }) {
+export default function BasicTable({ columns, data , isPending  }) {
   return (
     <TableContainer component={Container}  >
       <Table>
@@ -28,7 +28,7 @@ export default function BasicTable({ columns, data  }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, rowIndex) => (
+          {isPending ? <Skeleton variant="rectangular" width="100%" height={118} animation="wave" />: data.map((row, rowIndex) => (
             <StyledTableRow key={rowIndex} index={rowIndex} sx={{ fontSize: 'calc(12px + 0.5vw)' }}>
               {columns.map((column, columnIndex) => (
                 <TableCell key={columnIndex}> {column === 'Number of Sweets' ? 
