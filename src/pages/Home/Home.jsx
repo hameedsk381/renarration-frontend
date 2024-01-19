@@ -5,6 +5,8 @@ import UrlInput from '../../components/UrlInput/UrlInput'
 import BasicTable from '../../components/TableComp/BasicTable'
 import { Alert, Chip, Container, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, Skeleton, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import Navbar from '../../components/Navbar/Navbar'
+import Footer from '../../components/Footer/Footer'
 
 
 const Home = () => {
@@ -59,6 +61,8 @@ const handleSearchFieldChange = (event) => {
 };
 
 return (
+  <>
+  <Navbar/>
   <main>
     <Hero />
     <UrlInput navigateTo={'/re-narrate'}/>
@@ -106,6 +110,9 @@ return (
       {!isSearching && filteredData.length === 0 && !isPending && <Alert severity="info" sx={{ width: '100%', mt: 2 }}>No search results found.</Alert>}
     </Container>
   </main>
+  <Footer/>
+  </>
+  
 );
 };
 
