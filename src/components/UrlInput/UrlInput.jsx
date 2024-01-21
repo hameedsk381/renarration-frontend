@@ -1,20 +1,49 @@
 import React, { useState } from 'react';
-import { Alert, Button, CircularProgress, Paper, Snackbar } from '@mui/material';
+import { Alert, Button, CircularProgress, Paper, Snackbar, Box, Typography } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
 import { useUrlValidation } from '../../hooks/useUrlValidation';
-import { useDownloadMutation } from '../../hooks/useDownloadMutation';
-
+import { useMutation } from 'react-query';
+import axios from 'axios';
 function UrlInput({ navigateTo }) {
     const [inputValue, setInputValue] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
-
+    const [progress, setProgress] = useState(0);
     const navigate = useNavigate();
     const isValidUrl = useUrlValidation(inputValue);
-    const mutation = useDownloadMutation(navigateTo, navigate, setSnackbarMessage, setMutationErrorSnackbarOpen);
+    const useDownloadMutation = (
+      navigateTo,
+      navigate,
+      setSnackbarMessage,
+      setMutationErrorSnackbarOpen,
+      setProgress,
+    ) => {
+      return useMutation(async (urlToDownload) => {
+        return axios.post('http://localhost:2000/download', { url: urlToDownload }, {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setProgress(percentCompleted / 100);
+          },
+        });
+      }, {
+        onSuccess: (response) => {
+          console.log('Received HTML content:', response.data); // Temporarily log the received data
+          const htmlContent = response.data;
+          navigate(navigateTo, { state: { htmlContent } });
+        },
+        
+        onError: (error) => {
+          console.error('Error downloading the file:', error);
+          setSnackbarMessage(`Error: ${error.response ? error.response.data : error.message}`);
+          setMutationErrorSnackbarOpen(true);
+        }
+      });
+    };
+    
+    const mutation = useDownloadMutation(navigateTo, navigate, setSnackbarMessage, setMutationErrorSnackbarOpen, setProgress);
 
 
     const handleSnackbarClose = (event, reason) => {
@@ -46,7 +75,7 @@ function UrlInput({ navigateTo }) {
                 />
 
                 <Button
-                    endIcon={mutation.isLoading ? <CircularProgress size={24} color="inherit" /> : <ArrowForward />}
+                    endIcon={mutation.isLoading ? <CircularProgress size={24} color="inherit" value={progress * 100} /> : <ArrowForward />}
                     onClick={handleNavigate}
                     style={buttonStyle}
                     sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
