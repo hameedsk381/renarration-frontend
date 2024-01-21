@@ -37,12 +37,12 @@ const Renarration = () => {
       <AppBar sx={{ background: "#DFDFDF" }}>
         <Toolbar>
           <Stack direction={'row'} width={'100%'} justifyContent={'space-between'} alignItems={'center'}>
-            <Button sx={{ color: 'gray' }} onClick={() => navigate('/')} startIcon={<ArrowBackRounded/>}>Back to home</Button>
+            <Button sx={{ color: 'gray', fontSize: '1rem', width: '25%', minWidth: '100px' }} onClick={() => navigate('/')} startIcon={<ArrowBackRounded/>}>Back to home</Button>
             <FormGroup>
               <FormControlLabel label="Re-narration mode" control={<Switch checked={renarrationMode} onChange={() => setRenarrationMode(!renarrationMode)} />} />
             </FormGroup>
-            <Button sx={{ color: 'gray' }} endIcon={<PreviewSharp/>}>Preview Re-narrated page</Button>
-            <Button sx={{ color: 'gray' }} endIcon={<PreviewOutlined/>}>Published Changes</Button>
+            <Button sx={{ color: 'gray', fontSize: '1rem', width: '25%', minWidth: '100px' }} endIcon={<PreviewSharp/>}>Preview Re-narrated page</Button>
+            <Button sx={{ color: 'gray', fontSize: '1rem', width: '25%', minWidth: '100px' }} endIcon={<PreviewOutlined/>}>Published Changes</Button>
           </Stack>
         </Toolbar>
       </AppBar>
