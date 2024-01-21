@@ -22,7 +22,7 @@ function UrlInput({ navigateTo }) {
       setProgress,
     ) => {
       return useMutation(async (urlToDownload) => {
-        return axios.post('http://localhost:2000/download', { url: urlToDownload }, {
+        return axios.post('https://renarration-api.onrender.com/download', { url: urlToDownload }, {
           onUploadProgress: (progressEvent) => {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
             setProgress(percentCompleted / 100);
