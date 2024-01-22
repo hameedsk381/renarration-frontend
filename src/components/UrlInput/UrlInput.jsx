@@ -4,46 +4,18 @@ import { ArrowForward } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
 import { useUrlValidation } from '../../hooks/useUrlValidation';
-import { useMutation } from 'react-query';
+import { fetchHtmlStart ,fetchHtmlSuccess , fetchHtmlFailure} from '../../redux/actions';
 import axios from 'axios';
-function UrlInput({ navigateTo }) {
+import { connect } from 'react-redux';
+import { useMutation } from 'react-query';
+function UrlInput({ navigateTo, fetchHtmlStart, fetchHtmlSuccess, fetchHtmlFailure, isFetching, errorMessage }) {
     const [inputValue, setInputValue] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
-    const [progress, setProgress] = useState(0);
     const navigate = useNavigate();
     const isValidUrl = useUrlValidation(inputValue);
-    const useDownloadMutation = (
-      navigateTo,
-      navigate,
-      setSnackbarMessage,
-      setMutationErrorSnackbarOpen,
-      setProgress,
-    ) => {
-      return useMutation(async (urlToDownload) => {
-        return axios.post('https://renarration-api.onrender.com/download', { url: urlToDownload }, {
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            setProgress(percentCompleted / 100);
-          },
-        });
-      }, {
-        onSuccess: (response) => {
-          console.log('Received HTML content:', response.data); // Temporarily log the received data
-          const htmlContent = response.data;
-          navigate(navigateTo, { state: { htmlContent } });
-        },
-        
-        onError: (error) => {
-          console.error('Error downloading the file:', error);
-          setSnackbarMessage(`Error: ${error.response ? error.response.data : error.message}`);
-          setMutationErrorSnackbarOpen(true);
-        }
-      });
-    };
-    
-    const mutation = useDownloadMutation(navigateTo, navigate, setSnackbarMessage, setMutationErrorSnackbarOpen, setProgress);
+
 
 
     const handleSnackbarClose = (event, reason) => {
@@ -52,17 +24,35 @@ function UrlInput({ navigateTo }) {
         }
         setSnackbarOpen(false);
     };
-
-    const handleNavigate = () => {
-        if (isValidUrl) {
-            mutation.mutate(inputValue);
-            setInputValue('');
-        } else {
-            setSnackbarMessage("Invalid URL. Example: https://www.example.com");
-            setSnackbarOpen(true);
-        }
-    };
-
+    const mutation = useMutation(
+      (urlToDownload) => {
+        console.log("started fetching");
+          fetchHtmlStart(); // Dispatch fetchStart when the mutation begins
+          return axios.post('https://renarration-api.onrender.com/download', { url: urlToDownload });
+      },
+      {
+          onSuccess: (response) => {
+              fetchHtmlSuccess(response.data); // Dispatch fetchSuccess on success
+              console.log('Received HTML content:', response.data);
+              navigate(navigateTo);
+          },
+          onError: (error) => {
+       
+              fetchHtmlFailure(error.message); // Dispatch fetchFailure on error
+              setSnackbarMessage(errorMessage); // Update local snackbar message
+              setSnackbarOpen(true); // Open error snackbar
+          },
+      }
+  );
+  const handleNavigate = () => {
+    if (isValidUrl) {
+      console.log(inputValue)
+        mutation.mutate(inputValue); // Call mutate with the inputValue as argument
+    } else {
+        setSnackbarMessage("Invalid URL. Example: https://www.example.com");
+        setSnackbarOpen(true);
+    }
+};
     return (
         <>
             <Paper elevation={6} sx={{ width: { lg: "50%", md: "75%" }, m: 2, marginTop: "-25px", marginInline: { lg: "25%", md: "10%" } }} style={wrapperStyle}>
@@ -75,11 +65,11 @@ function UrlInput({ navigateTo }) {
                 />
 
                 <Button
-                    endIcon={mutation.isLoading ? <CircularProgress size={24} color="inherit" value={progress * 100} /> : <ArrowForward />}
+                    endIcon={isFetching ? <CircularProgress size={24} color="inherit"  /> : <ArrowForward />}
                     onClick={handleNavigate}
                     style={buttonStyle}
                     sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                    disabled={mutation.isLoading}
+                    disabled={isFetching}
                 >
                    Renarrate-now
                 </Button>
@@ -110,4 +100,15 @@ function UrlInput({ navigateTo }) {
     );
 }
 
-export default UrlInput;
+const mapStateToProps = (state) => ({
+  isFetching: state.url.isFetching,
+  errorMessage: state.url.errorMessage,
+});
+
+const mapDispatchToProps = {
+  fetchHtmlStart,
+  fetchHtmlSuccess,
+  fetchHtmlFailure,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UrlInput);
