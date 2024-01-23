@@ -6,7 +6,7 @@ import rootReducer from './reducers';
 // Function to load the state from local storage
 const loadState = () => {
     try {
-        const serializedState = localStorage.getItem('state');
+        const serializedState = sessionStorage.getItem('state');
         if (serializedState === null) {
             return undefined; // If no state in local storage, return undefined to use reducer's initial state
         }
@@ -21,7 +21,7 @@ const loadState = () => {
 const saveState = (state) => {
     try {
         const serializedState = JSON.stringify(state);
-        localStorage.setItem('state', serializedState);
+        sessionStorage.setItem('state', serializedState);
     } catch (err) {
         console.error('Error saving state:', err);
         // Ignore write errors or handle them in a way you prefer
