@@ -6,13 +6,20 @@ import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
 import { useUrlValidation } from '../../hooks/useUrlValidation';
 import { fetchHtmlStart ,fetchHtmlSuccess , fetchHtmlFailure} from '../../redux/actions';
 import axios from 'axios';
-import { connect } from 'react-redux';
+
 import { useMutation } from 'react-query';
-function UrlInput({ navigateTo, fetchHtmlStart, fetchHtmlSuccess, fetchHtmlFailure, isFetching, errorMessage }) {
-    const [inputValue, setInputValue] = useState('');
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
+import { useDispatch, useSelector } from 'react-redux';
+function UrlInput({ navigateTo }) {
+  const [inputValue, setInputValue] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
+
+
+  const isFetching = useSelector(state => state.url.isFetching); // Get state with useSelector
+  const errorMessage = useSelector(state => state.url.errorMessage); // Get state with useSelector
+  const dispatch = useDispatch(); // Get dispatch function with useDispatch
+
     const navigate = useNavigate();
     const isValidUrl = useUrlValidation(inputValue);
 
@@ -24,23 +31,25 @@ function UrlInput({ navigateTo, fetchHtmlStart, fetchHtmlSuccess, fetchHtmlFailu
         }
         setSnackbarOpen(false);
     };
+   
     const mutation = useMutation(
       (urlToDownload) => {
-        console.log("started fetching");
-          fetchHtmlStart(); // Dispatch fetchStart when the mutation begins
-          return axios.post('https://renarration-api.onrender.com/download', { url: urlToDownload });
+          console.log("started fetching");
+          dispatch(fetchHtmlStart()); // Dispatch action with useDispatch
+          return axios.post('http://localhost:2000/download', { url: urlToDownload });
       },
       {
           onSuccess: (response) => {
-              fetchHtmlSuccess(response.data); // Dispatch fetchSuccess on success
+              dispatch(fetchHtmlSuccess(response.data)); // Dispatch action with useDispatch
               console.log('Received HTML content:', response.data);
               navigate(navigateTo);
           },
           onError: (error) => {
-       
-              fetchHtmlFailure(error.message); // Dispatch fetchFailure on error
+            console.log(error)
+              dispatch(fetchHtmlFailure(error.message)); // Dispatch action with useDispatch
               setSnackbarMessage(errorMessage); // Update local snackbar message
               setSnackbarOpen(true); // Open error snackbar
+              setInputValue('')
           },
       }
   );
@@ -100,15 +109,5 @@ function UrlInput({ navigateTo, fetchHtmlStart, fetchHtmlSuccess, fetchHtmlFailu
     );
 }
 
-const mapStateToProps = (state) => ({
-  isFetching: state.url.isFetching,
-  errorMessage: state.url.errorMessage,
-});
 
-const mapDispatchToProps = {
-  fetchHtmlStart,
-  fetchHtmlSuccess,
-  fetchHtmlFailure,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UrlInput);
+export default UrlInput;

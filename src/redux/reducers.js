@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { ADD_RENARRATION_BLOCK, UPDATE_RENARRATION_BLOCK, DELETE_RENARRATION_BLOCK, UPDATE_HTML_CONTENT } from './actions';
 import { FETCH_HTML_START, FETCH_HTML_SUCCESS, FETCH_HTML_FAILURE } from './actions';
+import { RESET_STATE ,RESET_CONTENT } from './actions';
 const initialBlockState = {
     renarrationBlocks: [],
 };
@@ -25,6 +26,8 @@ export const renarrationBlocksReducer = (state = initialBlockState, action) => {
                 ...state,
                 renarrationBlocks: state.renarrationBlocks.filter(block => block.id !== action.payload),
             };
+            case RESET_STATE:
+                return initialBlockState;
         default:
             return state;
     }
@@ -63,7 +66,8 @@ export const urlReducer = (state = initialUrlState, action) => {
                 ...state,
                 htmlContent: action.payload,
             };
-
+            case RESET_CONTENT:
+                return initialUrlState;
         default:
             return state;
     }

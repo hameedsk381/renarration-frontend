@@ -3,26 +3,23 @@ import { AppBar, Box, Button, CircularProgress, Toolbar, Typography } from '@mui
 import {  useNavigate } from 'react-router-dom';
 import Annotator from './Annotator';
 import { v4 as uuidv4 } from 'uuid';
-import { connect } from 'react-redux';
-import { addRenarrationBlock, deleteRenarrationBlock , updateRenarrationBlock ,updateHtmlContent} from '../redux/actions'; // Import the necessary action creators
-
-const Renarration = ({ addRenarrationBlock, isFetching ,htmlContent,renarrationBlocks ,updateRenarrationBlock}) => {
-
+import { useDispatch, useSelector } from 'react-redux'; // Import the necessary action creators
+import { addRenarrationBlock, updateHtmlContent, updateRenarrationBlock } from '../redux/actions';
+import { resetState , resetContent } from '../redux/actions';
+const Renarration = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const renarrationBlocks = useSelector(state => state.renarrationBlocks.renarrationBlocks);
+  const htmlContent = useSelector(state => state.url.htmlContent);
+  const isFetching = useSelector(state => state.url.isFetching);
   const [openDialog, setOpenDialog] = useState(false);
   const [clickedElementContent, setClickedElementContent] = useState({ html: ''});
-  const [description, setDescription] = useState(''); // State to hold the description of the clicked element
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
-  const navigate = useNavigate();
-  const [renderedContent, setRenderedContent] = useState(() => {
-    // Get the initial content from localStorage or fallback to htmlContent from Redux
-    const savedContent = localStorage.getItem('renderedContent');
-    return savedContent ? savedContent : htmlContent;
-  });
+  
+useEffect(() => {
+console.log(htmlContent)
+}, [htmlContent]) 
 
-  // Update localStorage whenever renderedContent changes
-  useEffect(() => {
-    localStorage.setItem('renderedContent', renderedContent);
-  }, [renderedContent]);
 function outlineElement(htmlString, dataId, outlineStyle = '2px solid red') {
   // Parse the HTML string into a DOM structure
   const parser = new DOMParser();
@@ -59,48 +56,47 @@ const handleClick = (event) => {
   
   // Check if a block with this ID already exists
   existingBlock = renarrationBlocks.find(block => block.id === elementId);
-  
-  // If a block with this ID already exists, use its description
-  const initialDescription = existingBlock ? existingBlock.description : '';
 
   const fullHtml = event.target.outerHTML;
   const fullCss = window.getComputedStyle(event.target).cssText;
   const fullJs = event.target.getAttribute('onclick');
   setClickedElementContent({ html: fullHtml, css: fullCss, js: fullJs });
   setOpenDialog(true);
-  setDescription(initialDescription); // Set the initial description for the Annotator
   setCurrentBlockId(elementId); // Set the current block ID
 };
 
 
-const handleSave = (updatedContent, description) => {
+const handleSave = (updatedContent) => {
   const existingBlockIndex = renarrationBlocks.findIndex(block => block.id === currentBlockId);
 
   if (existingBlockIndex !== -1) {
     // Update existing block
-    const updatedBlock = {
+    dispatch(updateRenarrationBlock({
       ...renarrationBlocks[existingBlockIndex],
-      content: updatedContent, // Update content if necessary
-      description: description
-    };
-    updateRenarrationBlock(updatedBlock); // Dispatch the action to update the existing block
+      content: updatedContent
+      }));
   } else {
     // Add new block
     const newBlock = {
       content: updatedContent,
-      description: description,
-      id: currentBlockId || uuidv4() // Use the current block ID if available, otherwise generate a UUID
+       id: currentBlockId || uuidv4() // Use the current block ID if available, otherwise generate a UUID
     };
-    addRenarrationBlock(newBlock); // Dispatch the action to add a new block
+    dispatch(addRenarrationBlock(newBlock));
 
     // Update the htmlContent to include the outline for the annotated element
     const updatedHtmlContent = outlineElement(htmlContent, currentBlockId);
-    setRenderedContent(updatedHtmlContent); 
+    dispatch(updateHtmlContent(updatedHtmlContent));
 }
   setOpenDialog(false);
 };
 
-
+const handleExit = () => {
+  dispatch(resetState()); 
+  dispatch(resetContent());// Dispatch the resetState action to clear Redux state
+  localStorage.clear(); // Clear local storage
+  sessionStorage.clear(); // Clear session storage (if you use it)
+  navigate('/'); // Navigate to the home page or any other page
+};
   const navigateToRenarrationBlocks = () => {
     navigate('/renarration-blocks');
   };
@@ -111,6 +107,9 @@ const handleSave = (updatedContent, description) => {
         <div style={{ fontWeight: 'bold' }}>
           Renarration
         </div>
+        <Button color='inherit' variant='outlined' onClick={handleExit}>
+                        Exit Renarration
+                    </Button>
        {renarrationBlocks.length !==0 &&  <Button color='inherit' variant='outlined' onClick={navigateToRenarrationBlocks}>
           View Renarration Blocks
         </Button>}
@@ -121,13 +120,12 @@ const handleSave = (updatedContent, description) => {
         </Box>
       )}
       {!isFetching && (
-        <div dangerouslySetInnerHTML={{ __html: renderedContent }} onClick={handleClick} />
+        <div dangerouslySetInnerHTML={{ __html: htmlContent }} onClick={handleClick} />
       )}
    <Annotator
   open={openDialog}
   onClose={() => setOpenDialog(false)}
   content={clickedElementContent}
-  initialDescription={description} // Pass the description to the Annotator
   onSave={handleSave}
 />
 
@@ -135,17 +133,5 @@ const handleSave = (updatedContent, description) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  renarrationBlocks: state.renarrationBlocks.renarrationBlocks,
-  htmlContent: state.url.htmlContent,
-  isFetching: state.url.isFetching,
-  errorMessage: state.url.errorMessage,
-});
 
-
-const mapDispatchToProps = {
-  addRenarrationBlock,
-  updateRenarrationBlock, // Make sure this action is imported and available
-  deleteRenarrationBlock,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Renarration);
+export default Renarration;

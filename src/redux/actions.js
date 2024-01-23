@@ -42,3 +42,21 @@ export const updateHtmlContent = (htmlContent) => ({
     type: UPDATE_HTML_CONTENT,
     payload: htmlContent,
 });
+// actions.js
+
+// Action Type
+export const RESET_STATE = 'RESET_STATE';
+
+// Action Creator
+export const resetState = () => ({
+    type: RESET_STATE,
+});
+// actions.js
+
+// Action Type
+export const RESET_CONTENT = 'RESET_CONTENT';
+
+// Action Creator
+export const resetContent = () => ({
+    type: RESET_CONTENT,
+});
