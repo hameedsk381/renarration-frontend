@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { ADD_RENARRATION_BLOCK, UPDATE_RENARRATION_BLOCK, DELETE_RENARRATION_BLOCK } from './actions';
+import { ADD_RENARRATION_BLOCK, UPDATE_RENARRATION_BLOCK, DELETE_RENARRATION_BLOCK, UPDATE_HTML_CONTENT } from './actions';
 import { FETCH_HTML_START, FETCH_HTML_SUCCESS, FETCH_HTML_FAILURE } from './actions';
 const initialBlockState = {
     renarrationBlocks: [],
@@ -12,14 +12,14 @@ export const renarrationBlocksReducer = (state = initialBlockState, action) => {
                 ...state,
                 renarrationBlocks: [...state.renarrationBlocks, action.payload],
             };
-            case UPDATE_RENARRATION_BLOCK:
-                return {
-                  ...state,
-                  renarrationBlocks: state.renarrationBlocks.map(block =>
+        case UPDATE_RENARRATION_BLOCK:
+            return {
+                ...state,
+                renarrationBlocks: state.renarrationBlocks.map(block =>
                     block.id === action.payload.id ? action.payload : block
-                  ),
-                };
-              
+                ),
+            };
+
         case DELETE_RENARRATION_BLOCK:
             return {
                 ...state,
@@ -57,6 +57,13 @@ export const urlReducer = (state = initialUrlState, action) => {
                 isFetching: false,
                 errorMessage: action.payload,
             };
+        // Your reducer handling the htmlContent part of the state
+        case UPDATE_HTML_CONTENT:
+            return {
+                ...state,
+                htmlContent: action.payload,
+            };
+
         default:
             return state;
     }

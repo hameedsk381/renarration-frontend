@@ -4,49 +4,78 @@ import {  useNavigate } from 'react-router-dom';
 import Annotator from './Annotator';
 import { v4 as uuidv4 } from 'uuid';
 import { connect } from 'react-redux';
-import { addRenarrationBlock, deleteRenarrationBlock , updateRenarrationBlock } from '../redux/actions'; // Import the necessary action creators
+import { addRenarrationBlock, deleteRenarrationBlock , updateRenarrationBlock ,updateHtmlContent} from '../redux/actions'; // Import the necessary action creators
 
 const Renarration = ({ addRenarrationBlock, isFetching ,htmlContent,renarrationBlocks ,updateRenarrationBlock}) => {
 
   const [openDialog, setOpenDialog] = useState(false);
-  const [clickedElementContent, setClickedElementContent] = useState({ html: '', css: '', js: '' });
+  const [clickedElementContent, setClickedElementContent] = useState({ html: ''});
   const [description, setDescription] = useState(''); // State to hold the description of the clicked element
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
   const navigate = useNavigate();
+  const [renderedContent, setRenderedContent] = useState(() => {
+    // Get the initial content from localStorage or fallback to htmlContent from Redux
+    const savedContent = localStorage.getItem('renderedContent');
+    return savedContent ? savedContent : htmlContent;
+  });
 
-useEffect(() => {
-console.log(htmlContent)
-}, [])
+  // Update localStorage whenever renderedContent changes
+  useEffect(() => {
+    localStorage.setItem('renderedContent', renderedContent);
+  }, [renderedContent]);
+function outlineElement(htmlString, dataId, outlineStyle = '2px solid red') {
+  // Parse the HTML string into a DOM structure
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+
+  // Find the element with the specific data-id
+  const targetElement = doc.querySelector(`[data-id="${dataId}"]`);
+console.log(targetElement)
+  // If the element is found, modify its style to add an outline
+  if (targetElement) {
+    console.log("element found")
+      targetElement.style.outline = outlineStyle;
+      console.log(`added outlined to element ${targetElement.tagName}`)
+  } else {
+    console.log("element not found")
+  }
+  // Serialize the DOM structure back into an HTML string
+  const serializer = new XMLSerializer();
+  const modifiedHtmlString = serializer.serializeToString(doc);
+console.log(modifiedHtmlString);
+  return modifiedHtmlString;
+}
 
 
 const handleClick = (event) => {
   let elementId = event.target.dataset.id;
   let existingBlock;
-  if (elementId) {
-    // If the element has an ID, check if a block with this ID already exists
-    existingBlock = renarrationBlocks.find(block => block.id === elementId);
-  } else {
+
+  if (!elementId) {
     // If the element does not have an ID, generate a new one
     elementId = uuidv4();
-    event.target.dataset.id = elementId; // Assign the ID to the element's data-id attribute
+    event.target.setAttribute('data-id', elementId); // Assign the ID to the element's data-id attribute
   }
- 
-    // If a block with this ID already exists, use its description
-    const initialDescription = existingBlock ? existingBlock.description : '';
+  
+  // Check if a block with this ID already exists
+  existingBlock = renarrationBlocks.find(block => block.id === elementId);
+  
+  // If a block with this ID already exists, use its description
+  const initialDescription = existingBlock ? existingBlock.description : '';
 
-    const fullHtml = event.target.outerHTML;
-    const fullCss = window.getComputedStyle(event.target).cssText;
-    const fullJs = event.target.getAttribute('onclick');
-    setClickedElementContent({ html: fullHtml, css: fullCss, js: fullJs });
-    setOpenDialog(true);
-    setDescription(initialDescription); // Set the initial description for the Annotator
-    setCurrentBlockId(elementId); // Set the current block ID
+  const fullHtml = event.target.outerHTML;
+  const fullCss = window.getComputedStyle(event.target).cssText;
+  const fullJs = event.target.getAttribute('onclick');
+  setClickedElementContent({ html: fullHtml, css: fullCss, js: fullJs });
+  setOpenDialog(true);
+  setDescription(initialDescription); // Set the initial description for the Annotator
+  setCurrentBlockId(elementId); // Set the current block ID
 };
 
 
 const handleSave = (updatedContent, description) => {
   const existingBlockIndex = renarrationBlocks.findIndex(block => block.id === currentBlockId);
-  
+
   if (existingBlockIndex !== -1) {
     // Update existing block
     const updatedBlock = {
@@ -63,9 +92,14 @@ const handleSave = (updatedContent, description) => {
       id: currentBlockId || uuidv4() // Use the current block ID if available, otherwise generate a UUID
     };
     addRenarrationBlock(newBlock); // Dispatch the action to add a new block
-  }
+
+    // Update the htmlContent to include the outline for the annotated element
+    const updatedHtmlContent = outlineElement(htmlContent, currentBlockId);
+    setRenderedContent(updatedHtmlContent); 
+}
   setOpenDialog(false);
 };
+
 
   const navigateToRenarrationBlocks = () => {
     navigate('/renarration-blocks');
@@ -87,7 +121,7 @@ const handleSave = (updatedContent, description) => {
         </Box>
       )}
       {!isFetching && (
-        <div dangerouslySetInnerHTML={{ __html: htmlContent }} onClick={handleClick} />
+        <div dangerouslySetInnerHTML={{ __html: renderedContent }} onClick={handleClick} />
       )}
    <Annotator
   open={openDialog}

@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { deleteRenarrationBlock } from '../redux/actions';  // Adjust the path to your action creators
-import { Link } from 'react-router-dom';
+import { Link, Button, Card, CardActions, CardContent, Typography, Grid, Container } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router-dom';
 
 const RenarrationBlocks = ({ renarrationBlocks, deleteRenarrationBlock }) => {
+    const navigate = useNavigate();
     useEffect(() => {
      console.log(renarrationBlocks[0].content.html)
     }, [])
@@ -11,20 +14,38 @@ const RenarrationBlocks = ({ renarrationBlocks, deleteRenarrationBlock }) => {
     const handleDelete = (blockId) => {
         deleteRenarrationBlock(blockId);
     };
-
+const handleNavigate = ()=>{
+    navigate('/re-narrate');
+}
     return (
-        <div>
-            <h1>Renarration Blocks</h1>
-            <Link to='/re-narrate'> back to renarrate</Link>
-            {renarrationBlocks.map(block => (
-                <div key={block.id}>
-                    <div dangerouslySetInnerHTML={{ __html: block.content.html }} />
-                    <p>Description: {block.description}</p>
-                    <button onClick={() => handleDelete(block.id)}>Delete</button>
-                    <hr />
-                </div>
-            ))}
-        </div>
+        <Container maxWidth="lg">
+            <Typography variant="h4" component="h1" gutterBottom sx={{ marginY: 4 }}>
+                Renarration Blocks
+            </Typography>
+            <Button variant="contained" color="primary" startIcon={<ArrowBackIcon />} onClick={handleNavigate}>
+                Back to Renarrate
+            </Button>
+            <Grid container spacing={4} sx={{ marginTop: 2 }}>
+                {renarrationBlocks.map(block => (
+                    <Grid item key={block.id} xs={12} md={6} lg={4}>
+                        <Card>
+                            <CardContent>
+                              
+                                <div dangerouslySetInnerHTML={{ __html: block.content.html }} />
+                                <Typography variant="body2" color="text.secondary">
+                                    Description: {block.description}
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button size="small" color="primary" onClick={() => handleDelete(block.id)}>
+                                    Delete
+                                </Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+        </Container>
     );
 };
 

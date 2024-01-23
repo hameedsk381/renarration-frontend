@@ -35,3 +35,10 @@ export const fetchHtmlFailure = (errorMessage) => ({
     type: FETCH_HTML_FAILURE,
     payload: errorMessage,
 });
+// actions.js
+export const UPDATE_HTML_CONTENT = 'UPDATE_HTML_CONTENT';
+
+export const updateHtmlContent = (htmlContent) => ({
+    type: UPDATE_HTML_CONTENT,
+    payload: htmlContent,
+});
