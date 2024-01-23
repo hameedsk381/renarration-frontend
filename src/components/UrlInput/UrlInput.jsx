@@ -36,7 +36,7 @@ function UrlInput({ navigateTo }) {
       (urlToDownload) => {
           console.log("started fetching");
           dispatch(fetchHtmlStart()); // Dispatch action with useDispatch
-          return axios.post('http://localhost:2000/download', { url: urlToDownload });
+          return axios.post('https://renarration-api.onrender.com/download', { url: urlToDownload });
       },
       {
           onSuccess: (response) => {
@@ -45,7 +45,6 @@ function UrlInput({ navigateTo }) {
               navigate(navigateTo);
           },
           onError: (error) => {
-            console.log(error)
               dispatch(fetchHtmlFailure(error.message)); // Dispatch action with useDispatch
               setSnackbarMessage(errorMessage); // Update local snackbar message
               setSnackbarOpen(true); // Open error snackbar
