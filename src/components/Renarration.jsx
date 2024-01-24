@@ -103,6 +103,7 @@ const handleExit = () => {
 
   return (
     <>
+ 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'Highlight', padding: '10px' }}>
         <div style={{ fontWeight: 'bold' }}>
           Renarration

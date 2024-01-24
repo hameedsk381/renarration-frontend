@@ -60,3 +60,33 @@ export const RESET_CONTENT = 'RESET_CONTENT';
 export const resetContent = () => ({
     type: RESET_CONTENT,
 });
+// actions.js
+
+// Action Types
+export const UPDATE_PROGRESS = 'UPDATE_PROGRESS';
+export const RESET_PROGRESS = 'RESET_PROGRESS';
+
+// Action Creators
+export const updateProgress = (progress) => ({
+    type: UPDATE_PROGRESS,
+    payload: progress,
+});
+
+export const resetProgress = () => ({
+    type: RESET_PROGRESS,
+});
+// actions.js
+
+// Action Types
+export const SET_DEVICE_TYPE = 'SET_DEVICE_TYPE';
+export const CLEAR_DEVICE_TYPE = 'CLEAR_DEVICE_TYPE';
+
+// Action Creators
+export const setDeviceType = (deviceType) => ({
+    type: SET_DEVICE_TYPE,
+    payload: deviceType,
+});
+
+export const clearDeviceType = () => ({
+    type: CLEAR_DEVICE_TYPE,
+});
