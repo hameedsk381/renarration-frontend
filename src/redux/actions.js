@@ -2,6 +2,8 @@
 export const ADD_RENARRATION_BLOCK = 'ADD_RENARRATION_BLOCK';
 export const UPDATE_RENARRATION_BLOCK = 'UPDATE_RENARRATION_BLOCK';
 export const DELETE_RENARRATION_BLOCK = 'DELETE_RENARRATION_BLOCK';
+// actions.js
+export const TOGGLE_ANNOTATION_MODE = 'TOGGLE_ANNOTATION_MODE';
 
 export const addRenarrationBlock = (block) => ({
     type: ADD_RENARRATION_BLOCK,
@@ -24,6 +26,7 @@ export const FETCH_HTML_FAILURE = 'FETCH_HTML_FAILURE';
 // New Action Creators
 export const fetchHtmlStart = () => ({
     type: FETCH_HTML_START,
+
 });
 
 export const fetchHtmlSuccess = (htmlContent) => ({
@@ -90,3 +93,44 @@ export const setDeviceType = (deviceType) => ({
 export const clearDeviceType = () => ({
     type: CLEAR_DEVICE_TYPE,
 });
+// actions.js
+export const REORDER_RENARRATION_BLOCKS = 'REORDER_RENARRATION_BLOCKS';
+
+export const reorderRenarrationBlocks = (blocks) => ({
+    type: REORDER_RENARRATION_BLOCKS,
+    payload: blocks,
+});
+// actions.js
+export const toggleAnnotationMode = () => ({
+    type: TOGGLE_ANNOTATION_MODE,
+});
+export const ADD_TO_HISTORY = 'ADD_TO_HISTORY';
+export const RESET_HISTORY = 'RESET_HISTORY';
+
+export const addToHistory = url => ({
+    type: ADD_TO_HISTORY,
+    payload: {url,htmlDoc},
+});
+
+export const resetHistory = () => ({
+    type: RESET_HISTORY,
+});
+// Action Types
+export const SET_IMAGE = 'SET_IMAGE';
+export const SET_ID = 'SET_ID';
+export const SET_AUDIO = 'SET_AUDIO';
+export const SET_VIDEO = 'SET_VIDEO';
+export const SET_DESCRIPTION = 'SET_DESCRIPTION';
+export const RESET_MEDIA = 'RESET_MEDIA';
+export const RESET_FORM = 'RESET_FORM';
+export const SUBMIT_FORM = 'SUBMIT_FORM';
+
+// Action Creators
+export const setID = (id) => ({ type: SET_ID, payload: id });
+export const setImage = (image) => ({ type: SET_IMAGE, payload: image });
+export const setAudio = (audio) => ({ type: SET_AUDIO, payload: audio });
+export const setVideo = (video) => ({ type: SET_VIDEO, payload: video });
+export const setDescription = (description) => ({ type: SET_DESCRIPTION, payload: description });
+export const resetMedia = (mediaType) => ({ type: RESET_MEDIA, payload: mediaType });
+export const submitForm = () => ({ type: SUBMIT_FORM });
+export const resetForm = () => ({ type: RESET_FORM });

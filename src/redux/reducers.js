@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import { ADD_RENARRATION_BLOCK, UPDATE_RENARRATION_BLOCK, DELETE_RENARRATION_BLOCK, UPDATE_HTML_CONTENT } from './actions';
+import { ADD_RENARRATION_BLOCK, UPDATE_RENARRATION_BLOCK, DELETE_RENARRATION_BLOCK, UPDATE_HTML_CONTENT, TOGGLE_ANNOTATION_MODE, ADD_TO_HISTORY, RESET_HISTORY, RESET_FORM } from './actions';
 import { FETCH_HTML_START, FETCH_HTML_SUCCESS, FETCH_HTML_FAILURE } from './actions';
 import { RESET_STATE, RESET_CONTENT } from './actions';
 import { UPDATE_PROGRESS, RESET_PROGRESS } from './actions';
 import { SET_DEVICE_TYPE, CLEAR_DEVICE_TYPE } from './actions';
+import { REORDER_RENARRATION_BLOCKS } from './actions';
 const initialBlockState = {
     renarrationBlocks: [],
 };
@@ -28,6 +29,11 @@ export const renarrationBlocksReducer = (state = initialBlockState, action) => {
                 ...state,
                 renarrationBlocks: state.renarrationBlocks.filter(block => block.id !== action.payload),
             };
+        case REORDER_RENARRATION_BLOCKS:
+            return {
+                ...state,
+                renarrationBlocks: action.payload,
+            };
         case RESET_STATE:
             return initialBlockState;
         default:
@@ -37,11 +43,13 @@ export const renarrationBlocksReducer = (state = initialBlockState, action) => {
 
 
 const initialUrlState = {
+    url:'',
     htmlContent: '',
     isFetching: false,
     errorMessage: '',
     progress: 0,
     deviceType: null,
+    annotationMode: false,
 };
 
 export const urlReducer = (state = initialUrlState, action) => {
@@ -82,6 +90,11 @@ export const urlReducer = (state = initialUrlState, action) => {
                 ...state,
                 progress: 0,
             };
+        case TOGGLE_ANNOTATION_MODE:
+            return {
+                ...state,
+                annotationMode: !state.annotationMode,
+            };
         case SET_DEVICE_TYPE:
             return {
                 ...state,
@@ -96,9 +109,67 @@ export const urlReducer = (state = initialUrlState, action) => {
             return state;
     }
 };
+
+
+const historyState = {
+    history: [],
+};
+
+const historyReducer = (state = historyState, action) => {
+    switch (action.type) {
+        case ADD_TO_HISTORY:
+            return {
+                ...state,
+                history: [...state.history, action.payload],
+            };
+        case RESET_HISTORY:
+            return {
+                ...state,
+                history: [],
+            };
+        default:
+            return state;
+    }
+};
+import { SET_IMAGE, SET_AUDIO, SET_VIDEO, SET_DESCRIPTION, RESET_MEDIA, SUBMIT_FORM } from './actions';
+
+const initialFormState = {
+  image: null,
+  audio: null,
+  video: null,
+  description: null,
+};
+
+const formReducer = (state = initialFormState, action) => {
+  switch (action.type) {
+    case SET_IMAGE:
+      return { ...state, image: action.payload };
+    case SET_AUDIO:
+      return { ...state, audio: action.payload };
+    case SET_VIDEO:
+      return { ...state, video: action.payload };
+    case SET_DESCRIPTION:
+      return { ...state, description: action.payload };
+    case RESET_MEDIA:
+      return { ...state, [action.payload]: null }; // Resets specific media type
+    case SUBMIT_FORM:
+      console.log('Form submitted with state:', state);
+      return state; // Here you would normally handle form submission
+      case RESET_FORM:
+        console.log('Form resetted with state:', state);
+        return initialFormState; // Here you would normally handle form submission
+    default:
+      return state;
+  }
+};
+
+
 const rootReducer = combineReducers({
     renarrationBlocks: renarrationBlocksReducer,
     url: urlReducer,
+    history : historyReducer,
+    formdata : formReducer
 });
+
 
 export default rootReducer;

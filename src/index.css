@@ -8,3 +8,7 @@ h1,h2,h3,h4,h5,h6{
   color: black;
   font-weight: bolder;
 }
+/* Stylesheet (e.g., styles.css) */
+.hover-effect {
+  outline: 2px solid green;
+}

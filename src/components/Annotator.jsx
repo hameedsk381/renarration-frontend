@@ -20,7 +20,7 @@ const Annotator = ({ open, onClose, content, onSave }) => {
       <DialogTitle>Add Annotation</DialogTitle>
       <DialogContent>
         <div style={{ margin: '20px 0', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
-          <div dangerouslySetInnerHTML={{ __html: content.html }} />
+          <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>
         {/* <TextField
           label="Description/Notes"

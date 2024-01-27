@@ -1,7 +1,7 @@
 // store.js
 import { createStore, applyMiddleware } from 'redux';
 import {thunk} from 'redux-thunk';
-import rootReducer from './reducers';
+import rootReducer from './rootReducer';
 
 // Function to load the state from local storage
 const loadState = () => {

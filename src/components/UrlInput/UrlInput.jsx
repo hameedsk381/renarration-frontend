@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, Button, CircularProgress, Paper, Snackbar, Box, Typography, LinearProgress } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
 import { useUrlValidation } from '../../hooks/useUrlValidation';
-import { fetchHtmlStart, fetchHtmlSuccess, fetchHtmlFailure, updateProgress, resetProgress } from '../../redux/actions';
+import { fetchHtmlStart, fetchHtmlSuccess, fetchHtmlFailure, updateProgress, resetProgress, addToHistory } from '../../redux/actions';
 import axios from 'axios';
 
 import { useMutation } from 'react-query';
@@ -32,15 +32,12 @@ function UrlInput({ navigateTo }) {
     }
     setSnackbarOpen(false);
   };
-
   const mutation = useMutation(
-    (urlToDownload) => {
+    async (urlToDownload) => {
       console.log("started fetching");
-      dispatch(fetchHtmlStart()); // Dispatch action with useDispatch
+      dispatch(fetchHtmlStart())
 
-      return axios.post('https://renarration-api.onrender.com/download', { url: urlToDownload},{headers: {
-        'User-Agent': deviceType 
-      }}, {
+      return await axios.post('http://localhost:2000/download', { url: urlToDownload,device: deviceType}, {
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           dispatch(updateProgress(percentCompleted)); // Dispatch progress update
@@ -74,6 +71,19 @@ function UrlInput({ navigateTo }) {
       setSnackbarOpen(true);
     }
   };
+  
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        handleNavigate();
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleNavigate]);
+  
   return (
     <>
       <Paper elevation={6} sx={{ width: { lg: "50%", md: "75%" }, m: 2, marginTop: "-25px", marginInline: { lg: "25%", md: "10%" } }} style={wrapperStyle}>
@@ -83,6 +93,11 @@ function UrlInput({ navigateTo }) {
           style={inputStyle}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleNavigate();
+            }
+          }}
         />
 
         <Button
@@ -123,3 +138,4 @@ function UrlInput({ navigateTo }) {
 
 
 export default UrlInput;
+
