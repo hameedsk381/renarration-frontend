@@ -1,6 +1,6 @@
-const initialState = {
+export const initialState = {
     isFetching: false,
-    initialHtmlContent: '', // Initial HTML content fetched
+    initialHtmlContent: null, // Initial HTML content fetched
     currentUrl: '', // Current URL being processed
     errorMessage: '', // Error messages
     progress: 0, // Progress of current fetching operation
@@ -13,8 +13,7 @@ export const urlReducer = (state = initialState, action) => {
         case 'FETCH_START':
             return {
                 ...state,
-                isFetching: true,
-                deviceType: action.payload.deviceType,
+                isFetching: true
             };
         case 'FETCH_SUCCESS':
             return {
@@ -26,10 +25,11 @@ export const urlReducer = (state = initialState, action) => {
                 history: [...state.history, { url: action.payload.url, htmlContent: action.payload.htmlContent }]
             };
         case 'FETCH_FAILURE':
+            console.log(action.payload)
             return {
                 ...state,
                 isFetching: false,
-                errorMessage: action.payload.errorMessage,
+                errorMessage: action.payload,
             };
         case 'UPDATE_PROGRESS':
             return {

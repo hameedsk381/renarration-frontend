@@ -7,9 +7,9 @@ export const toggleAnnotationMode = () => ({
     type: TOGGLE_ANNOTATION_MODE,
 });
 
-export const setAnnotatedHtmlContent = (htmlContent) => ({
+export const setAnnotatedHtmlContent = (htmlforannotation) => ({
     type: SET_ANNOTATED_HTML_CONTENT,
-    payload: htmlContent,
+    payload: htmlforannotation,
 });
 // Additional Action Types
 export const ADD_ANNOTATED_BLOCK = 'ADD_ANNOTATED_BLOCK';

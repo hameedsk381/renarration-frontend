@@ -1,12 +1,13 @@
 import { ADD_ANNOTATED_BLOCK, REMOVE_ANNOTATED_BLOCK, SET_ANNOTATED_HTML_CONTENT, TOGGLE_ANNOTATION_MODE } from "../actions/annotationActions";
+import { initialState } from "./urlReducers";
 
-const initialState = {
+const initialAnnState = {
     mode: false,
-    htmlContent: '',
+    htmlforAnnotation:null,
     annotatedBlocks: [],
 };
 
-const annotationReducer = (state = initialState, action) => {
+const annotationReducer = (state = initialAnnState, action) => {
     switch (action.type) {
         case TOGGLE_ANNOTATION_MODE:
             return {
@@ -16,7 +17,7 @@ const annotationReducer = (state = initialState, action) => {
         case SET_ANNOTATED_HTML_CONTENT:
             return {
                 ...state,
-                htmlContent: action.payload
+                htmlforAnnotation: action.payload,
             };
         case ADD_ANNOTATED_BLOCK:
             return {

@@ -4,11 +4,13 @@ import { ArrowForward } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
 import { useUrlValidation } from '../../hooks/useUrlValidation';
-import { fetchHtmlStart, fetchHtmlSuccess, fetchHtmlFailure, updateProgress, resetProgress, addToHistory } from '../../redux/actions';
 import axios from 'axios';
 
 import { useMutation } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchFailure, fetchStart, fetchSuccess } from '../../redux/actions/urlActions';
+import { extractApi } from '../../apis/extractApis';
+import { setAnnotatedHtmlContent } from '../../redux/actions/annotationActions';
 
 function UrlInput({ navigateTo }) {
   const [inputValue, setInputValue] = useState('');
@@ -17,8 +19,9 @@ function UrlInput({ navigateTo }) {
   const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
   const progress = useSelector(state => state.url.progress);
   const isFetching = useSelector(state => state.url.isFetching); // Get state with useSelector
+  const initialHtmlContent = useSelector(state => state.url.htmlContent);
+  const annotatedHtmlContent = useSelector(state => state.annotation.htmlforAnnotation); // Get state with useSelector
   const errorMessage = useSelector(state => state.url.errorMessage); // Get state with useSelector
-  const deviceType = useSelector(state => state.url.deviceType);
   const dispatch = useDispatch(); // Get dispatch function with useDispatch
 
   const navigate = useNavigate();
@@ -32,46 +35,51 @@ function UrlInput({ navigateTo }) {
     }
     setSnackbarOpen(false);
   };
-  const mutation = useMutation(
-    async (urlToDownload) => {
-      console.log("started fetching");
-      dispatch(fetchHtmlStart())
+  // const mutation = useMutation(
+  //   async (urlToDownload) => {
+  //     console.log("started fetching");
+  //     dispatch(fetchHtmlStart())
 
-      return await axios.post('http://localhost:2000/download', { url: urlToDownload,device: deviceType}, {
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          dispatch(updateProgress(percentCompleted)); // Dispatch progress update
-        }
-      });
-    },
-    {
-      onSuccess: (response) => {
-        dispatch(fetchHtmlSuccess(response.data)); // Dispatch action with useDispatch
-        console.log('Received HTML content:', response.data);
-        navigate(navigateTo);
+  //     return await axios.post('http://localhost:2000/download', { url: urlToDownload,device: deviceType}, {
+  //       onUploadProgress: (progressEvent) => {
+  //         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+  //         dispatch(updateProgress(percentCompleted)); // Dispatch progress update
+  //       }
+  //     });
+  //   },
+  //   {
+  //     onSuccess: (response) => {
+  //       dispatch(fetchHtmlSuccess(response.data)); // Dispatch action with useDispatch
+  //       console.log('Received HTML content:', response.data);
+  //       navigate(navigateTo);
 
-        dispatch(resetProgress()); // Reset progress
-      },
-      onError: (error) => {
-        dispatch(fetchHtmlFailure(error.message)); // Dispatch action with useDispatch
-        setSnackbarMessage(errorMessage); // Update local snackbar message
-        setSnackbarOpen(true); // Open error snackbar
-        setInputValue('');
-        dispatch(resetProgress()); // Reset progress
-      },
-    }
-  );
+  //       dispatch(resetProgress()); // Reset progress
+  //     },
+  //     onError: (error) => {
+  //       dispatch(fetchHtmlFailure(error.message)); // Dispatch action with useDispatch
+  //       setSnackbarMessage(errorMessage); // Update local snackbar message
+  //       setSnackbarOpen(true); // Open error snackbar
+  //       setInputValue('');
+  //       dispatch(resetProgress()); // Reset progress
+  //     },
+  //   }
+  // );
 
-  const handleNavigate = () => {
+  const handleNavigate = async () => {
     if (isValidUrl) {
       console.log(inputValue)
-      mutation.mutate(inputValue); // Call mutate with the inputValue as argument
+      dispatch(fetchStart());
+      await axios.post(extractApi, { url: inputValue }, { headers: navigator.userAgent }).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); setAnnotatedHtmlContent(res.data); navigate(navigateTo); }).catch(err => {
+        dispatch(fetchFailure(err.message)); setSnackbarMessage(errorMessage); // Update local snackbar message
+        setSnackbarOpen(true); // Open error snackbar
+        setInputValue('');
+      });
     } else {
       setSnackbarMessage("Invalid URL. Example: https://www.example.com");
       setSnackbarOpen(true);
     }
   };
-  
+
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === 'Enter') {
@@ -83,7 +91,7 @@ function UrlInput({ navigateTo }) {
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [handleNavigate]);
-  
+
   return (
     <>
       <Paper elevation={6} sx={{ width: { lg: "50%", md: "75%" }, m: 2, marginTop: "-25px", marginInline: { lg: "25%", md: "10%" } }} style={wrapperStyle}>

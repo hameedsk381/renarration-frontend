@@ -7,9 +7,8 @@ export const SET_DEVICE_TYPE = 'SET_DEVICE_TYPE';
 export const RESET_STATE = 'RESET_STATE';
 
 // Action creators
-export const fetchStart = (url, deviceType) => ({
+export const fetchStart = ( ) => ({
     type: FETCH_START,
-    payload: { url, deviceType }
 });
 
 export const fetchSuccess = (url, htmlContent) => ({
