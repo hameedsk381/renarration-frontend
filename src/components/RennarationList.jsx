@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, IconButton, Tooltip, Button, CardActions, Paper } from '@mui/material';
-import RenarrationBlock from './RenarrationBlock';
 import { useNavigate } from 'react-router-dom';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
@@ -66,9 +65,6 @@ console.log(rennaratedBlocks);
        </Paper>
     </CardContent>
  
-    {/* {del && <CardActions>
-        <Button startIcon={<Delete/>} onClick={deleteRennarationBlock(block.id)}>Delete</Button>
-        </CardActions>} */}
 </Card>
                     </Grid>
                 ))}

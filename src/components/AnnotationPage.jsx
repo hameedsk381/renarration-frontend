@@ -13,7 +13,7 @@ import { fetchFailure, fetchStart, fetchSuccess, resetState } from '../redux/act
 import { extractApi } from '../apis/extractApis';
 import getDeviceType from '../utils/getDeviceType';
 import { resetRennarations } from '../redux/actions/rennarationActions';
-const Renarration = () => {
+const AnnotationPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const annotatedBlocks = useSelector(state => state.annotation.annotatedBlocks);
@@ -170,7 +170,7 @@ const handleExit = () => {
                         Exit Renarration
                     </Button>
        {annotatedBlocks.length !==0 &&  <Button color='inherit' variant='outlined' onClick={navigateToRenarrationBlocks}>
-          View Renarration Blocks
+          View Annotated Blocks
         </Button>}
       </div>
       <UrlInput/>
@@ -220,4 +220,4 @@ const handleExit = () => {
 };
 
 
-export default Renarration;
+export default AnnotationPage;
