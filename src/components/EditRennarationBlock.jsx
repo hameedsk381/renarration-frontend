@@ -6,7 +6,6 @@ import { ArrowBack, Audiotrack, Cancel, Image, VideoLibraryOutlined } from '@mui
 import RenarrationBlock from './RenarrationBlock';
 import Recording from './Recording';
 import { updateAnnotatedBlock } from '../redux/actions/annotationActions';
-import { addRennarationBlock, updateRennaratedBlock } from '../redux/actions/rennarationActions';
 
 const EditRennarationBlock = () => {
   const location = useLocation();
@@ -15,7 +14,6 @@ const EditRennarationBlock = () => {
   const blockId = location.state;
   const annotatedBlocks = useSelector(state => state.annotation.annotatedBlocks);
   const selectedBlock = annotatedBlocks.find(block => block.id === blockId);
-const rennaratedBlocks = useSelector(state=>state.rennaration.rennaratedBlocks);
   const [formData, setFormData] = useState({
     description: selectedBlock.desc || '',
     audio: selectedBlock.aud || null,
@@ -24,7 +22,8 @@ const rennaratedBlocks = useSelector(state=>state.rennaration.rennaratedBlocks);
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
+  const [updateSnackbarOpen, setUpdateSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
   useEffect(() => {
     console.log(selectedBlock);
   }, [selectedBlock]);
@@ -50,7 +49,7 @@ const rennaratedBlocks = useSelector(state=>state.rennaration.rennaratedBlocks);
       setSnackbarOpen(true);
       return;
     }
-    const existingBlock = rennaratedBlocks.find(block => block.id === blockId);
+
     dispatch(updateAnnotatedBlock(blockId, {
       id: blockId,
       content: selectedBlock.content,
@@ -60,33 +59,19 @@ const rennaratedBlocks = useSelector(state=>state.rennaration.rennaratedBlocks);
       img: formData.image,
       rennarationStatus : true
   }));
-  if(existingBlock){
-    dispatch(updateRennaratedBlock(blockId,{
-      id: blockId,
-      content: selectedBlock.content,
-      desc: formData.description,
-      aud: formData.audio,
-      vid: formData.video,
-      img: formData.image
-  }))
-  } else {
-    dispatch(addRennarationBlock({
-      id: blockId,
-      content: selectedBlock.content,
-      desc: formData.description,
-      aud: formData.audio,
-      vid: formData.video,
-      img: formData.image
-  }))
-  }
-    // dispatch(addRennarationBlock({ id: blockId, ...formData }));
+  setSnackbarMessage('Renarration block updated successfully!');
+  setUpdateSnackbarOpen(true);
+   
+  setTimeout(() => {
     navigate('/create-rennaration');
+}, 3000);
   };
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') return;
     setSnackbarOpen(false);
-  };
+    setUpdateSnackbarOpen(false);
+};
 
   return (
     <Container maxWidth='md' sx={{ my: 2, p: 2 }}>
@@ -121,6 +106,11 @@ const rennaratedBlocks = useSelector(state=>state.rennaration.rennaratedBlocks);
           Please fill in the description.
         </Alert>
       </Snackbar>
+      <Snackbar open={updateSnackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
     </Container>
   );
 };
@@ -155,6 +145,7 @@ const UploadInput = ({ type, icon, formData, handleFileChange, handleCancelMedia
           </IconButton>
         </Box>
       )}
+      
     </Box>
   );
 };

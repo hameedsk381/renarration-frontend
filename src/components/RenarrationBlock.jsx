@@ -11,7 +11,7 @@ import { removeAnnotatedBlock, setAnnotatedHtmlContent } from '../redux/actions/
 import { Delete } from '@mui/icons-material'
 import { removeRennaratedBlock } from '../redux/actions/rennarationActions'
 
-const RenarrationBlock = ({block,del,desc,noActions}) => {
+const RenarrationBlock = ({block,desc,noActions}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const  {htmlforAnnotation}  = useSelector(state => state.annotation)
@@ -29,7 +29,7 @@ const RenarrationBlock = ({block,del,desc,noActions}) => {
         dispatch(removeRennaratedBlock(id));
     }
   return (
-    <Card>
+    <Card sx={{borderTop: block.rennarationStatus ? '4px solid green' : '4px solid red'}}>
     <CardMedia>
     <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1 }}>
         {extractMedia(block.content).map((src, index) => (
@@ -48,10 +48,11 @@ const RenarrationBlock = ({block,del,desc,noActions}) => {
         ))}
     </Box>
     </CardMedia>
-    <CardContent>
-        <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content)}} />
-        <Typography>{desc}</Typography>
-    </CardContent>
+    <CardContent sx={{ maxHeight: '200px', overflowY: 'auto' }}>
+    <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
+    <Typography>{desc}</Typography>
+</CardContent>
+
  { !noActions &&  <CardActions>
     <Button size="small" color="primary" onClick={()=>{navigate('/edit-rennaration', { state: block.id })}}>
         {block.rennarationStatus ? 'Update' : 'Create'}
@@ -60,9 +61,7 @@ const RenarrationBlock = ({block,del,desc,noActions}) => {
             Delete
         </Button>
     </CardActions>}
-    {del && <CardActions>
-        <Button startIcon={<Delete/>} onClick={deleteRennarationBlock(block.id)}>Delete</Button>
-        </CardActions>}
+   
 </Card>
   )
 }
