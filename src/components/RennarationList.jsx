@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Card, CardContent, CardMedia, Typography, Grid, IconButton, Tooltip, Button, CardActions } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Typography, Grid, IconButton, Tooltip, Button, CardActions, Paper } from '@mui/material';
 import RenarrationBlock from './RenarrationBlock';
 import { useNavigate } from 'react-router-dom';
 import extractMedia from '../utils/extractMedia';
@@ -24,7 +24,7 @@ console.log(rennaratedBlocks);
 
               
                 {rennaratedBlocks && rennaratedBlocks.map(block => (
-                    <Grid item key={block.id} xs={12} sm={6} md={4} lg={3}>
+                    <Grid item key={block.id} xs={12} sm={6} md={4} >
                      <Card>
     <CardMedia>
     <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1 }}>
@@ -47,19 +47,23 @@ console.log(rennaratedBlocks);
     </CardMedia>
     <CardContent>
         <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content)}} />
-        <Typography>{block.desc}</Typography>
-        <Box
+       <Paper variant='outlined' sx={{p:2,my:3}}>
+       <Box
               
-                component="img"
-                sx={{
-                    width: '50%',
-                    height: 'auto',
-                    objectFit: 'cover',
-                    p: 0.5,
-                }}
-                src={block.img}
-                alt={`Renarration image `}
-            />
+              component="img"
+              sx={{
+                  width: '50%',
+                  height: 'auto',
+                  objectFit: 'cover',
+                  p: 0.5,
+              }}
+              src={URL.createObjectURL(block.img)}
+              alt={`Renarration image `}
+          />
+       <Typography my={2}>{block.desc}</Typography>
+       <audio controls src={URL.createObjectURL(block.aud)} />
+       <video controls width="100%" src={URL.createObjectURL(block.vid)} style={{marginBlock:"20px"}} />
+       </Paper>
     </CardContent>
  
     {/* {del && <CardActions>
