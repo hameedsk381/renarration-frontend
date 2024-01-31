@@ -6,24 +6,12 @@ import About from './pages/About/About'
 import Contact from './pages/Contact/Contact'
 import SimpleBottomNavigation from './components/SimpleBottomNavigation/SimpleBottomNavigation'
 import Renarration from './components/Renarration'
-
-
-import { setDeviceType } from './redux/actions';
-import { useDispatch } from 'react-redux';
-import getDeviceType from './utils/getDeviceType';
-import { useEffect } from 'react';
 import EditRennarationBlock from './components/EditRennarationBlock';
 import RennarationBlocks from './components/RennarationBlocks';
 import RenarrationList from './components/RennarationList';
 
 function App() {
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const deviceType = getDeviceType();
-    dispatch(setDeviceType(deviceType)); // Set device type in Redux state
-  }, [dispatch]);
   return (
     <Router>
 

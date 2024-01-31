@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux';
 import { setVideo } from '../redux/actions';
 import { useSelector } from 'react-redux';
 
-const VideoInput = () => {
+const VideoInput = ({data}) => {
 const dispatch = useDispatch();
-const {video} = useSelector(state => state.formdata)
+
   return (
     <Box mb={2}>
   <input
@@ -23,9 +23,9 @@ const {video} = useSelector(state => state.formdata)
       Upload Video
     </Button>
   </label>
-  {video && (
+  {data && (
     <Box mt={2} position="relative">
-      <video controls width="100%" src={URL.createObjectURL(video)} />
+      <video controls width="100%" src={URL.createObjectURL(data)} />
       <IconButton
         color="error"
         onClick={() => dispatch(setVideo(null))}

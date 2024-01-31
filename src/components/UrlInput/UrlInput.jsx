@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchFailure, fetchStart, fetchSuccess } from '../../redux/actions/urlActions';
 import { extractApi } from '../../apis/extractApis';
 import { setAnnotatedHtmlContent } from '../../redux/actions/annotationActions';
+import getDeviceType from '../../utils/getDeviceType';
 
 function UrlInput({ navigateTo }) {
   const [inputValue, setInputValue] = useState('');
@@ -69,7 +70,7 @@ function UrlInput({ navigateTo }) {
     if (isValidUrl) {
       console.log(inputValue)
       dispatch(fetchStart());
-      await axios.post(extractApi, { url: inputValue }, { headers: navigator.userAgent }).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); setAnnotatedHtmlContent(res.data); navigate(navigateTo); }).catch(err => {
+      await axios.post(extractApi, { url: inputValue }, { headers: getDeviceType }).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); dispatch(setAnnotatedHtmlContent(res.data)); navigate(navigateTo); }).catch(err => {
         dispatch(fetchFailure(err.message)); setSnackbarMessage(errorMessage); // Update local snackbar message
         setSnackbarOpen(true); // Open error snackbar
         setInputValue('');

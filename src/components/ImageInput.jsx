@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux';
 import { setImage } from '../redux/actions';
 import { useSelector } from 'react-redux';
 
-const ImageInput = () => {
+const ImageInput = ({data}) => {
     const dispatch = useDispatch();
-    const {image} = useSelector(state => state.formdata)
+   
   
   return (
     <Box mb={2}>
@@ -25,8 +25,8 @@ const ImageInput = () => {
     </Button>
     
   </label>
-  {image && <Button variant='outlined'  startIcon={<Cancel/>} onClick={()=>{dispatch(setImage(null))}}>Cancel</Button>}
-  {image && (
+  {data && <Button variant='outlined'  startIcon={<Cancel/>} onClick={()=>{dispatch(setImage(null))}}>Cancel</Button>}
+  {data && (
     <Box mt={2} position="relative">
       <img src={URL.createObjectURL(image)} alt="Preview" width="100%" />
     </Box>

@@ -1,27 +1,33 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
+import { Box, Button, Card, CardActions, CardContent, CardMedia, IconButton, Typography } from '@mui/material'
 import React from 'react'
 import extractMedia from '../utils/extractMedia'
 import removeMedia from '../utils/removeMedia'
 import { useNavigate } from 'react-router'
-import { deleteRenarrationBlock, updateHtmlContent } from '../redux/actions'
+
 import removeOutlineFromElement from '../utils/removeOutline'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
+import { removeAnnotatedBlock, setAnnotatedHtmlContent } from '../redux/actions/annotationActions'
+import { Delete } from '@mui/icons-material'
+import { removeRennaratedBlock } from '../redux/actions/rennarationActions'
 
-const RenarrationBlock = ({block,noActions,desc}) => {
+const RenarrationBlock = ({block,del,desc,noActions}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const htmlContent = useSelector(state => state.url.htmlContent)
+    const  {htmlforAnnotation}  = useSelector(state => state.annotation)
     const deleteBlock = (blockId) => {
         // Dispatch action to delete the block
-        dispatch(deleteRenarrationBlock(blockId));
-    
+        dispatch(removeAnnotatedBlock(blockId));
+    console.log(typeof(htmlforAnnotation));
         // Remove outline from the element in htmlContent
-        const updatedHtmlContent = removeOutlineFromElement(htmlContent, blockId);
+        const updatedHtmlContent = removeOutlineFromElement(htmlforAnnotation, blockId);
     
         // Optional: Dispatch an action to update the htmlContent in Redux
-        dispatch(updateHtmlContent(updatedHtmlContent));
+        dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
     };
+    const deleteRennarationBlock = (id)=>{
+        dispatch(removeRennaratedBlock(id));
+    }
   return (
     <Card>
     <CardMedia>
@@ -48,12 +54,15 @@ const RenarrationBlock = ({block,noActions,desc}) => {
     </CardContent>
  { !noActions &&  <CardActions>
     <Button size="small" color="primary" onClick={()=>{navigate('/edit-rennaration', { state: block.id })}}>
-        {block.description !== null ? 'Update' : 'Create'}
+        {block.rennarationStatus ? 'Update' : 'Create'}
     </Button>
         <Button size="small" color="primary" onClick={() => deleteBlock(block.id)}>
             Delete
         </Button>
     </CardActions>}
+    {del && <CardActions>
+        <Button startIcon={<Delete/>} onClick={deleteRennarationBlock(block.id)}>Delete</Button>
+        </CardActions>}
 </Card>
   )
 }

@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux';
 import { setAudio } from '../redux/actions';
 import { useSelector } from 'react-redux';
 
-const AudioInput = () => {
+const AudioInput = ({data}) => {
     const dispatch = useDispatch();
-    const {audio} = useSelector(state => state.formdata)
+ 
   return (
     <Box mb={2}>
   <input
@@ -23,9 +23,9 @@ const AudioInput = () => {
       Upload Audio
     </Button>
   </label>
-  {audio && (
+  {data && (
     <Box mt={2} position="relative">
-      <audio controls src={URL.createObjectURL(audio)} />
+      <audio controls src={URL.createObjectURL(data)} />
       <IconButton
         color="error"
         onClick={() => dispatch(setAudio(null))}

@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Box, Breadcrumbs, Button, CircularProgress, FormControlLabel, Switch, Toolbar, Typography } from '@mui/material';
+import { Alert, AppBar, Box, Breadcrumbs, Button, CircularProgress, FormControlLabel, Snackbar, Switch, Toolbar, Typography } from '@mui/material';
 import {  Link, useNavigate } from 'react-router-dom';
 import Annotator from './Annotator';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux'; // Import the necessary action creators
-import { resetState , resetContent } from '../redux/actions';
 import UrlInput from './UrlInput/UrlInput';
 import outlineElement from '../utils/outlineElement';
 import removeOutlineFromElement from '../utils/removeOutline';
-import { removeAnnotatedBlock, setAnnotatedHtmlContent, toggleAnnotationMode } from '../redux/actions/annotationActions';
+import { addAnnotatedBlock, removeAnnotatedBlock, resetAnnotations, setAnnotatedHtmlContent, toggleAnnotationMode, updateAnnotatedBlock } from '../redux/actions/annotationActions';
 import { processHtml } from '../utils/processHtml';
+import { fetchFailure, fetchStart, fetchSuccess, resetState } from '../redux/actions/urlActions';
+import { extractApi } from '../apis/extractApis';
+import getDeviceType from '../utils/getDeviceType';
+import { resetRennarations } from '../redux/actions/rennarationActions';
 const Renarration = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,6 +20,9 @@ const Renarration = () => {
   const initialHtmlContent = useSelector(state => state.url.initialHtmlContent);
   const annotationHtmlContent = useSelector(state => state.annotation.htmlforAnnotation);
   const isFetching = useSelector(state => state.url.isFetching);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
   // const history = useSelector(state => state.history.history);
   const annotationMode = useSelector(state => state.annotation.mode); // Get the annotation mode from Redux state
   const [openDialog, setOpenDialog] = useState(false);
@@ -24,31 +30,19 @@ const Renarration = () => {
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
   
 useEffect(()=>{
+console.log(annotationMode)
+},[annotationMode,annotationHtmlContent])
 
-},[annotationMode])
-
-// Function to remove onclicks and hrefs when annotation mode is on
-// const processContentForAnnotation = (htmlContent) => {
- 
-
-//   const parser = new DOMParser();
-//   const doc = parser.parseFromString(htmlContent, 'text/html');
-//   const allElements = doc.querySelectorAll('*');
-
-//   allElements.forEach(el => {
-//     el.removeAttribute('onclick');
-//     el.removeAttribute('href');
-//     // Add more attributes to remove if necessary
-//   });
-
- 
-//   return doc;
-// };
 
 const handleAnnotationModeChange = () => {
   dispatch(toggleAnnotationMode()); // Dispatch toggle action
 };
-
+const handleSnackbarClose = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+  setSnackbarOpen(false);
+};
  
 
 
@@ -80,15 +74,25 @@ if(existingBlock){
   setCurrentBlockId(elementId); // Set the current block ID
 }
 };
-const handleNavigationClick =(event)=>{
+const handleNavigationClick =async(event)=>{
   if ( event.target.tagName === 'A') {
     const href = event.target.getAttribute('href');
     if (href) {
         // If the annotation mode is off and it's an anchor tag, treat href as new URL input
-     
+        console.log(inputValue)
+        dispatch(fetchStart());
+        await axios.post(extractApi, { url: href }, { headers: {'User-Agent':getDeviceType }}).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); dispatch(setAnnotatedHtmlContent(res.data)); }).catch(err => {
+          dispatch(fetchFailure(err.message)); setSnackbarMessage(errorMessage); // Update local snackbar message
+          setSnackbarOpen(true); // Open error snackbar
+          setInputValue('');
+        });
+      
      
          event.preventDefault(); // Prevent default action of the anchor tag
         return; // Skip the rest of the function
+    } else {
+      setSnackbarMessage("Invalid URL. Example: https://www.example.com");
+      setSnackbarOpen(true);
     }
 }
 }
@@ -108,7 +112,7 @@ const handleSave = (updatedContent) => {
 
   if (existingBlockIndex !== -1) {
     // Update existing block
-    dispatch(updateRenarrationBlock({
+    dispatch(updateAnnotatedBlock({
       ...annotatedBlocks[existingBlockIndex],
       content: updatedContent
       }));
@@ -117,25 +121,27 @@ const handleSave = (updatedContent) => {
     const newBlock = {
       content: updatedContent,
        id: currentBlockId || uuidv4() ,
-       image: null,
-  audio: null,
-  video: null,
-  description: null,
+       img: null,
+  aud: null,
+  vid: null,
+  desc: null,
+  rennarationStatus:false
     };
-    dispatch(addRenarrationBlock(newBlock));
+    dispatch(addAnnotatedBlock(newBlock));
 
     // Update the htmlContent to include the outline for the annotated element
-    const updatedHtmlContent = outlineElement(htmlContent, currentBlockId);
-    dispatch(updateHtmlContent(updatedHtmlContent));
+    const updatedHtmlContent = outlineElement(annotationHtmlContent, currentBlockId);
+    dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
 }
   setOpenDialog(false);
 };
 
 const handleExit = () => {
   if (window.confirm("Are you sure you want to exit Renarration?")) {
-    // dispatch(resetState()); 
-    // dispatch(resetHistory()); // Reset history
-    // dispatch(resetContent());// Dispatch the resetState action to clear Redux state
+   dispatch(resetState());
+   dispatch(resetAnnotations())
+   dispatch(resetRennarations())
+
     localStorage.clear(); // Clear local storage
     sessionStorage.clear(); // Clear session storage (if you use it)
     navigate('/'); // Navigate to the home page or any other page
@@ -176,7 +182,7 @@ const handleExit = () => {
                 ))}
             </Breadcrumbs> */}
       {!isFetching && annotationMode && (
-        <div  dangerouslySetInnerHTML={{ __html: annotationHtmlContent }} onClick={handleAnnotationClick}   onMouseOver={handleMouseOver}
+        <div  dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }} onClick={handleAnnotationClick}   onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut} />
       )}
       {!isFetching && !annotationMode && (
@@ -188,7 +194,27 @@ const handleExit = () => {
   content={clickedElementContent}
   onSave={handleSave}
 />
+<Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="error" sx={{ width: '100%', whiteSpace: 'pre-line' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
+      <Snackbar
+        open={mutationErrorSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setMutationErrorSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <Alert onClose={() => setMutationErrorSnackbarOpen(false)} severity="error" sx={{ width: '100%', whiteSpace: 'pre-line' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
