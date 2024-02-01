@@ -35,9 +35,10 @@ const EditRennarationBlock = () => {
   const handleFileChange = (mediaType, event) => {
     const file = event.target.files[0];
     if (file) {
-      setFormData({ ...formData, [mediaType]: file });
+        setFormData(prevFormData => ({ ...prevFormData, [mediaType]: file }));
     }
-  };
+};
+
 
   const handleCancelMedia = (mediaType) => {
     setFormData({ ...formData, [mediaType]: null });
