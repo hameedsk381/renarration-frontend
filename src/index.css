@@ -12,3 +12,35 @@ h1,h2,h3,h4,h5,h6{
 .hover-effect {
   outline: 2px solid green;
 }
+/* Base styles */
+.app-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f3f3f3;
+  padding: 10px;
+  margin-bottom: 7vh;
+}
+
+.app-bar-button {
+  color: inherit;
+  border: 1px solid;
+  padding: 8px 16px;
+  font-size: x-small;
+  margin-left: 10px;
+  border-radius: 4px;
+  text-transform: none; /* Optional: if you want to keep the button text casing as is */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .app-bar-button {
+      padding: 6px 12px; /* Smaller padding for smaller screens */
+      font-size: 10px; /* Smaller font size */
+      margin-left: 5px; /* Less margin */
+  }
+
+  .app-bar .switch-container {
+      margin-right: 10px; /* Adjust space around the switch */
+  }
+}

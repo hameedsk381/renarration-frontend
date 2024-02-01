@@ -13,6 +13,7 @@ import { fetchFailure, fetchStart, fetchSuccess, resetState } from '../redux/act
 import { extractApi } from '../apis/extractApis';
 import getDeviceType from '../utils/getDeviceType';
 import { resetRennarations } from '../redux/actions/rennarationActions';
+
 const AnnotationPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -154,25 +155,23 @@ const handleExit = () => {
   return (
     <>
  
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'Highlight', padding: '10px',marginBottom:"7vh" }}>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={annotationMode}
-            onChange={handleAnnotationModeChange}
-            color="primary"
-          />
-        }
+ <div className="app-bar">
+    <FormControlLabel
+        control={<Switch checked={annotationMode} onChange={handleAnnotationModeChange} color="primary" />}
         label="Annotation Mode"
-      />
-      
-        <Button color='inherit' variant='outlined' onClick={handleExit}>
-                        Exit Renarration
-                    </Button>
-       {annotatedBlocks.length !==0 &&  <Button color='inherit' variant='outlined' onClick={navigateToRenarrationBlocks}>
-          View Annotated Blocks
-        </Button>}
-      </div>
+    />
+    
+    <button className="app-bar-button" onClick={handleExit}>
+        Exit Renarration
+    </button>
+
+    {annotatedBlocks.length !== 0 && (
+        <button className="app-bar-button" onClick={navigateToRenarrationBlocks}>
+            View Renarration Blocks
+        </button>
+    )}
+</div>
+
       <UrlInput/>
       {/* <Breadcrumbs aria-label="breadcrumb">
                 {history.map((url, index) => (
