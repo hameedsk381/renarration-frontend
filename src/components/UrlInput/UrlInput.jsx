@@ -20,8 +20,6 @@ function UrlInput({ navigateTo }) {
   const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
   const progress = useSelector(state => state.url.progress);
   const isFetching = useSelector(state => state.url.isFetching); // Get state with useSelector
-  const initialHtmlContent = useSelector(state => state.url.htmlContent);
-  const annotatedHtmlContent = useSelector(state => state.annotation.htmlforAnnotation); // Get state with useSelector
   const errorMessage = useSelector(state => state.url.errorMessage); // Get state with useSelector
   const dispatch = useDispatch(); // Get dispatch function with useDispatch
 

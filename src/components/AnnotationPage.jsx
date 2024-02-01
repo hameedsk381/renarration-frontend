@@ -13,6 +13,7 @@ import { fetchFailure, fetchStart, fetchSuccess, resetState } from '../redux/act
 import { extractApi } from '../apis/extractApis';
 import getDeviceType from '../utils/getDeviceType';
 import { resetRennarations } from '../redux/actions/rennarationActions';
+import axios from 'axios';
 
 const AnnotationPage = () => {
   const dispatch = useDispatch();
@@ -75,28 +76,38 @@ if(existingBlock){
   setCurrentBlockId(elementId); // Set the current block ID
 }
 };
-const handleNavigationClick =async(event)=>{
-  if ( event.target.tagName === 'A') {
-    const href = event.target.getAttribute('href');
-    if (href) {
-        // If the annotation mode is off and it's an anchor tag, treat href as new URL input
-        console.log(inputValue)
-        dispatch(fetchStart());
-        await axios.post(extractApi, { url: href }, { headers: {'User-Agent':getDeviceType }}).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); dispatch(setAnnotatedHtmlContent(res.data)); }).catch(err => {
-          dispatch(fetchFailure(err.message)); setSnackbarMessage(errorMessage); // Update local snackbar message
-          setSnackbarOpen(true); // Open error snackbar
-          setInputValue('');
-        });
-      
-     
-         event.preventDefault(); // Prevent default action of the anchor tag
-        return; // Skip the rest of the function
-    } else {
-      setSnackbarMessage("Invalid URL. Example: https://www.example.com");
-      setSnackbarOpen(true);
-    }
-}
-}
+const handleNavigationClick = async (event) => {
+  // Check if the clicked element is an anchor tag
+  if (event.target.tagName === 'A') {
+      const href = event.target.getAttribute('href');
+
+      // If href exists and annotation mode is off, fetch new content
+      if (href) {
+          event.stopPropagation(); // Prevent default navigation
+          console.log("URL to fetch:", href);
+
+          try {
+              dispatch(fetchStart());
+              const response = await axios.post(extractApi, { url: href }, { headers: { 'User-Agent': getDeviceType() } });
+              dispatch(fetchSuccess(response.data));
+              dispatch(setAnnotatedHtmlContent(response.data));
+          } catch (error) {
+              dispatch(fetchFailure(error.message));
+              setSnackbarMessage("Failed to fetch content: " + error.message);
+              setSnackbarOpen(true);
+              setInputValue('');
+          }
+      } else {
+          // Handle invalid href
+          setSnackbarMessage("Invalid URL. Example: https://www.example.com");
+          setSnackbarOpen(true);
+      }
+  } else {
+      // If not an anchor tag or href is empty, let default behavior occur
+      console.log("Not an anchor tag or no href, default click behavior.");
+  }
+};
+
 
 const handleMouseOver = (event) => {
   // Prevent event from affecting parent elements
@@ -140,8 +151,7 @@ const handleSave = (updatedContent) => {
 const handleExit = () => {
   if (window.confirm("Are you sure you want to exit Renarration?")) {
    dispatch(resetState());
-   dispatch(resetAnnotations())
-   dispatch(resetRennarations())
+   dispatch(resetAnnotations());
 
     localStorage.clear(); // Clear local storage
     sessionStorage.clear(); // Clear session storage (if you use it)

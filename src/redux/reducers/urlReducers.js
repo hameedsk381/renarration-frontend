@@ -25,7 +25,6 @@ export const urlReducer = (state = initialState, action) => {
                 history: [...state.history, { url: action.payload.url, htmlContent: action.payload.htmlContent }]
             };
         case 'FETCH_FAILURE':
-            console.log(action.payload)
             return {
                 ...state,
                 isFetching: false,

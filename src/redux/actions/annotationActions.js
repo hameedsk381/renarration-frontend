@@ -34,6 +34,6 @@ export const updateAnnotatedBlock = (id, updatedBlock) => {
 };
 export const resetAnnotations = () => {
     return {
-        type: 'CLEAR_ANNOTATIONS'
+        type: 'RESET_ANNOTATIONS'
     };
 };
