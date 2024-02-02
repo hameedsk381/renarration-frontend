@@ -1,69 +1,219 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Card, CardContent, CardMedia, Typography, Grid, IconButton, Tooltip, Button, CardActions, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, Stepper, Step, StepLabel, TextField, Snackbar, Alert, Container, Paper, CardHeader } from '@mui/material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
+import { ArrowBack, NearMe } from '@mui/icons-material';
+import { resetState } from '../redux/actions/urlActions';
+import { resetAnnotations } from '../redux/actions/annotationActions';
+import { submitApi } from '../apis/extractApis';
+import axios from 'axios';
 
 const RenarrationList = () => {
-    const rennaratedBlocks = useSelector(state => 
+    const navigate = useNavigate();
+   
+    const renarratedBlocks = useSelector(state =>
         state.annotation.annotatedBlocks.filter(block => block.rennarationStatus === true)
     );
-    
-    useEffect(()=>{
-console.log(rennaratedBlocks);
 
-    },[rennaratedBlocks])
- const navigate = useNavigate();
+    const [activeStep, setActiveStep] = useState(0);
+    const [renarrationTitle, setRenarrationTitle] = useState('');
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMsg,setsnackbarMsg] = useState('');
+const dispatch = useDispatch();
+    const steps = ['Add Re-narration title', 'Submit Renarration'];
+
+    const handleNext = async() => {
+        if (!renarrationTitle.trim()) {
+            setSnackbarOpen(true);
+            setsnackbarMsg('Please give the title to renarration ')
+            return;
+        }
+        if (activeStep === steps.length - 1) {
+         
+            const formData = new FormData();
+
+            // Add renarration title to the form data
+            formData.append('renarrationTitle', renarrationTitle);
+        
+            // Add blocks to the form data
+            renarratedBlocks.forEach((block, index) => {
+                formData.append(`blocks[${index}][content]`, block.content);
+                formData.append(`blocks[${index}][id]`, block.id);
+                formData.append(`blocks[${index}][description]`, block.desc);
+        
+                // Append files if they exist
+                if (block.img) {
+                    formData.append(`blocks[${index}][image]`, block.img);
+                }
+                if (block.aud) {
+                    formData.append(`blocks[${index}][audio]`, block.aud);
+                }
+                if (block.vid) {
+                    formData.append(`blocks[${index}][video]`, block.vid);
+                }
+            });
+            try {
+                 // Send a POST request with the form data
+        const response = await axios.post(submitApi, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        console.log(response.data);
+        handleExit();
+        setSnackbarOpen(true);
+        setsnackbarMsg("Renarration submitted successfully")
+        setTimeout(() => navigate('/'), 3000);
+            } catch (error) {
+                setSnackbarOpen(true)
+                setsnackbarMsg('Error submitting renarration:', error.message);  
+                console.log(error)
+            }
+           
+        }
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+    const handleExit = () => {
+        dispatch(resetState());
+        dispatch(resetAnnotations());
+     
+         localStorage.clear(); // Clear local storage
+         sessionStorage.clear(); // Clear session storage (if you use it)
+      };
+    const getStepContent = (stepIndex) => {
+        const rennaratedBlocks = useSelector(state =>
+            state.annotation.annotatedBlocks.filter(block => block.rennarationStatus === true)
+        );
+
+        useEffect(() => {
+            console.log(rennaratedBlocks);
+
+        }, [rennaratedBlocks])
+        switch (stepIndex) {
+            case 0:
+                return (
+                    <Box>
+                        <TextField
+                            label="Renarration Title"
+                            value={renarrationTitle}
+                            onChange={(e) => setRenarrationTitle(e.target.value)}
+                            margin="normal"
+                            required
+                            fullWidth
+                        />
+                       
+                   
+                    </Box>
+                );
+            case 1:
+              
+                return (
+                    <Box>
+                       <Typography textAlign={'center'} variant='h4'>{renarrationTitle}</Typography>
+                       <Grid container p={3} spacing={2}>
+                        {rennaratedBlocks && rennaratedBlocks.map(block => (
+                            <Grid item key={block.id} xs={12} sm={6}  >
+                                <Card>
+                                <CardHeader
+        action={
+            <Button variant='outlined' size='small' endIcon={<NearMe/>} href={block.source} target='_blank'>source</Button>
+        }
+  subheader={new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+/>
+                                    <CardMedia>
+                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1 }}>
+                                            {extractMedia(block.content).map((src, index) => (
+                                                <Box
+                                                    key={index}
+                                                    component="img"
+                                                    sx={{
+                                                        width: '50%',
+                                                        height: 'auto',
+                                                        objectFit: 'cover',
+                                                        p: 0.5,
+                                                    }}
+                                                    src={src}
+                                                    alt={`Renarration image ${index + 1}`}
+                                                />
+                                            ))}
+
+                                        </Box>
+                                    </CardMedia>
+                                    <CardContent>
+                                        <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
+                                        <Paper variant='outlined' sx={{ p: 2, my: 3 }}>
+                                            {block.img && (
+                                                <Box component="img" src={URL.createObjectURL(block.img)} alt={`Renarration image`} sx={{ width: '50%', height: 'auto', objectFit: 'cover', p: 0.5 }} />
+                                            )}
+                                            <Typography my={2}>{block.desc}</Typography>
+                                            {block.aud && (
+                                                <audio controls src={URL.createObjectURL(block.aud)} style={{ marginBlock: "20px" }} />
+                                            )}
+                                            {block.vid && (
+                                                <video controls width="100%" src={URL.createObjectURL(block.vid)} style={{ marginBlock: "20px" }} />
+                                            )} </Paper>
+                                    </CardContent>
+
+                                </Card>
+                            </Grid>
+                        ))}
+                        </Grid>
+                </Box>
+                       
+                );
+            default:
+                return 'Unknown step';
+        }
+    };
 
     return (
-        <Box sx={{ flexGrow: 1, p: 2 }}>
-              <Button variant='contained' sx={{mb:3}} onClick={()=>{navigate('/create-rennaration')}}>Back to editing</Button>
-            <Grid container spacing={2}>
+        <>
 
-              
-                {rennaratedBlocks && rennaratedBlocks.map(block => (
-                    <Grid item key={block.id} xs={12} sm={6} md={4} >
-                     <Card>
-    <CardMedia>
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1 }}>
-        {extractMedia(block.content).map((src, index) => (
-            <Box
-                key={index}
-                component="img"
-                sx={{
-                    width: '50%',
-                    height: 'auto',
-                    objectFit: 'cover',
-                    p: 0.5,
-                }}
-                src={src}
-                alt={`Renarration image ${index + 1}`}
-            />
-        ))}
+            <Container variant='outlined' component={Paper} maxWidth='md' sx={{ width: '100%', p: 4,my:2,backgroundColor:"#f3f3f3" }}>
+                <Button startIcon={<ArrowBack />} variant='contained' sx={{ mb: 3 }} onClick={() => { navigate('/create-rennaration') }}>Back to editing</Button>
+                <Stepper activeStep={activeStep}>
+                    {steps.map((label, index) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
 
-    </Box>
-    </CardMedia>
-    <CardContent>
-        <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content)}} />
-       <Paper variant='outlined' sx={{p:2,my:3}}>
-   {block.img && (
-                                        <Box component="img" src={URL.createObjectURL(block.img)} alt={`Renarration image`} sx={{ width: '50%', height: 'auto', objectFit: 'cover', p: 0.5 }}/>
-                                    )}
-                                    <Typography my={2}>{block.desc}</Typography>
-                                    {block.aud && (
-                                        <audio controls src={URL.createObjectURL(block.aud)} style={{ marginBlock: "20px" }}/>
-                                    )}
-                                    {block.vid && (
-                                        <video controls width="100%" src={URL.createObjectURL(block.vid)} style={{ marginBlock: "20px" }}/>
-                                    )} </Paper>
-    </CardContent>
- 
-</Card>
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
+                <Box sx={{ mt: 2 }}>
+                    {getStepContent(activeStep)}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                        <Button
+                            color="inherit"
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                            sx={{ mr: 1 }}
+                        >
+                            Back
+                        </Button>
+                        <Box sx={{ flex: '1 1 auto' }} />
+                        <Button onClick={handleNext}>
+                            {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+                        </Button>
+                    </Box>
+                </Box>
+
+                <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                    <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                       {snackbarMsg}
+                    </Alert>
+                </Snackbar>
+            </Container>
+        </>
     );
 };
 

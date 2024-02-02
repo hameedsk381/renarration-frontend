@@ -9,6 +9,7 @@ import EditRennarationBlock from './components/EditRennarationBlock';
 import RennarationBlocks from './components/RennarationBlocks';
 import RenarrationList from './components/RennarationList';
 import AnnotationPage from './components/AnnotationPage';
+import Sweet from './components/Sweet';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/create-rennaration" element={<RennarationBlocks />} />
         <Route path="/edit-rennaration" element={<EditRennarationBlock />} />
         <Route path="/view-rennaration" element={<RenarrationList />} />
+        <Route path="/renarration-details" element={<Sweet />} />
       </Routes>
       {/* <SimpleBottomNavigation /> */}
 

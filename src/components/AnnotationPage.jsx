@@ -12,13 +12,15 @@ import { processHtml } from '../utils/processHtml';
 import { fetchFailure, fetchStart, fetchSuccess, resetState } from '../redux/actions/urlActions';
 import { extractApi } from '../apis/extractApis';
 import getDeviceType from '../utils/getDeviceType';
-import { resetRennarations } from '../redux/actions/rennarationActions';
 import axios from 'axios';
+import { removeOutlineFromOuterHtml } from '../utils/removeOutlineFromOuterHtml';
 
 const AnnotationPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const annotatedBlocks = useSelector(state => state.annotation.annotatedBlocks);
+  const history = useSelector(state=>state.url.history);
+  const currentUrl = useSelector(state=>state.url.currentUrl)
   const initialHtmlContent = useSelector(state => state.url.initialHtmlContent);
   const annotationHtmlContent = useSelector(state => state.annotation.htmlforAnnotation);
   const isFetching = useSelector(state => state.url.isFetching);
@@ -60,22 +62,21 @@ const handleAnnotationClick = (event) => {
   
   // Check if a block with this ID already exists
   existingBlock = annotatedBlocks.find(block => block.id === elementId);
-if(existingBlock){
-  dispatch(removeAnnotatedBlock(existingBlock.id));
-  
-  const updatedHtmlContent = removeOutlineFromElement(annotationHtmlContent,existingBlock.id);
-  dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
-  return;
-} else {
-  event.target.classList.remove('hover-effect');
-  const fullHtml = event.target.outerHTML;
+  if (existingBlock) {
+    dispatch(removeAnnotatedBlock(existingBlock.id));
+    const updatedHtmlContent = removeOutlineFromElement(annotationHtmlContent, existingBlock.id);
+    dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
+  } else {
+    event.target.classList.remove('hover-effect');
+    const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
 
- 
-  setClickedElementContent(fullHtml);
-  setOpenDialog(true);
-  setCurrentBlockId(elementId); // Set the current block ID
-}
+
+    setClickedElementContent(fullHtmlWithoutOutline);
+    setOpenDialog(true);
+    setCurrentBlockId(elementId); // Set the current block ID
+  }
 };
+
 const handleNavigationClick = async (event) => {
   // Check if the clicked element is an anchor tag
   if (event.target.tagName === 'A') {
@@ -137,7 +138,8 @@ const handleSave = (updatedContent) => {
   aud: null,
   vid: null,
   desc: null,
-  rennarationStatus:false
+  rennarationStatus:false,
+  source : currentUrl
     };
     dispatch(addAnnotatedBlock(newBlock));
 
@@ -184,9 +186,9 @@ const handleExit = () => {
 
       <UrlInput/>
       {/* <Breadcrumbs aria-label="breadcrumb">
-                {history.map((url, index) => (
-                    <Link key={index} color="inherit" to={url} onClick={(e) => e.preventDefault()}>
-                        {url}
+                {history && history.map((obj, index) => (
+                    <Link key={index} color="inherit"  onClick={handleNavigationClick}>
+                      {obj.url} 
                     </Link>
                 ))}
             </Breadcrumbs> */}

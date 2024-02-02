@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, IconButton, Typography } from '@mui/material'
+import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Typography } from '@mui/material'
 import React from 'react'
 import extractMedia from '../utils/extractMedia'
 import removeMedia from '../utils/removeMedia'
@@ -8,8 +8,8 @@ import removeOutlineFromElement from '../utils/removeOutline'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { removeAnnotatedBlock, setAnnotatedHtmlContent } from '../redux/actions/annotationActions'
-import { Delete } from '@mui/icons-material'
 import { removeRennaratedBlock } from '../redux/actions/rennarationActions'
+
 
 const RenarrationBlock = ({block,desc,noActions}) => {
     const navigate = useNavigate();
@@ -30,7 +30,7 @@ const RenarrationBlock = ({block,desc,noActions}) => {
     }
   return (
     <Card sx={{borderTop: block.rennarationStatus ? '4px solid green' : '4px solid red'}}>
-    <CardMedia>
+ <CardMedia>
     <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1 }}>
         {extractMedia(block.content).map((src, index) => (
             <Box
