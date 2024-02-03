@@ -6,7 +6,7 @@ import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
 import { ArrowBack, NearMe } from '@mui/icons-material';
 import { getAllRenarrations } from '../apis/extractApis';
-import RenarrationBlockSkeleton from './renarrationBlockSkeleton';
+import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
 
 const Sweet = () => {
     const location = useLocation();
