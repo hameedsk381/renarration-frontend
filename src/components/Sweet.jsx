@@ -5,6 +5,7 @@ import { Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
 import { ArrowBack, NearMe } from '@mui/icons-material';
+import { getAllRenarrations } from '../apis/extractApis';
 
 const Sweet = () => {
     const location = useLocation();
@@ -13,7 +14,7 @@ const Sweet = () => {
     const navigate = useNavigate();
     const getRennaration = async()=>{
         try {
-           await axios.get(`http://localhost:2000/renarrations/${renarrationId}`).then((res)=>{setRenarration(res.data);console.log(res.data)})
+           await axios.get(`${getAllRenarrations}/${renarrationId}`).then((res)=>{setRenarration(res.data);console.log(res.data)})
         } catch (error) {
            console.log(error)
         }
