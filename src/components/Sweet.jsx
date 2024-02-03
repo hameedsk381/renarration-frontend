@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, Paper, Typography } from '@mui/material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
 import { ArrowBack, NearMe } from '@mui/icons-material';
 import { getAllRenarrations } from '../apis/extractApis';
+import RenarrationBlockSkeleton from './renarrationBlockSkeleton';
 
 const Sweet = () => {
     const location = useLocation();
     const renarrationId = location.state; // Get renarration ID from the state
     const [renarration, setRenarration] = useState(null);
     const navigate = useNavigate();
+    
     const getRennaration = async()=>{
         try {
            await axios.get(`${getAllRenarrations}/${renarrationId}`).then((res)=>{setRenarration(res.data);console.log(res.data)})
@@ -23,6 +25,7 @@ const Sweet = () => {
        getRennaration();
        console.log(renarrationId)
        },[renarrationId])
+       const skeletons = Array.from({ length:  6 }, (_, index) => index);
     return renarration ? 
     <Box >
         <Button startIcon={<ArrowBack/>} sx={{m:4}} onClick={()=>{navigate('/')}} variant='contained'>Go Back</Button>
@@ -77,7 +80,14 @@ const Sweet = () => {
                         ))}
     </Grid>
     </Box>
-    : <CircularProgress/>;
+    :<Grid container spacing={2}  p={3}>
+         {skeletons.map((_, index) => (
+       <Grid item lg={3} md={4} xs={12}>
+       <RenarrationBlockSkeleton key={index} />
+       </Grid>
+      ))}
+
+    </Grid>;
 };
 
 export default Sweet;
