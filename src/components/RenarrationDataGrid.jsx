@@ -10,7 +10,7 @@ const RenarrationDataGrid = () => {
   const [renarrations,setRenarrations] = useState([]);
 const getRennarations = async()=>{
  try {
-    await axios.get('http://localhost:2000/renarrations').then((res)=>{setRenarrations(res.data);console.log(res.data)})
+    await axios.get('https://renarration-api.onrender.com/renarrations').then((res)=>{setRenarrations(res.data);console.log(res.data)})
  } catch (error) {
     console.log(error)
  }
