@@ -4,13 +4,14 @@ import { Button, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
+import { getAllRenarrations } from '../apis/extractApis';
 
 
 const RenarrationDataGrid = () => {
   const [renarrations,setRenarrations] = useState([]);
 const getRennarations = async()=>{
  try {
-    await axios.get('https://renarration-api.onrender.com/renarrations').then((res)=>{setRenarrations(res.data);console.log(res.data)})
+    await axios.get(getAllRenarrations).then((res)=>{setRenarrations(res.data);console.log(res.data)})
  } catch (error) {
     console.log(error)
  }
