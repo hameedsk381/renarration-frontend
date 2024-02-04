@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, Paper, Typography } from '@mui/material';
 import extractMedia from '../utils/extractMedia';
@@ -9,8 +9,7 @@ import { getAllRenarrations } from '../apis/extractApis';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
 
 const Sweet = () => {
-    const location = useLocation();
-    const renarrationId = location.state; // Get renarration ID from the state
+    const renarrationId = useParams().id;
     const [renarration, setRenarration] = useState(null);
     const navigate = useNavigate();
 
@@ -86,7 +85,7 @@ const Sweet = () => {
             <Grid container spacing={2} p={3}>
 
                 {skeletons.map((_, index) => (
-                    <Grid item lg={3} md={4} xs={12}>
+                    <Grid key={index} item lg={3} md={4} xs={12}>
                         <RenarrationBlockSkeleton key={index} />
                     </Grid>
                 ))}

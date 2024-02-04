@@ -42,7 +42,7 @@ const dispatch = useDispatch();
                 formData.append(`blocks[${index}][content]`, block.content);
                 formData.append(`blocks[${index}][id]`, block.id);
                 formData.append(`blocks[${index}][description]`, block.desc);
-        
+                formData.append(`blocks[${index}][source]`, block.source);
                 // Append files if they exist
                 if (block.img) {
                     formData.append(`blocks[${index}][image]`, block.img);
@@ -171,8 +171,6 @@ const dispatch = useDispatch();
                 </Box>
                        
                 );
-            default:
-                return 'Unknown step';
         }
     };
 

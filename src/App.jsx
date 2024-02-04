@@ -24,7 +24,7 @@ function App() {
         <Route path="/create-rennaration" element={<RennarationBlocks />} />
         <Route path="/edit-rennaration" element={<EditRennarationBlock />} />
         <Route path="/view-rennaration" element={<RenarrationList />} />
-        <Route path="/renarration-details" element={<Sweet />} />
+        <Route path="/renarration-details/:id" element={<Sweet />} />
       </Routes>
       {/* <SimpleBottomNavigation /> */}
 

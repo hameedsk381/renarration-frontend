@@ -25,7 +25,7 @@ const RenarrationDataGrid = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigate('/renarration-details', { state: params.row._id })}
+          onClick={() => navigate(`/renarration-details/${params.row._id}`, { state: params.row._id })}
         >
           View
         </Button>
