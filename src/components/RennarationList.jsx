@@ -116,7 +116,7 @@ const dispatch = useDispatch();
                     <Button variant="contained" color="primary" startIcon={<ArrowBack />} onClick={()=>{ navigate('/re-narrate')}}>
                         Back to Annotate
                     </Button>
-                   {annotatedBlocks.length !== 0 &&  <Button variant='contained' onClick={()=>{navigate('/view-rennaration')}} endIcon={<ArrowForward/>}>View Re-narration</Button>}
+                   {/* {annotatedBlocks.length !== 0 &&  <Button variant='contained' onClick={()=>{navigate('/view-rennaration')}} endIcon={<ArrowForward/>}>View Re-narration</Button>} */}
                     </Stack>
                     <Grid container spacing={4} sx={{ marginTop: 2 }}>
                         {annotatedBlocks && annotatedBlocks.map(block => (
