@@ -1,3 +1,4 @@
-export const  extractApi = 'https://renarration-api.onrender.com/download'
-export const submitApi = 'https://renarration-api.onrender.com/create-renarration'
-export const getAllRenarrations = 'https://renarration-api.onrender.com/renarrations'
+export const  extractApi = 'http://localhost:2000/download'
+export const submitApi = 'http://localhost:2000/create-renarration'
+export const getAllRenarrations = 'http://localhost:2000/renarrations'
+export const updateApi = 'http://localhost:2000/create-renarration'

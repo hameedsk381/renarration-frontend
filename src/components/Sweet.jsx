@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, Paper, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, Paper, Stack, Typography } from '@mui/material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
-import { ArrowBack, NearMe } from '@mui/icons-material';
+import { ArrowBack, ArrowForward, Edit, NearMe } from '@mui/icons-material';
 import { getAllRenarrations } from '../apis/extractApis';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
+import SharingIdModal from './SharingIdModal';
+import SharingIDModal from './SharingIdModal';
 
 const Sweet = () => {
     const renarrationId = useParams().id;
     const [renarration, setRenarration] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSharingIdIncorrect, setIsSharingIdIncorrect] = useState(false);
+  const [resMessage,setresMessage] = useState('')
+
     const navigate = useNavigate();
 
     const getRennaration = async () => {
@@ -20,6 +26,28 @@ const Sweet = () => {
             console.log(error)
         }
     }
+
+   
+    const handleEditClick = () => {
+        setIsModalOpen(true);
+        setIsSharingIdIncorrect(false);
+    };
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+    };
+    const handleModalSubmit = async (sharingId) => {
+        try {
+            const response = await axios.get(`http://localhost:2000/verify-sharing/${sharingId}`);
+const getRenarration = await axios.get(`http://localhost:2000/renarrations/${response.data}`);
+            navigate(`/create-renarration`);
+            
+      
+        } catch (error) {
+            console.error('Error verifying sharing ID:', error);
+            setIsSharingIdIncorrect(true);
+            setresMessage(error.response.data)
+        }
+    };
     useEffect(() => {
         getRennaration();
         console.log(renarrationId)
@@ -27,12 +55,15 @@ const Sweet = () => {
     const skeletons = Array.from({ length: 6 }, (_, index) => index);
     return renarration ?
         <Box >
+            <Stack direction={'row'} justifyContent={'space-between'}>
             <Button startIcon={<ArrowBack />} sx={{ m: 4 }} onClick={() => { navigate('/') }} variant='contained'>Go Back</Button>
+            <Button endIcon={<Edit />} sx={{ m: 4 }} onClick={handleEditClick} variant='contained'>Edit this Renarration</Button>
+            </Stack>
             <Typography textAlign={'center'} variant='h4'>{renarration.renarrationTitle}</Typography>
             <Grid container maxWidth={'lg'} spacing={2} p={4}>
 
-                {renarration.blocks.map(block => (
-                    <Grid item key={block._id} xs={12} lg={4} >
+                {renarration.blocks.map((block,index) => (
+                    <Grid item key={index} xs={12} lg={4} >
                         <Card>
                             <CardHeader
                                 action={
@@ -78,6 +109,14 @@ const Sweet = () => {
                     </Grid>
                 ))}
             </Grid>
+            <SharingIDModal
+                open={isModalOpen}
+                onClose={handleModalClose}
+                onSubmit={handleModalSubmit}
+                response={resMessage}
+                idVerifyStatus = {isSharingIdIncorrect}
+            />
+       
         </Box>
         :
         <>
@@ -91,6 +130,7 @@ const Sweet = () => {
                 ))}
 
             </Grid>
+
         </>
 
 };

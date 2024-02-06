@@ -1,10 +1,12 @@
-import { ADD_ANNOTATED_BLOCK, REMOVE_ANNOTATED_BLOCK, RESET_ANNOTATIONS, SET_ANNOTATED_HTML_CONTENT, TOGGLE_ANNOTATION_MODE, UPDATE_ANNOTATED_BLOCK } from "../actions/annotationActions";
+import { ADD_ANNOTATED_BLOCK, ADD_ANNOTATED_BLOCKS, REMOVE_ANNOTATED_BLOCK, RESET_ANNOTATIONS, SET_ANNOTATED_HTML_CONTENT, TOGGLE_ANNOTATION_MODE, UPDATE_ANNOTATED_BLOCK } from "../actions/annotationActions";
 
 
 const initialAnnState = {
     mode: false,
     htmlforAnnotation: null,
     annotatedBlocks: [],
+    updationStatus : false,
+    updationId : null
 };
 
 const annotationReducer = (state = initialAnnState, action) => {
@@ -36,6 +38,10 @@ const annotationReducer = (state = initialAnnState, action) => {
                 ...state,
                 annotatedBlocks: state.annotatedBlocks.filter(block => block.id !== action.payload)
             };
+        case ADD_ANNOTATED_BLOCKS:
+            return {
+...state,annotatedBlocks : action.payload.blocks,updationId:action.payload.id,updationStatus:action.payload.status
+            }
             case RESET_ANNOTATIONS:
                 return initialAnnState;
         default:

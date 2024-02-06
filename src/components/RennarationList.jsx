@@ -41,17 +41,18 @@ const dispatch = useDispatch();
             renarratedBlocks.forEach((block, index) => {
                 formData.append(`blocks[${index}][content]`, block.content);
                 formData.append(`blocks[${index}][id]`, block.id);
-                formData.append(`blocks[${index}][description]`, block.desc);
+                formData.append(`blocks[${index}][desc]`, block.desc);
                 formData.append(`blocks[${index}][source]`, block.source);
+                formData.append(`blocks[${index}][rennarationStatus]`, true);
                 // Append files if they exist
                 if (block.img) {
-                    formData.append(`blocks[${index}][image]`, block.img);
+                    formData.append(`blocks[${index}][img]`, block.img);
                 }
                 if (block.aud) {
-                    formData.append(`blocks[${index}][audio]`, block.aud);
+                    formData.append(`blocks[${index}][aud]`, block.aud);
                 }
                 if (block.vid) {
-                    formData.append(`blocks[${index}][video]`, block.vid);
+                    formData.append(`blocks[${index}][vid]`, block.vid);
                 }
             });
             try {

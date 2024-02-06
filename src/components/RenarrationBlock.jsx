@@ -50,7 +50,7 @@ const RenarrationBlock = ({block,desc,noActions}) => {
     </CardMedia>
     <CardContent sx={{ maxHeight: '200px', overflowY: 'auto' }}>
     <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
-    <Typography>{desc}</Typography>
+    {/* <Typography>{desc}</Typography> */}
 </CardContent>
 
  { !noActions &&  <CardActions>
