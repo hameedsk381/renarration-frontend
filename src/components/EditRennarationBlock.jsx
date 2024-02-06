@@ -34,11 +34,15 @@ const EditRennarationBlock = () => {
 
   const handleFileChange = (mediaType, event) => {
     const file = event.target.files[0];
+    
     if (file) {
-        setFormData(prevFormData => ({ ...prevFormData, [mediaType]: file }));
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setFormData(prevFormData => ({ ...prevFormData, [mediaType]: e.target.result }));
+        };
+        reader.readAsDataURL(file);
     }
 };
-
 
   const handleCancelMedia = (mediaType) => {
     setFormData({ ...formData, [mediaType]: null });
@@ -126,6 +130,7 @@ const UploadInput = ({ type, icon, formData, handleFileChange, handleCancelMedia
         multiple
         type="file"
         onChange={(e) => handleFileChange(type, e)}
+        size={100000000} // Allow max of 100mb input
       />
       <label htmlFor={`raised-button-file-${type}`}>
         <Button variant="contained" component="span" startIcon={icon}>
@@ -134,9 +139,9 @@ const UploadInput = ({ type, icon, formData, handleFileChange, handleCancelMedia
       </label>
       {formData[type] && (
         <Box mt={2} position="relative">
-          {type === 'image' && <img src={URL.createObjectURL(formData[type])} alt="Preview" width="100%" />}
-          {type === 'audio' && <audio controls src={URL.createObjectURL(formData[type])} />}
-          {type === 'video' && <video controls width="100%" src={URL.createObjectURL(formData[type])} />}
+          {type === 'image' && <img src={formData[type]} alt="Preview" width="100%" />}
+          {type === 'audio' && <audio controls src={formData[type]} />}
+          {type === 'video' && <video controls width="100%" src={formData[type]} />}
           <IconButton
             color="error"
             onClick={() => handleCancelMedia(type)}

@@ -16,7 +16,6 @@ export const ADD_ANNOTATED_BLOCK = 'ADD_ANNOTATED_BLOCK';
 export const REMOVE_ANNOTATED_BLOCK = 'REMOVE_ANNOTATED_BLOCK';
 export const UPDATE_ANNOTATED_BLOCK = 'UPDATE_ANNOTATED_BLOCK';
 export const RESET_ANNOTATIONS = 'RESET_ANNOTATIONS';
-export const ADD_ANNOTATED_BLOCKS = 'ADD_ANNOTATED_BLOCKS'
 // Action Creators
 export const addAnnotatedBlock = (block) => ({
     type: ADD_ANNOTATED_BLOCK,
@@ -33,10 +32,6 @@ export const updateAnnotatedBlock = (id, updatedBlock) => {
         payload: { id, ...updatedBlock }
     };
 };
-export const addAnnotatedBlocks = (updationData) => ({
-    type: ADD_ANNOTATED_BLOCKS,
-    payload: updationData,
-});
 export const resetAnnotations = () => {
     return {
         type: 'RESET_ANNOTATIONS'

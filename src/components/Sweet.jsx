@@ -38,8 +38,7 @@ const Sweet = () => {
     const handleModalSubmit = async (sharingId) => {
         try {
             const response = await axios.get(`http://localhost:2000/verify-sharing/${sharingId}`);
-const getRenarration = await axios.get(`http://localhost:2000/renarrations/${response.data}`);
-            navigate(`/create-renarration`);
+            navigate(`/update-renarration`,{state:response.data});
             
       
         } catch (error) {
@@ -94,14 +93,14 @@ const getRenarration = await axios.get(`http://localhost:2000/renarrations/${res
                                 <Paper variant='outlined' sx={{ p: 2, my: 3 }}>
                                     <Typography>{block.description}</Typography>
                                     {block.img && (
-                                        <Box component="img" src={URL.createObjectURL(block.img)} alt={`Renarration image`} sx={{ width: '50%', height: 'auto', objectFit: 'cover', p: 0.5 }} />
+                                        <Box component="img" src={(block.img)} alt={`Renarration image`} sx={{ width: '50%', height: 'auto', objectFit: 'cover', p: 0.5 }} />
                                     )}
                                     <Typography my={2}>{block.desc}</Typography>
                                     {block.aud && (
-                                        <audio controls src={URL.createObjectURL(block.aud)} style={{ marginBlock: "20px" }} />
+                                        <audio controls src={(block.aud)} style={{ marginBlock: "20px" }} />
                                     )}
                                     {block.vid && (
-                                        <video controls width="100%" src={URL.createObjectURL(block.vid)} style={{ marginBlock: "20px" }} />
+                                        <video controls width="100%" src={(block.vid)} style={{ marginBlock: "20px" }} />
                                     )} </Paper>
                             </CardContent>
 

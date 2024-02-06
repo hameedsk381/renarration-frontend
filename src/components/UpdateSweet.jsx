@@ -1,13 +1,14 @@
 import { Button, Container, Grid, Stack, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
-import {useNavigate } from 'react-router-dom'
+import {useLocation, useNavigate } from 'react-router-dom'
 import RenarrationBlock from './RenarrationBlock';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 
-const RennarationBlocks = () => {
-    const navigate = useNavigate();
-    const {annotatedBlocks} = useSelector(state=>state.annotation);
+const UpdateSweet = () => {
+    
+    const data = useLocation();
+    const annotatedBlocks = data.state;
     useEffect(()=>{
 console.log(annotatedBlocks)
     },[])
@@ -34,4 +35,4 @@ console.log(annotatedBlocks)
   )
 }
 
-export default RennarationBlocks
+export default UpdateSweet
