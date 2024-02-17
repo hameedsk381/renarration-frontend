@@ -6,6 +6,8 @@ import { ArrowBack, Audiotrack, Cancel, Image, VideoLibraryOutlined } from '@mui
 import RenarrationBlock from './RenarrationBlock';
 import Recording from './Recording';
 import { updateAnnotatedBlock } from '../redux/actions/annotationActions';
+import { serverApi, uploadFileApi } from '../apis/extractApis';
+import axios from 'axios';
 
 const EditRennarationBlock = () => {
   const location = useLocation();
@@ -23,7 +25,7 @@ const EditRennarationBlock = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [updateSnackbarOpen, setUpdateSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   useEffect(() => {
     console.log(selectedBlock);
   }, [selectedBlock]);
@@ -32,17 +34,26 @@ const EditRennarationBlock = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (mediaType, event) => {
+  const handleFileChange = async (mediaType, event) => {
     const file = event.target.files[0];
-    
+
     if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            setFormData(prevFormData => ({ ...prevFormData, [mediaType]: e.target.result }));
-        };
-        reader.readAsDataURL(file);
+      const formDataMedia = new FormData();
+      formDataMedia.append('file', file);
+
+      try {
+        const response = await axios.post(uploadFileApi, formDataMedia, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        console.log(response);
+        setFormData(prevFormData => ({ ...prevFormData, [mediaType]: `${serverApi}/${response.data}` }));
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
     }
-};
+  };
 
   const handleCancelMedia = (mediaType) => {
     setFormData({ ...formData, [mediaType]: null });
@@ -62,21 +73,21 @@ const EditRennarationBlock = () => {
       aud: formData.audio,
       vid: formData.video,
       img: formData.image,
-      rennarationStatus : true
-  }));
-  setSnackbarMessage('Renarration block updated successfully!');
-  setUpdateSnackbarOpen(true);
-   
-  setTimeout(() => {
-    navigate('/create-rennaration');
-}, 3000);
+      rennarationStatus: true
+    }));
+    setSnackbarMessage('Renarration block updated successfully!');
+    setUpdateSnackbarOpen(true);
+
+    setTimeout(() => {
+      navigate('/create-rennaration');
+    }, 3000);
   };
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') return;
     setSnackbarOpen(false);
     setUpdateSnackbarOpen(false);
-};
+  };
 
   return (
     <Container maxWidth='md' sx={{ my: 2, p: 2 }}>
@@ -112,10 +123,10 @@ const EditRennarationBlock = () => {
         </Alert>
       </Snackbar>
       <Snackbar open={updateSnackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
@@ -151,7 +162,7 @@ const UploadInput = ({ type, icon, formData, handleFileChange, handleCancelMedia
           </IconButton>
         </Box>
       )}
-      
+
     </Box>
   );
 };
