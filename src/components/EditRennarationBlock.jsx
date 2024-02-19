@@ -54,7 +54,6 @@ const EditRennarationBlock = () => {
       }
     }
   };
-
   const handleCancelMedia = (mediaType) => {
     setFormData({ ...formData, [mediaType]: null });
   };

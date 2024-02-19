@@ -24,7 +24,7 @@ The idea of the re-narration Web is to provide a person visiting a Web page, a c
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
           {'© '}
           <Link color="inherit" href="https://yourwebsite.com/">
-            Your Website
+            SWeets
           </Link>{' '}
           {new Date().getFullYear()}
           {'.'}
