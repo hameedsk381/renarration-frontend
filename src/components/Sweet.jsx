@@ -92,15 +92,15 @@ const Sweet = () => {
                                 <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
                                 <Paper variant='outlined' sx={{ p: 2, my: 3 }}>
                                     <Typography>{block.description}</Typography>
-                                    {block.img && (
-                                        <Box component="img" src={(block.img)} alt={`Renarration image`} sx={{ width: '50%', height: 'auto', objectFit: 'cover', p: 0.5 }} />
+                                    {block.image && (
+                                        <Box component="img" src={(block.image)} alt={`Renarration image`} sx={{ width: '50%', height: 'auto', objectFit: 'cover', p: 0.5 }} />
                                     )}
                                     <Typography my={2}>{block.desc}</Typography>
-                                    {block.aud && (
-                                        <audio controls src={(block.aud)} style={{ marginBlock: "20px" }} />
+                                    {block.audio && (
+                                        <audio controls src={(block.audio)} style={{ marginBlock: "20px" }} />
                                     )}
-                                    {block.vid && (
-                                        <video controls width="100%" src={(block.vid)} style={{ marginBlock: "20px" }} />
+                                    {block.video && (
+                                        <video controls width="100%" src={(block.video)} style={{ marginBlock: "20px" }} />
                                     )} </Paper>
                             </CardContent>
 
