@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, Stepper, Step, StepLabel, TextField, Snackbar, Alert, Container, Paper, CardHeader, Stack } from '@mui/material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
-import { ArrowBack, ArrowForward, NearMe } from '@mui/icons-material';
+import { ArrowBack, NearMe } from '@mui/icons-material';
 import { resetState } from '../redux/actions/urlActions';
 import { resetAnnotations } from '../redux/actions/annotationActions';
 import { submitApi } from '../apis/extractApis';
@@ -34,36 +34,26 @@ const dispatch = useDispatch();
                 setsnackbarMsg('Please give the title to renarration ')
                 return;
             }
-            const formData = new FormData();
+            const requestBody = {
+                renarrationTitle,
+                blocks: renarratedBlocks.map((block) => ({
+                    content: block.content,
+                    id: block.id,
+                    desc: block.desc,
+                    source: block.source,
+                    rennarationStatus: true,
+                    image: block.img,
+                    audio: block.aud,
+                    video: block.vid
+                }))
+            };
 
-            // Add renarration title to the form data
-            formData.append('renarrationTitle', renarrationTitle);
-        
-            // Add blocks to the form data
-            renarratedBlocks.forEach((block, index) => {
-                formData.append(`blocks[${index}][content]`, block.content);
-                formData.append(`blocks[${index}][id]`, block.id);
-                formData.append(`blocks[${index}][desc]`, block.desc);
-                formData.append(`blocks[${index}][source]`, block.source);
-                formData.append(`blocks[${index}][rennarationStatus]`, true);
-                // Append files if they exist
-                if (block.img) {
-                    formData.append(`blocks[${index}][img]`, block.img);
-                }
-                if (block.aud) {
-                    formData.append(`blocks[${index}][aud]`, block.aud);
-                }
-                if (block.vid) {
-                    formData.append(`blocks[${index}][vid]`, block.vid);
-                }
-            });
             try {
-                 // Send a POST request with the form data
-        const response = await axios.post(submitApi, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+                const response = await axios.post(submitApi, requestBody, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
         console.log(response.data);
         handleExit();
         setSnackbarOpen(true);
