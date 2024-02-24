@@ -23,7 +23,7 @@ const Sweet = () => {
         try {
             await axios.get(`${getAllRenarrations}/${renarrationId}`).then((res) => { setRenarration(res.data); console.log(res.data) })
         } catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 
@@ -42,14 +42,14 @@ const Sweet = () => {
             
       
         } catch (error) {
-            console.error('Error verifying sharing ID:', error);
+            // console.error('Error verifying sharing ID:', error);
             setIsSharingIdIncorrect(true);
             setresMessage(error.response.data)
         }
     };
     useEffect(() => {
         getRennaration();
-        console.log(renarrationId)
+        // console.log(renarrationId)
     }, [renarrationId])
     const skeletons = Array.from({ length: 6 }, (_, index) => index);
     return renarration ?

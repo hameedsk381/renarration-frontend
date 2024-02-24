@@ -3,13 +3,13 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import {useNavigate } from 'react-router-dom'
 import RenarrationBlock from './RenarrationBlock';
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
 
 const AnnotatedBlocks = () => {
     const navigate = useNavigate();
     const {annotatedBlocks} = useSelector(state=>state.annotation);
     useEffect(()=>{
-console.log(annotatedBlocks)
+// console.log(annotatedBlocks)
     },[])
   return (
     <Container maxWidth="lg">

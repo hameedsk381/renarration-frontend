@@ -5,19 +5,19 @@ function outlineElement(htmlString, dataId, outlineStyle = '2px solid red') {
   
     // Find the element with the specific data-id
     const targetElement = doc.querySelector(`[data-id="${dataId}"]`);
-  console.log(targetElement)
+  // console.log(targetElement)
     // If the element is found, modify its style to add an outline
     if (targetElement) {
-      console.log("element found")
+      // console.log("element found")
         targetElement.style.outline = outlineStyle;
-        console.log(`added outlined to element ${targetElement.tagName}`)
+        // console.log(`added outlined to element ${targetElement.tagName}`)
     } else {
-      console.log("element not found")
+      // console.log("element not found")
     }
     // Serialize the DOM structure back into an HTML string
     const serializer = new XMLSerializer();
     const modifiedHtmlString = serializer.serializeToString(doc);
-  console.log(modifiedHtmlString);
+  // console.log(modifiedHtmlString);
     return modifiedHtmlString;
   }
   export default outlineElement;

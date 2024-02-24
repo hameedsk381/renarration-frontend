@@ -34,7 +34,7 @@ const AnnotationPage = () => {
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
   
 useEffect(()=>{
-console.log(annotationMode)
+// console.log(annotationMode)
 },[annotationMode,annotationHtmlContent])
 
 
@@ -85,7 +85,7 @@ const handleNavigationClick = async (event) => {
       // If href exists and annotation mode is off, fetch new content
       if (href) {
           event.stopPropagation(); // Prevent default navigation
-          console.log("URL to fetch:", href);
+          // console.log("URL to fetch:", href);
 
           try {
               dispatch(fetchStart());
@@ -105,7 +105,7 @@ const handleNavigationClick = async (event) => {
       }
   } else {
       // If not an anchor tag or href is empty, let default behavior occur
-      console.log("Not an anchor tag or no href, default click behavior.");
+      // console.log("Not an anchor tag or no href, default click behavior.");
   }
 };
 

@@ -27,7 +27,7 @@ const Recording = () => {
 
                 mediaRecorder.start();
             } catch (err) {
-                console.error('Error accessing audio devices:', err);
+                // console.error('Error accessing audio devices:', err);
             }
         } else {
             alert('Audio recording is not supported in this browser.');

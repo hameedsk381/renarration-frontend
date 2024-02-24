@@ -15,7 +15,7 @@ export const useFetchAndProcessContent = (urlToDownload) => {
 
   const mutation = useMutation(
     (urlToDownload) => {
-      console.log("started fetching");
+      // console.log("started fetching");
       dispatch(fetchHtmlStart()); // Dispatch action with useDispatch
 
       return axios.post('http://localhost:2000/download', { url: urlToDownload }, {
@@ -28,7 +28,7 @@ export const useFetchAndProcessContent = (urlToDownload) => {
     {
       onSuccess: (response) => {
         dispatch(fetchHtmlSuccess(response.data)); // Dispatch action with useDispatch
-        console.log('Received HTML content:', response.data);
+        // console.log('Received HTML content:', response.data);
         // navigate(navigateTo); // You might want to pass a callback instead of using navigate here
 
         dispatch(resetProgress()); // Reset progress

@@ -12,7 +12,7 @@ function removeOutlineFromElement(htmlString, dataId) {
             el.style.outline = ''; // Remove the outline style from all elements
         });
     }
-console.log(`deleted block ${dataId}`)
+// console.log(`deleted block ${dataId}`)
     const serializer = new XMLSerializer();
     const modifiedHtmlString = serializer.serializeToString(doc);
     return modifiedHtmlString;

@@ -54,7 +54,7 @@ const dispatch = useDispatch();
                         'Content-Type': 'application/json'
                     }
                 });
-        console.log(response.data);
+        // console.log(response.data);
         handleExit();
         setSnackbarOpen(true);
         setsnackbarMsg("Renarration submitted successfully")
@@ -62,7 +62,7 @@ const dispatch = useDispatch();
             } catch (error) {
                 setSnackbarOpen(true)
                 setsnackbarMsg('Error submitting renarration:', error.message);  
-                console.log(error)
+                // console.log(error)
             }
            
         }
@@ -91,7 +91,7 @@ const dispatch = useDispatch();
         );
 
         useEffect(() => {
-            console.log(rennaratedBlocks);
+            // console.log(rennaratedBlocks);
 
         }, [rennaratedBlocks])
         switch (stepIndex) {
@@ -109,11 +109,15 @@ const dispatch = useDispatch();
                    {/* {annotatedBlocks.length !== 0 &&  <Button variant='contained' onClick={()=>{navigate('/view-rennaration')}} endIcon={<ArrowForward/>}>View Re-narration</Button>} */}
                     </Stack>
                     <Grid container spacing={4} sx={{ marginTop: 2 }}>
-                        {annotatedBlocks && annotatedBlocks.map(block => (
-                            <Grid item key={block.id} xs={12} md={6} lg={4}>
-                               <RenarrationBlock block={block}/>
-                            </Grid>
-                        ))}
+                        {annotatedBlocks.length === 0 ? (
+                            navigate('/re-narrate')
+                        ) : (
+                            annotatedBlocks.map(block => (
+                                <Grid item key={block.id} xs={12} md={6} lg={4}>
+                                    <RenarrationBlock block={block}/>
+                                </Grid>
+                            ))
+                        )}
                     </Grid>
                 </Container>
                 );

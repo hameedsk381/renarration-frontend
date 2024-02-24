@@ -66,7 +66,7 @@ function UrlInput({ navigateTo }) {
 
   const handleNavigate = async () => {
     if (isValidUrl) {
-      console.log(inputValue)
+      // console.log(inputValue)
       dispatch(fetchStart());
       await axios.post(extractApi, { url: inputValue }, { headers: getDeviceType }).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); dispatch(setAnnotatedHtmlContent(res.data)); navigate(navigateTo); }).catch(err => {
         dispatch(fetchFailure(err.message)); setSnackbarMessage(errorMessage); // Update local snackbar message

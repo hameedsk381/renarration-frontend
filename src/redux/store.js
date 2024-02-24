@@ -12,7 +12,7 @@ const loadState = () => {
         }
         return JSON.parse(serializedState);
     } catch (err) {
-        console.error('Error loading state:', err);
+        // console.error('Error loading state:', err);
         return undefined;
     }
 };
@@ -23,7 +23,7 @@ const saveState = (state) => {
         const serializedState = JSON.stringify(state);
         localStorage.setItem('state', serializedState);
     } catch (err) {
-        console.error('Error saving state:', err);
+        // console.error('Error saving state:', err);
         // Ignore write errors or handle them in a way you prefer
     }
 };

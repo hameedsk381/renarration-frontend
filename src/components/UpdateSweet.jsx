@@ -10,7 +10,7 @@ const UpdateSweet = () => {
     const data = useLocation();
     const annotatedBlocks = data.state;
     useEffect(()=>{
-console.log(annotatedBlocks)
+// console.log(annotatedBlocks)
     },[])
   return (
     <Container maxWidth="lg">
