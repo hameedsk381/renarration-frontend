@@ -1,5 +1,7 @@
-export const  extractApi = 'http://localhost:5000/download'
-export const submitApi = 'http://localhost:5000/sweets/create-renarration'
-export const getAllRenarrations = 'http://localhost:5000/sweets/renarrations'
-export const uploadFileApi = 'http://localhost:5000/upload'
-export const serverApi = 'http://localhost:5000'
+import dotenv from 'dotenv';
+dotenv.config();
+export const serverApi = process.env.SERVER_URL
+export const extractApi = `${serverApi}/download`;
+export const submitApi = `${serverApi}/sweets/create-renarration`;
+export const getAllRenarrations = `${serverApi}/sweets/renarrations`;
+export const uploadFileApi = `${serverApi}/upload`;

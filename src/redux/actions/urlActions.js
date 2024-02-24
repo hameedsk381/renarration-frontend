@@ -7,32 +7,32 @@ export const SET_DEVICE_TYPE = 'SET_DEVICE_TYPE';
 export const RESET_STATE = 'RESET_STATE';
 
 // Action creators
-export const fetchStart = ( ) => ({
-    type: FETCH_START,
+export const fetchStart = () => ({
+  type: FETCH_START,
 });
 
 export const fetchSuccess = (url, htmlContent) => ({
-    type: FETCH_SUCCESS,
-    payload: { url, htmlContent }
+  type: FETCH_SUCCESS,
+  payload: { url, htmlContent },
 });
 
 export const fetchFailure = (errorMessage) => ({
-    type: FETCH_FAILURE,
-    payload: { errorMessage }
+  type: FETCH_FAILURE,
+  payload: { errorMessage },
 });
 
 export const updateProgress = (progress) => ({
-    type: UPDATE_PROGRESS,
-    payload: { progress }
+  type: UPDATE_PROGRESS,
+  payload: { progress },
 });
 
 export const setDeviceType = (deviceType) => ({
-    type: SET_DEVICE_TYPE,
-    payload: { deviceType }
+  type: SET_DEVICE_TYPE,
+  payload: { deviceType },
 });
 
 export const resetState = () => ({
-    type: RESET_STATE
+  type: RESET_STATE,
 });
 
 // Add other action creators as needed

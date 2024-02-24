@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Button, CircularProgress, Paper, Snackbar, Box, Typography, LinearProgress } from '@mui/material';
+import {
+  Alert, Button, CircularProgress, Paper, Snackbar, Box, Typography, LinearProgress,
+} from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
-import { useUrlValidation } from '../../hooks/useUrlValidation';
 import axios from 'axios';
 
 import { useMutation } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
+import { useUrlValidation } from '../../hooks/useUrlValidation';
+import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
 import { fetchFailure, fetchStart, fetchSuccess } from '../../redux/actions/urlActions';
 import { extractApi } from '../../apis/extractApis';
 import { setAnnotatedHtmlContent } from '../../redux/actions/annotationActions';
@@ -18,15 +20,13 @@ function UrlInput({ navigateTo }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
-  const progress = useSelector(state => state.url.progress);
-  const isFetching = useSelector(state => state.url.isFetching); // Get state with useSelector
-  const errorMessage = useSelector(state => state.url.errorMessage); // Get state with useSelector
+  const progress = useSelector((state) => state.url.progress);
+  const isFetching = useSelector((state) => state.url.isFetching); // Get state with useSelector
+  const errorMessage = useSelector((state) => state.url.errorMessage); // Get state with useSelector
   const dispatch = useDispatch(); // Get dispatch function with useDispatch
 
   const navigate = useNavigate();
   const isValidUrl = useUrlValidation(inputValue);
-
-
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -68,13 +68,13 @@ function UrlInput({ navigateTo }) {
     if (isValidUrl) {
       // console.log(inputValue)
       dispatch(fetchStart());
-      await axios.post(extractApi, { url: inputValue }, { headers: getDeviceType }).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); dispatch(setAnnotatedHtmlContent(res.data)); navigate(navigateTo); }).catch(err => {
+      await axios.post(extractApi, { url: inputValue }, { headers: getDeviceType }).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); dispatch(setAnnotatedHtmlContent(res.data)); navigate(navigateTo); }).catch((err) => {
         dispatch(fetchFailure(err.message)); setSnackbarMessage(errorMessage); // Update local snackbar message
         setSnackbarOpen(true); // Open error snackbar
         setInputValue('');
       });
     } else {
-      setSnackbarMessage("Invalid URL. Example: https://www.example.com");
+      setSnackbarMessage('Invalid URL. Example: https://www.example.com');
       setSnackbarOpen(true);
     }
   };
@@ -93,7 +93,13 @@ function UrlInput({ navigateTo }) {
 
   return (
     <>
-      <Paper elevation={6} sx={{ width: { lg: "50%", md: "75%" }, m: 2, marginTop: "-25px", marginInline: { lg: "25%", md: "10%" } }} style={wrapperStyle}>
+      <Paper
+        elevation={6}
+        sx={{
+          width: { lg: '50%', md: '75%' }, m: 2, marginTop: '-25px', marginInline: { lg: '25%', md: '10%' },
+        }}
+        style={wrapperStyle}
+      >
         <input
           type="url"
           placeholder="Enter a URL, link you want to re-narrate with"
@@ -108,7 +114,7 @@ function UrlInput({ navigateTo }) {
         />
 
         <Button
-          endIcon={isFetching ? <CircularProgress value={progress} size={24} color='inherit' /> : <ArrowForward />}
+          endIcon={isFetching ? <CircularProgress value={progress} size={24} color="inherit" /> : <ArrowForward />}
           onClick={handleNavigate}
           style={buttonStyle}
           sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
@@ -143,6 +149,4 @@ function UrlInput({ navigateTo }) {
   );
 }
 
-
 export default UrlInput;
-

@@ -11,28 +11,29 @@ export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       width: '100%', // Full width
       position: 'fixed', // Fixed position
       bottom: 0, // At the bottom of the page
       left: 0, // Align to the left
       right: 0, // Align to the right
       zIndex: 1000, // High z-index to ensure it's above other content,
-      display: { xs: 'block', md: 'none' }
-    }}>
-     <BottomNavigation
-  showLabels
-  value={value}
-  onChange={(event, newValue) => {
-    setValue(newValue);
-  }}
->
-  
-    <BottomNavigationAction component={Link} to={'/'} label="Home" icon={<RestoreIcon />}  />
+      display: { xs: 'block', md: 'none' },
+    }}
+    >
+      <BottomNavigation
+        showLabels
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+      >
 
-    <BottomNavigationAction component={Link} to={'/about'} label="About" icon={<RestoreIcon />}  />
-    <BottomNavigationAction component={Link} to={'/contact'} label="Contact" icon={<RestoreIcon />}  />
-</BottomNavigation>
+        <BottomNavigationAction component={Link} to="/" label="Home" icon={<RestoreIcon />} />
+
+        <BottomNavigationAction component={Link} to="/about" label="About" icon={<RestoreIcon />} />
+        <BottomNavigationAction component={Link} to="/contact" label="Contact" icon={<RestoreIcon />} />
+      </BottomNavigation>
 
     </Box>
   );

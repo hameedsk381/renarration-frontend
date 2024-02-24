@@ -1,10 +1,10 @@
-import './App.css'
-import Home from './pages/Home/Home'
-
+import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import About from './pages/About/About'
-import Contact from './pages/Contact/Contact'
-import SimpleBottomNavigation from './components/SimpleBottomNavigation/SimpleBottomNavigation'
+import Home from './pages/Home/Home';
+
+import About from './pages/About/About';
+import Contact from './pages/Contact/Contact';
+import SimpleBottomNavigation from './components/SimpleBottomNavigation/SimpleBottomNavigation';
 import EditRennarationBlock from './components/EditRennarationBlock';
 import RenarrationList from './components/RennarationList';
 import AnnotationPage from './components/AnnotationPage';
@@ -13,7 +13,6 @@ import AnnotatedBlocks from './components/AnnotatedBlocks';
 import UpdateSweet from './components/UpdateSweet';
 
 function App() {
-
   return (
     <Router>
 
@@ -26,12 +25,12 @@ function App() {
         <Route path="/edit-rennaration" element={<EditRennarationBlock />} />
         <Route path="/view-rennaration" element={<RenarrationList />} />
         <Route path="/renarration-details/:id" element={<Sweet />} />
-        <Route path="/update-renarration" element={<UpdateSweet/>} />
+        <Route path="/update-renarration" element={<UpdateSweet />} />
       </Routes>
       {/* <SimpleBottomNavigation /> */}
 
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;

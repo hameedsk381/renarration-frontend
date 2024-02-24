@@ -1,211 +1,216 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, AppBar, Box, Breadcrumbs, Button, CircularProgress, FormControlLabel, Snackbar, Switch, Toolbar, Typography } from '@mui/material';
-import {  Link, useNavigate } from 'react-router-dom';
-import Annotator from './Annotator';
+import {
+  Alert, AppBar, Box, Breadcrumbs, Button, CircularProgress, FormControlLabel, Snackbar, Switch, Toolbar, Typography,
+} from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux'; // Import the necessary action creators
+import axios from 'axios';
+import Annotator from './Annotator';
 import UrlInput from './UrlInput/UrlInput';
 import outlineElement from '../utils/outlineElement';
 import removeOutlineFromElement from '../utils/removeOutline';
-import { addAnnotatedBlock, removeAnnotatedBlock, resetAnnotations, setAnnotatedHtmlContent, toggleAnnotationMode, updateAnnotatedBlock } from '../redux/actions/annotationActions';
+import {
+  addAnnotatedBlock, removeAnnotatedBlock, resetAnnotations, setAnnotatedHtmlContent, toggleAnnotationMode, updateAnnotatedBlock,
+} from '../redux/actions/annotationActions';
 import { processHtml } from '../utils/processHtml';
-import { fetchFailure, fetchStart, fetchSuccess, resetState } from '../redux/actions/urlActions';
+import {
+  fetchFailure, fetchStart, fetchSuccess, resetState,
+} from '../redux/actions/urlActions';
 import { extractApi } from '../apis/extractApis';
 import getDeviceType from '../utils/getDeviceType';
-import axios from 'axios';
 import { removeOutlineFromOuterHtml } from '../utils/removeOutlineFromOuterHtml';
 
-const AnnotationPage = () => {
+function AnnotationPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const annotatedBlocks = useSelector(state => state.annotation.annotatedBlocks);
-  const history = useSelector(state=>state.url.history);
-  const currentUrl = useSelector(state=>state.url.currentUrl)
-  const initialHtmlContent = useSelector(state => state.url.initialHtmlContent);
-  const annotationHtmlContent = useSelector(state => state.annotation.htmlforAnnotation);
-  const isFetching = useSelector(state => state.url.isFetching);
+  const annotatedBlocks = useSelector((state) => state.annotation.annotatedBlocks);
+  const history = useSelector((state) => state.url.history);
+  const currentUrl = useSelector((state) => state.url.currentUrl);
+  const initialHtmlContent = useSelector((state) => state.url.initialHtmlContent);
+  const annotationHtmlContent = useSelector((state) => state.annotation.htmlforAnnotation);
+  const isFetching = useSelector((state) => state.url.isFetching);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
   // const history = useSelector(state => state.history.history);
-  const annotationMode = useSelector(state => state.annotation.mode); // Get the annotation mode from Redux state
+  const annotationMode = useSelector((state) => state.annotation.mode); // Get the annotation mode from Redux state
   const [openDialog, setOpenDialog] = useState(false);
-  const [clickedElementContent, setClickedElementContent] = useState({ html: ''});
+  const [clickedElementContent, setClickedElementContent] = useState({ html: '' });
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
-  
-useEffect(()=>{
-// console.log(annotationMode)
-},[annotationMode,annotationHtmlContent])
 
+  useEffect(() => {
+    // console.log(annotationMode)
+  }, [annotationMode, annotationHtmlContent]);
 
-const handleAnnotationModeChange = () => {
-  dispatch(toggleAnnotationMode()); // Dispatch toggle action
-};
-const handleSnackbarClose = (event, reason) => {
-  if (reason === 'clickaway') {
-    return;
-  }
-  setSnackbarOpen(false);
-};
- 
+  const handleAnnotationModeChange = () => {
+    dispatch(toggleAnnotationMode()); // Dispatch toggle action
+  };
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
 
+  const handleAnnotationClick = (event) => {
+    let elementId = event.target.dataset.id;
+    let existingBlock;
 
-const handleAnnotationClick = (event) => {
-  let elementId = event.target.dataset.id;
-  let existingBlock;
-
-  if (!elementId) {
+    if (!elementId) {
     // If the element does not have an ID, generate a new one
-    elementId = uuidv4();
-    event.target.setAttribute('data-id', elementId); // Assign the ID to the element's data-id attribute
-  }
-  
-  // Check if a block with this ID already exists
-  existingBlock = annotatedBlocks.find(block => block.id === elementId);
-  if (existingBlock) {
-    dispatch(removeAnnotatedBlock(existingBlock.id));
-    const updatedHtmlContent = removeOutlineFromElement(annotationHtmlContent, existingBlock.id);
-    dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
-  } else {
-    event.target.classList.remove('hover-effect');
-    const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
+      elementId = uuidv4();
+      event.target.setAttribute('data-id', elementId); // Assign the ID to the element's data-id attribute
+    }
 
+    // Check if a block with this ID already exists
+    existingBlock = annotatedBlocks.find((block) => block.id === elementId);
+    if (existingBlock) {
+      dispatch(removeAnnotatedBlock(existingBlock.id));
+      const updatedHtmlContent = removeOutlineFromElement(annotationHtmlContent, existingBlock.id);
+      dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
+    } else {
+      event.target.classList.remove('hover-effect');
+      const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
 
-    setClickedElementContent(fullHtmlWithoutOutline);
-    setOpenDialog(true);
-    setCurrentBlockId(elementId); // Set the current block ID
-  }
-};
+      setClickedElementContent(fullHtmlWithoutOutline);
+      setOpenDialog(true);
+      setCurrentBlockId(elementId); // Set the current block ID
+    }
+  };
 
-const handleNavigationClick = async (event) => {
+  const handleNavigationClick = async (event) => {
   // Check if the clicked element is an anchor tag
-  if (event.target.tagName === 'A') {
+    if (event.target.tagName === 'A') {
       const href = event.target.getAttribute('href');
 
       // If href exists and annotation mode is off, fetch new content
       if (href) {
-          event.stopPropagation(); // Prevent default navigation
-          // console.log("URL to fetch:", href);
+        event.stopPropagation(); // Prevent default navigation
+        // console.log("URL to fetch:", href);
 
-          try {
-              dispatch(fetchStart());
-              const response = await axios.post(extractApi, { url: href }, { headers: { 'User-Agent': getDeviceType() } });
-              dispatch(fetchSuccess(response.data));
-              dispatch(setAnnotatedHtmlContent(response.data));
-          } catch (error) {
-              dispatch(fetchFailure(error.message));
-              setSnackbarMessage("Failed to fetch content: " + error.message);
-              setSnackbarOpen(true);
-              setInputValue('');
-          }
-      } else {
-          // Handle invalid href
-          setSnackbarMessage("Invalid URL. Example: https://www.example.com");
+        try {
+          dispatch(fetchStart());
+          const response = await axios.post(extractApi, { url: href }, { headers: { 'User-Agent': getDeviceType() } });
+          dispatch(fetchSuccess(response.data));
+          dispatch(setAnnotatedHtmlContent(response.data));
+        } catch (error) {
+          dispatch(fetchFailure(error.message));
+          setSnackbarMessage(`Failed to fetch content: ${error.message}`);
           setSnackbarOpen(true);
+          setInputValue('');
+        }
+      } else {
+        // Handle invalid href
+        setSnackbarMessage('Invalid URL. Example: https://www.example.com');
+        setSnackbarOpen(true);
       }
-  } else {
+    } else {
       // If not an anchor tag or href is empty, let default behavior occur
       // console.log("Not an anchor tag or no href, default click behavior.");
-  }
-};
+    }
+  };
 
-
-const handleMouseOver = (event) => {
+  const handleMouseOver = (event) => {
   // Prevent event from affecting parent elements
-  event.stopPropagation();
-  event.target.classList.add('hover-effect');
-};
+    event.stopPropagation();
+    event.target.classList.add('hover-effect');
+  };
 
-const handleMouseOut = (event) => {
-  event.stopPropagation();
-  event.target.classList.remove('hover-effect');
-};
-const handleSave = (updatedContent) => {
-  const existingBlockIndex = annotatedBlocks.findIndex(block => block.id === currentBlockId);
+  const handleMouseOut = (event) => {
+    event.stopPropagation();
+    event.target.classList.remove('hover-effect');
+  };
+  const handleSave = (updatedContent) => {
+    const existingBlockIndex = annotatedBlocks.findIndex((block) => block.id === currentBlockId);
 
-  if (existingBlockIndex !== -1) {
+    if (existingBlockIndex !== -1) {
     // Update existing block
-    dispatch(updateAnnotatedBlock({
-      ...annotatedBlocks[existingBlockIndex],
-      content: updatedContent
+      dispatch(updateAnnotatedBlock({
+        ...annotatedBlocks[existingBlockIndex],
+        content: updatedContent,
       }));
-  } else {
+    } else {
     // Add new block
-    const newBlock = {
-      content: updatedContent,
-       id: currentBlockId || uuidv4() ,
-       img: null,
-  aud: null,
-  vid: null,
-  desc: null,
-  rennarationStatus:false,
-  source : currentUrl
-    };
-    dispatch(addAnnotatedBlock(newBlock));
+      const newBlock = {
+        content: updatedContent,
+        id: currentBlockId || uuidv4(),
+        img: null,
+        aud: null,
+        vid: null,
+        desc: null,
+        rennarationStatus: false,
+        source: currentUrl,
+      };
+      dispatch(addAnnotatedBlock(newBlock));
 
-    // Update the htmlContent to include the outline for the annotated element
-    const updatedHtmlContent = outlineElement(annotationHtmlContent, currentBlockId);
-    dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
-}
-  setOpenDialog(false);
-};
+      // Update the htmlContent to include the outline for the annotated element
+      const updatedHtmlContent = outlineElement(annotationHtmlContent, currentBlockId);
+      dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
+    }
+    setOpenDialog(false);
+  };
 
-const handleExit = () => {
-  if (window.confirm("Are you sure you want to exit Renarration?")) {
-   dispatch(resetState());
-   dispatch(resetAnnotations());
+  const handleExit = () => {
+    if (window.confirm('Are you sure you want to exit Renarration?')) {
+      dispatch(resetState());
+      dispatch(resetAnnotations());
 
-    localStorage.clear(); // Clear local storage
-    sessionStorage.clear(); // Clear session storage (if you use it)
-    navigate('/'); // Navigate to the home page or any other page
-  }
-};
+      localStorage.clear(); // Clear local storage
+      sessionStorage.clear(); // Clear session storage (if you use it)
+      navigate('/'); // Navigate to the home page or any other page
+    }
+  };
   const navigateToRenarrationBlocks = () => {
     navigate('/create-rennaration');
   };
 
   return (
     <>
- 
- <div className="app-bar">
-    <FormControlLabel
-        control={<Switch checked={annotationMode} onChange={handleAnnotationModeChange} color="primary" />}
-        label="Annotation Mode"
-    />
-    
-    <button className="app-bar-button" onClick={handleExit}>
-        Exit Renarration
-    </button>
 
-    {annotatedBlocks.length !== 0 && (
-        <button className="app-bar-button" onClick={navigateToRenarrationBlocks}>
-            View Renarration Blocks
+      <div className="app-bar">
+        <FormControlLabel
+          control={<Switch checked={annotationMode} onChange={handleAnnotationModeChange} color="primary" />}
+          label="Annotation Mode"
+        />
+
+        <button className="app-bar-button" onClick={handleExit}>
+          Exit Renarration
         </button>
-    )}
-</div>
 
-      <UrlInput/>
+        {annotatedBlocks.length !== 0 && (
+        <button className="app-bar-button" onClick={navigateToRenarrationBlocks}>
+          View Renarration Blocks
+        </button>
+        )}
+      </div>
+
+      <UrlInput />
       {/* <Breadcrumbs aria-label="breadcrumb">
                 {history && history.map((obj, index) => (
                     <Link key={index} color="inherit"  onClick={handleNavigationClick}>
-                      {obj.url} 
+                      {obj.url}
                     </Link>
                 ))}
             </Breadcrumbs> */}
       {!isFetching && annotationMode && (
-        <div  dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }} onClick={handleAnnotationClick}   onMouseOver={handleMouseOver}
-        onMouseOut={handleMouseOut} />
+        <div
+          dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }}
+          onClick={handleAnnotationClick}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
+        />
       )}
       {!isFetching && !annotationMode && (
-        <div dangerouslySetInnerHTML={{ __html:initialHtmlContent }} onClick={handleNavigationClick}  />
+        <div dangerouslySetInnerHTML={{ __html: initialHtmlContent }} onClick={handleNavigationClick} />
       )}
-   <Annotator
-  open={openDialog}
-  onClose={() => setOpenDialog(false)}
-  content={clickedElementContent}
-  onSave={handleSave}
-/>
-<Snackbar
+      <Annotator
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        content={clickedElementContent}
+        onSave={handleSave}
+      />
+      <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
@@ -228,7 +233,6 @@ const handleExit = () => {
       </Snackbar>
     </>
   );
-};
-
+}
 
 export default AnnotationPage;

@@ -1,34 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Container, Stack, TextField, Snackbar, Alert, IconButton, Box, Typography, CircularProgress } from '@mui/material';
-import { ArrowBack, Audiotrack, Cancel, Image, VideoLibraryOutlined } from '@mui/icons-material';
+import {
+  Button, Container, Stack, TextField, Snackbar, Alert, IconButton, Box, Typography, CircularProgress,
+} from '@mui/material';
+import {
+  ArrowBack, Audiotrack, Cancel, Image, VideoLibraryOutlined,
+} from '@mui/icons-material';
+import axios from 'axios';
 import RenarrationBlock from './RenarrationBlock';
 import Recording from './Recording';
 import { updateAnnotatedBlock } from '../redux/actions/annotationActions';
 import { serverApi, uploadFileApi } from '../apis/extractApis';
-import axios from 'axios';
 import { extractPublicId } from '../utils/extractPublicId';
 
-const EditRennarationBlock = () => {
+function EditRennarationBlock() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const blockId = location.state;
-  const annotatedBlocks = useSelector(state => state.annotation.annotatedBlocks);
-  const selectedBlock = annotatedBlocks.find(block => block.id === blockId);
+  const annotatedBlocks = useSelector((state) => state.annotation.annotatedBlocks);
+  const selectedBlock = annotatedBlocks.find((block) => block.id === blockId);
   const [formData, setFormData] = useState({
     description: selectedBlock.desc || '',
     audio: selectedBlock.aud || null,
     image: selectedBlock.img || null,
-    video: selectedBlock.vid || null
+    video: selectedBlock.vid || null,
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [updateSnackbarOpen, setUpdateSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   // Inside EditRennarationBlock component
-const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     // console.log(selectedBlock);
   }, [selectedBlock]);
@@ -44,7 +48,7 @@ const [loading, setLoading] = useState(false);
       setSnackbarOpen(true);
       return;
     }
-    setFormData(prevFormData => ({ ...prevFormData, [mediaType]: file }));
+    setFormData((prevFormData) => ({ ...prevFormData, [mediaType]: file }));
   };
   const handleCancelMedia = async (mediaType) => {
     if (formData[mediaType]) {
@@ -52,7 +56,7 @@ const [loading, setLoading] = useState(false);
       if (confirmDelete) {
         if (formData[mediaType].startsWith('https')) {
           try {
-            const publicId = extractPublicId(formData[mediaType])
+            const publicId = extractPublicId(formData[mediaType]);
             await axios.delete(`${serverApi}/delete/${publicId}`);
             setSnackbarOpen(true);
             setSnackbarMessage('File removed successfully');
@@ -72,59 +76,58 @@ const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.description) {
-        setSnackbarOpen(true);
-        return;
+      setSnackbarOpen(true);
+      return;
     }
 
     try {
       setLoading(true); // Set loading state to true
 
-        const updatedFormData = { ...formData };
+      const updatedFormData = { ...formData };
 
-        // Iterate over each media type and handle file upload
-        for (const mediaType of ['audio', 'image', 'video']) {
-            const file = formData[mediaType];
+      // Iterate over each media type and handle file upload
+      for (const mediaType of ['audio', 'image', 'video']) {
+        const file = formData[mediaType];
 
-            if (file) {
-                const formDataMedia = new FormData();
-                formDataMedia.append('file', file);
+        if (file) {
+          const formDataMedia = new FormData();
+          formDataMedia.append('file', file);
 
-                const response = await axios.post(uploadFileApi, formDataMedia, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
+          const response = await axios.post(uploadFileApi, formDataMedia, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
 
-                // Update the formData with the stored path
-                updatedFormData[mediaType] = response.data;
-            }
+          // Update the formData with the stored path
+          updatedFormData[mediaType] = response.data;
         }
+      }
 
-        // Dispatch the updated annotated block with the stored file paths
-        dispatch(updateAnnotatedBlock(blockId, {
-            id: blockId,
-            content: selectedBlock.content,
-            desc: formData.description,
-            aud: updatedFormData.audio,
-            vid: updatedFormData.video,
-            img: updatedFormData.image,
-            rennarationStatus: true
-        }));
+      // Dispatch the updated annotated block with the stored file paths
+      dispatch(updateAnnotatedBlock(blockId, {
+        id: blockId,
+        content: selectedBlock.content,
+        desc: formData.description,
+        aud: updatedFormData.audio,
+        vid: updatedFormData.video,
+        img: updatedFormData.image,
+        rennarationStatus: true,
+      }));
 
-        setSnackbarMessage('Renarration block updated successfully!');
-        setUpdateSnackbarOpen(true);
-        setLoading(false); // Set loading state to true
+      setSnackbarMessage('Renarration block updated successfully!');
+      setUpdateSnackbarOpen(true);
+      setLoading(false); // Set loading state to true
 
-        setTimeout(() => {
-            navigate('/create-rennaration');
-        }, 3000);
+      setTimeout(() => {
+        navigate('/create-rennaration');
+      }, 3000);
     } catch (error) {
       // console.error('Error uploading file:', error);
       setSnackbarMessage('Error uploading file. Please try again later.');
       setUpdateSnackbarOpen(true);
     }
-};
-
+  };
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') return;
@@ -133,11 +136,11 @@ const [loading, setLoading] = useState(false);
   };
 
   return (
-    <Container maxWidth='md' sx={{ my: 2, p: 2 }}>
-      <Button variant="contained" color="primary" startIcon={<ArrowBack />} size='small' sx={{ mb: 2 }} onClick={() => navigate('/create-rennaration')}>
+    <Container maxWidth="md" sx={{ my: 2, p: 2 }}>
+      <Button variant="contained" color="primary" startIcon={<ArrowBack />} size="small" sx={{ mb: 2 }} onClick={() => navigate('/create-rennaration')}>
         Go Back
       </Button>
-      <RenarrationBlock block={selectedBlock} noActions={true} />
+      <RenarrationBlock block={selectedBlock} noActions />
       <form onSubmit={handleSubmit}>
         <Stack my={4} gap={2}>
           <TextField
@@ -155,14 +158,18 @@ const [loading, setLoading] = useState(false);
           <UploadInput type="audio" icon={<Audiotrack />} formData={formData} handleFileChange={handleFileChange} handleCancelMedia={handleCancelMedia} />
           <UploadInput type="image" icon={<Image />} formData={formData} handleFileChange={handleFileChange} handleCancelMedia={handleCancelMedia} />
           <UploadInput type="video" icon={<VideoLibraryOutlined />} formData={formData} handleFileChange={handleFileChange} handleCancelMedia={handleCancelMedia} />
-          <Button variant="contained" color="primary" type="submit" disabled={loading} startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}> {/* Disable the button when loading */}
-    {loading ? 'Submitting...' : 'Submit'} {/* Show different text when loading */}
-</Button>
+          <Button variant="contained" color="primary" type="submit" disabled={loading} startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}>
+            {' '}
+            {/* Disable the button when loading */}
+            {loading ? 'Submitting...' : 'Submit'}
+            {' '}
+            {/* Show different text when loading */}
+          </Button>
         </Stack>
       </form>
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
         <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-        {snackbarMessage}
+          {snackbarMessage}
         </Alert>
       </Snackbar>
       <Snackbar open={updateSnackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
@@ -172,9 +179,11 @@ const [loading, setLoading] = useState(false);
       </Snackbar>
     </Container>
   );
-};
+}
 
-const UploadInput = ({ type, icon, formData, handleFileChange, handleCancelMedia }) => {
+function UploadInput({
+  type, icon, formData, handleFileChange, handleCancelMedia,
+}) {
   return (
     <Box mb={2}>
       <input
@@ -188,10 +197,12 @@ const UploadInput = ({ type, icon, formData, handleFileChange, handleCancelMedia
       />
       <label htmlFor={`raised-button-file-${type}`}>
         {formData[type] ? (
-         null
+          null
         ) : (
-          <Button variant="contained" component="span" startIcon={icon} >
-            Upload {type.charAt(0).toUpperCase() + type.slice(1)}
+          <Button variant="contained" component="span" startIcon={icon}>
+            Upload
+            {' '}
+            {type.charAt(0).toUpperCase() + type.slice(1)}
           </Button>
         )}
       </label>
@@ -212,6 +223,6 @@ const UploadInput = ({ type, icon, formData, handleFileChange, handleCancelMedia
 
     </Box>
   );
-};
+}
 
 export default EditRennarationBlock;

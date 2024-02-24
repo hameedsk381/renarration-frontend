@@ -20,17 +20,16 @@ function AnimatedStep({ label }) {
     </Step>
   );
 }
-const StepperComp = ()=>{
-    return (
-        <Stepper activeStep={-1} orientation="horizontal">
-{
+function StepperComp() {
+  return (
+    <Stepper activeStep={-1} orientation="horizontal">
+      {
   steps.map((label, index) => (
     <AnimatedStep key={label} label={label} />
   ))
 }
-        </Stepper>
-    )
+    </Stepper>
+  );
 }
-
 
 export default StepperComp;

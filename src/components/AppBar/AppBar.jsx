@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Avatar, Box, Button, Checkbox, Container, FormControlLabel, Grid, Link, TextField, Typography, createTheme } from '@mui/material';
+import {
+  Avatar, Box, Button, Checkbox, Container, FormControlLabel, Grid, Link, TextField, Typography, createTheme,
+} from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import { useSelector } from 'react-redux';
 
@@ -9,9 +11,10 @@ function Copyright(props) {
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{' '}
+      </Link>
+      {' '}
       {new Date().getFullYear()}
-      {'.'}
+      .
     </Typography>
   );
 }
@@ -21,7 +24,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const progress = useSelector(state => state.url.progress);
+  const progress = useSelector((state) => state.url.progress);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -33,7 +36,7 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-     
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <LinearProgress variant="determinate" value={progress} />
@@ -92,7 +95,7 @@ export default function SignIn() {
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>

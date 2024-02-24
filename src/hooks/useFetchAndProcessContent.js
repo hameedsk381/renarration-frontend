@@ -22,7 +22,7 @@ export const useFetchAndProcessContent = (urlToDownload) => {
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           dispatch(updateProgress(percentCompleted)); // Dispatch progress update
-        }
+        },
       });
     },
     {
@@ -38,7 +38,7 @@ export const useFetchAndProcessContent = (urlToDownload) => {
         // Handle error, maybe set a local state for error message here
         dispatch(resetProgress()); // Reset progress
       },
-    }
+    },
   );
 
   return mutation(urlToDownload);

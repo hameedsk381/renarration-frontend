@@ -11,9 +11,11 @@ const fetchRenarrations = async () => {
   return response.data;
 };
 
-const RenarrationDataGrid = () => {
+function RenarrationDataGrid() {
   const navigate = useNavigate();
-  const { data: renarrations, isLoading, isError, error } = useQuery('renarrations', fetchRenarrations);
+  const {
+    data: renarrations, isLoading, isError, error,
+  } = useQuery('renarrations', fetchRenarrations);
 
   const columns = [
     { field: 'renarrationTitle', headerName: 'Renarration Title', flex: 1 },
@@ -36,31 +38,34 @@ const RenarrationDataGrid = () => {
   const rows = renarrations?.map((renarration, index) => ({
     id: index,
     renarrationTitle: renarration.renarrationTitle,
-    _id: renarration._id // Assuming _id is unique for each renarration
+    _id: renarration._id, // Assuming _id is unique for each renarration
   })) || [];
 
   if (isLoading) {
     return (
-      <Container maxWidth='lg' sx={{ my: 3 }}>
-       <Skeleton animation="wave" width={'100'} />
-       <Skeleton animation="wave" width={'100'} />
-       <Skeleton animation="wave" width={'100'} />
-       <Skeleton animation="wave" width={'100'} />
-       <Skeleton animation="wave" width={'100'} />
+      <Container maxWidth="lg" sx={{ my: 3 }}>
+        <Skeleton animation="wave" width="100" />
+        <Skeleton animation="wave" width="100" />
+        <Skeleton animation="wave" width="100" />
+        <Skeleton animation="wave" width="100" />
+        <Skeleton animation="wave" width="100" />
       </Container>
     );
   }
 
   if (isError) {
     return (
-      <Container maxWidth='lg' sx={{ my: 3 }}>
-        <p>Error loading renarrations: {error.message}</p>
+      <Container maxWidth="lg" sx={{ my: 3 }}>
+        <p>
+          Error loading renarrations:
+          {error.message}
+        </p>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth='lg' sx={{ my: 3 }}>
+    <Container maxWidth="lg" sx={{ my: 3 }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -70,6 +75,6 @@ const RenarrationDataGrid = () => {
       />
     </Container>
   );
-};
+}
 
 export default RenarrationDataGrid;

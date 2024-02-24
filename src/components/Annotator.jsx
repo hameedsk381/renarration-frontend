@@ -1,7 +1,11 @@
 import React from 'react';
-import { Modal, Box, Typography, Button } from '@mui/material';
+import {
+  Modal, Box, Typography, Button,
+} from '@mui/material';
 
-const Annotator = ({ open, onClose, content, onSave }) => {
+function Annotator({
+  open, onClose, content, onSave,
+}) {
   const handleSave = () => {
     onSave(content); // Call the onSave function passed from the parent component
     onClose(); // Close the modal after onSave is called
@@ -48,6 +52,6 @@ const Annotator = ({ open, onClose, content, onSave }) => {
       </Box>
     </Modal>
   );
-};
+}
 
 export default Annotator;
