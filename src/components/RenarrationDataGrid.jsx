@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Container, Skeleton } from '@mui/material';
+import { Alert, Button, Container, Skeleton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
@@ -61,6 +61,14 @@ function RenarrationDataGrid() {
           {error.message}
         </p>
       </Container>
+    );
+  }
+
+  if (rows.length === 0) {
+    return (
+      <Alert severity="info" sx={{ m: 3 }}>
+        No sweets available.
+      </Alert>
     );
   }
 
