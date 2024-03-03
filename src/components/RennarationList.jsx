@@ -13,6 +13,7 @@ import { resetAnnotations } from '../redux/actions/annotationActions';
 import { submitApi } from '../apis/extractApis';
 import AnnotatedBlocks from './AnnotatedBlocks';
 import RenarrationBlock from './RenarrationBlock';
+import BlockListing from './BlockListing';
 
 function RenarrationList() {
   const navigate = useNavigate();
@@ -94,27 +95,7 @@ function RenarrationList() {
       case 0:
         return (
           <Container maxWidth="lg">
-            <Typography variant="h4" component="h1" gutterBottom sx={{ marginY: 4 }}>
-              Annotated Blocks
-            </Typography>
-
-            <Stack direction="row" justifyContent="space-between">
-              <Button variant="contained" color="primary" startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}>
-                Back to Annotate
-              </Button>
-              {/* {annotatedBlocks.length !== 0 &&  <Button variant='contained' onClick={()=>{navigate('/view-rennaration')}} endIcon={<ArrowForward/>}>View Re-narration</Button>} */}
-            </Stack>
-            <Grid container spacing={4} sx={{ marginTop: 2 }}>
-              {annotatedBlocks.length === 0 ? (
-                navigate('/re-narrate')
-              ) : (
-                annotatedBlocks.map((block) => (
-                  <Grid item key={block.id} xs={12} md={6} lg={4}>
-                    <RenarrationBlock block={block} />
-                  </Grid>
-                ))
-              )}
-            </Grid>
+            <AnnotatedBlocks/>
           </Container>
         );
       case 1:
@@ -133,65 +114,7 @@ function RenarrationList() {
             </Box>
             <Box>
               <Typography textAlign="center" variant="h4">{renarrationTitle}</Typography>
-              <Grid container p={3} spacing={2}>
-                {rennaratedBlocks && rennaratedBlocks.map((block) => (
-                  <Grid item key={block.id} xs={12} sm={6}>
-                    <Card>
-                      <CardHeader
-                        action={
-                                  <Button variant="outlined" size="small" endIcon={<NearMe />} href={block.source} target="_blank">source</Button>
-      }
-                        subheader={new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      />
-                      <CardMedia>
-                        <Box sx={{
-                                  display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1,
-                                }}
-                                >
-                                  {extractMedia(block.content).map((src, index) => (
-                                    <Box
-                                       key={index}
-                                       component="img"
-                                       sx={{
-                                       width: '50%',
-                                       height: 'auto',
-                                       objectFit: 'cover',
-                                       p: 0.5,
-                                     }}
-                                       src={src}
-                                       alt={`Renarration image ${index + 1}`}
-                                     />
-                                  ))}
-
-                                </Box>
-                      </CardMedia>
-                      <CardContent>
-                        <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
-                        <Paper variant="outlined" sx={{ p: 2, my: 3 }}>
-                                  {block.img && (
-                                  <Box
-                                     component="img"
-                                     src={(block.img)}
-                                     alt="Renarration image"
-                                     sx={{
-                                     width: '50%', height: 'auto', objectFit: 'cover', p: 0.5,
-                                   }}
-                                   />
-                                  )}
-                                  <Typography my={2}>{block.desc}</Typography>
-                                  {block.aud && (
-                                  <audio controls src={(block.aud)} style={{ marginBlock: '20px' }} />
-                                  )}
-                                  {block.vid && (
-                                  <video controls width="100%" src={(block.vid)} style={{ marginBlock: '20px' }} />
-                                  )}
-                                </Paper>
-                      </CardContent>
-
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+            <BlockListing blocks={renarratedBlocks}/>
             </Box>
           </>
         );

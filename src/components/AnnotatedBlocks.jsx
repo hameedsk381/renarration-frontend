@@ -15,7 +15,7 @@ function AnnotatedBlocks() {
   }, []);
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom sx={{ marginY: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ marginY: 4 ,textAlign:"center"}}>
         Annotated Blocks
       </Typography>
 
@@ -37,3 +37,4 @@ function AnnotatedBlocks() {
 }
 
 export default AnnotatedBlocks;
+

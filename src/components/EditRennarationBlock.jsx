@@ -43,34 +43,15 @@ function EditRennarationBlock() {
 
   const handleFileChange = (mediaType, event) => {
     const file = event.target.files[0];
-    if (file.size > 10485760) {
-      setSnackbarMessage('File size exceeds 10MB limit. Please choose a smaller file.');
-      setSnackbarOpen(true);
-      return;
-    }
+    // if (file.size > 10485760) {
+    //   setSnackbarMessage('File size exceeds 10MB limit. Please choose a smaller file.');
+    //   setSnackbarOpen(true);
+    //   return;
+    // }
     setFormData((prevFormData) => ({ ...prevFormData, [mediaType]: file }));
   };
   const handleCancelMedia = async (mediaType) => {
-    if (formData[mediaType]) {
-      const confirmDelete = window.confirm('Are you sure you want to delete this file?');
-      if (confirmDelete) {
-        if (formData[mediaType].startsWith('https')) {
-          try {
-            const publicId = extractPublicId(formData[mediaType]);
-            await axios.delete(`${serverApi}/delete/${publicId}`);
-            setSnackbarOpen(true);
-            setSnackbarMessage('File removed successfully');
-            setFormData({ ...formData, [mediaType]: null });
-          } catch (error) {
-            // console.error('Error deleting file:', error);
-            setSnackbarOpen(true);
-            setSnackbarMessage('Error removing file');
-          }
-        } else {
-          setFormData({ ...formData, [mediaType]: null });
-        }
-      }
-    }
+    setFormData({ ...formData, [mediaType]: null });
   };
 
   const handleSubmit = async (e) => {
@@ -208,9 +189,11 @@ function UploadInput({
       </label>
       {formData[type] && (
         <Box mt={2} position="relative">
-          {type === 'image' && <img src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} alt="Preview" width="100%" />}
-          {type === 'audio' && <audio controls src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} />}
-          {type === 'video' && <video controls width="100%" src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} />}
+          <React.Suspense fallback={<CircularProgress/>}>
+            {type === 'image' && <img src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} alt="Preview" width="100%" />}
+            {type === 'audio' && <audio controls src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} />}
+            {type === 'video' && <video controls width="100%" src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} />}
+          </React.Suspense>
           <IconButton
             color="error"
             onClick={() => handleCancelMedia(type)}
