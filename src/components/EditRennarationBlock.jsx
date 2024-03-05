@@ -135,7 +135,7 @@ function EditRennarationBlock() {
             onChange={handleInputChange}
             required
           />
-          <Recording />
+          {/* <Recording /> */}
           <UploadInput type="audio" icon={<Audiotrack />} formData={formData} handleFileChange={handleFileChange} handleCancelMedia={handleCancelMedia} />
           <UploadInput type="image" icon={<Image />} formData={formData} handleFileChange={handleFileChange} handleCancelMedia={handleCancelMedia} />
           <UploadInput type="video" icon={<VideoLibraryOutlined />} formData={formData} handleFileChange={handleFileChange} handleCancelMedia={handleCancelMedia} />
