@@ -1,5 +1,5 @@
 import {
-  ADD_ANNOTATED_BLOCK, REMOVE_ANNOTATED_BLOCK, RESET_ANNOTATIONS, SET_ANNOTATED_HTML_CONTENT, TOGGLE_ANNOTATION_MODE, UPDATE_ANNOTATED_BLOCK,
+  ADD_ANNOTATED_BLOCK, REMOVE_ANNOTATED_BLOCK, RESET_ANNOTATIONS, SET_ANNOTATED_HTML_CONTENT, TOGGLE_ANNOTATION_MODE, UPDATE_ANNOTATED_BLOCK, ADD_ANNOTATED_BLOCKS,
 } from '../actions/annotationActions';
 
 const initialAnnState = {
@@ -37,6 +37,11 @@ const annotationReducer = (state = initialAnnState, action) => {
       };
     case RESET_ANNOTATIONS:
       return initialAnnState;
+    case ADD_ANNOTATED_BLOCKS:
+      return {
+        ...state,
+        annotatedBlocks: action.payload,
+      };
     default:
       return state;
   }

@@ -11,7 +11,7 @@ function AnnotatedBlocks() {
   const navigate = useNavigate();
   const { annotatedBlocks } = useSelector((state) => state.annotation);
   useEffect(() => {
-    // console.log(annotatedBlocks)
+    // console.log(annotatedBlocks);
   }, []);
   return (
     <Container maxWidth="lg">

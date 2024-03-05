@@ -1,33 +1,24 @@
-import {
-  ADD_RENNARATED_BLOCK, REMOVE_RENNARATED_BLOCK, RESET_RENNARATIONS, UPDATE_RENNARATED_BLOCK,
-} from '../actions/rennarationActions';
-
-const initialState = {
-  rennaratedBlocks: [],
+export const initialState = {
+  renarrationTitle: '',
+  renarrationId:''
 };
 
-const rennarationReducer = (state = initialState, action) => {
+const renarrationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_RENNARATED_BLOCK:
+  
+    case 'ADD_RENNARATION_TITLE':
       return {
         ...state,
-        rennaratedBlocks: [...state.rennaratedBlocks, action.payload],
+        renarrationTitle: action.payload,
       };
-
-    case REMOVE_RENNARATED_BLOCK:
-      return {
-        ...state,
-        rennaratedBlocks: state.rennaratedBlocks.filter((block) => block.id !== action.payload),
-      };
-    case UPDATE_RENNARATED_BLOCK:
-      return {
-        ...state,
-        rennaratedBlocks: state.rennaratedBlocks.map((block) => (block.id === action.payload.id ? { ...block, ...action.payload } : block)),
-      };
-    case RESET_RENNARATIONS:
-      return initialState;
+      case 'ADD_RENARRATION_ID':
+        return {
+          ...state,
+          renarrationId: action.payload,
+        };
     default:
       return state;
   }
 };
-export default rennarationReducer;
+
+export default renarrationReducer;

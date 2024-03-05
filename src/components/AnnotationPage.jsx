@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Alert, AppBar, Box, Breadcrumbs, Button, CircularProgress, FormControlLabel, Snackbar, Switch, Toolbar, Typography,
+  Alert, AlertTitle, AppBar, Box, Breadcrumbs, Button, CircularProgress, Container, FormControlLabel, Snackbar, Switch, Toolbar, Typography,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -139,7 +139,7 @@ function AnnotationPage() {
         aud: null,
         vid: null,
         desc: null,
-        rennarationStatus: false,
+        renarrationStatus: false,
         source: currentUrl,
       };
       dispatch(addAnnotatedBlock(newBlock));
@@ -201,9 +201,18 @@ function AnnotationPage() {
           onMouseOut={handleMouseOut}
         />
       )}
+      {initialHtmlContent === null && (
+        <Container>
+         <Alert severity="info">
+  <AlertTitle>URL</AlertTitle>
+  copy the url of any web page and paste it above to renarrate
+</Alert>
+        </Container>
+      )}
       {!isFetching && !annotationMode && (
         <div dangerouslySetInnerHTML={{ __html: initialHtmlContent }} onClick={handleNavigationClick} />
       )}
+
       <Annotator
         open={openDialog}
         onClose={() => setOpenDialog(false)}

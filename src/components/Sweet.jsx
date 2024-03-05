@@ -9,10 +9,12 @@ import {
 } from '@mui/icons-material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
-import { getAllRenarrations } from '../apis/extractApis';
+import { getAllRenarrations, sharingIdApi } from '../apis/extractApis';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
-import SharingIdModal from './SharingIdModal';
 import SharingIDModal from './SharingIdModal';
+import { addAnnotatedBlocks } from '../redux/actions/annotationActions';
+import { useDispatch } from 'react-redux';
+import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
 
 function Sweet() {
   const renarrationId = useParams().id;
@@ -20,14 +22,17 @@ function Sweet() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSharingIdIncorrect, setIsSharingIdIncorrect] = useState(false);
   const [resMessage, setresMessage] = useState('');
-
+const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const getRennaration = async () => {
     try {
-      await axios.get(`${getAllRenarrations}/${renarrationId}`).then((res) => { setRenarration(res.data); console.log(res.data); });
+      const res = await axios.get(`${getAllRenarrations}/${renarrationId}`);
+    
+      setRenarration({ ...res.data, blocks: res.data.blocks });
+      // console.log(res.data);
     } catch (error) {
-      // console.log(error)
+      // console.log(error);
     }
   };
 
@@ -40,10 +45,16 @@ function Sweet() {
   };
   const handleModalSubmit = async (sharingId) => {
     try {
-      const response = await axios.get(`http://localhost:2000/verify-sharing/${sharingId}`);
-      navigate('/update-renarration', { state: response.data });
+      const response = await axios.post(sharingIdApi, { sharingId });
+      if (response.status === 200) {
+        dispatch(addAnnotatedBlocks(response.data.blocks));
+        dispatch(addRennarationTitle(response.data.renarrationTitle));
+        dispatch(addRennarationId(renarrationId));
+        navigate('/create-rennaration');
+      } else {
+        setIsSharingIdIncorrect(true);
+      }
     } catch (error) {
-      // console.error('Error verifying sharing ID:', error);
       setIsSharingIdIncorrect(true);
       setresMessage(error.response.data);
     }

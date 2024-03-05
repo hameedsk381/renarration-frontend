@@ -8,6 +8,7 @@ import { getAllRenarrations } from '../apis/extractApis';
 
 const fetchRenarrations = async () => {
   const response = await axios.get(getAllRenarrations);
+  // console.log(response.data);
   return response.data;
 };
 

@@ -13,6 +13,7 @@ export const setAnnotatedHtmlContent = (htmlforannotation) => ({
 });
 // Additional Action Types
 export const ADD_ANNOTATED_BLOCK = 'ADD_ANNOTATED_BLOCK';
+export const ADD_ANNOTATED_BLOCKS = 'ADD_ANNOTATED_BLOCKS';
 export const REMOVE_ANNOTATED_BLOCK = 'REMOVE_ANNOTATED_BLOCK';
 export const UPDATE_ANNOTATED_BLOCK = 'UPDATE_ANNOTATED_BLOCK';
 export const RESET_ANNOTATIONS = 'RESET_ANNOTATIONS';
@@ -21,7 +22,11 @@ export const addAnnotatedBlock = (block) => ({
   type: ADD_ANNOTATED_BLOCK,
   payload: block,
 });
-
+// Action Creators
+export const addAnnotatedBlocks = (blocks) => ({
+  type: ADD_ANNOTATED_BLOCKS,
+  payload: blocks,
+});
 export const removeAnnotatedBlock = (blockId) => ({
   type: REMOVE_ANNOTATED_BLOCK,
   payload: blockId,

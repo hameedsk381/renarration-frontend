@@ -1,19 +1,12 @@
-export const ADD_RENNARATED_BLOCK = 'ADD_RENNARATED_BLOCK';
-export const REMOVE_RENNARATED_BLOCK = 'REMOVE_RENNARATED_BLOCK';
-export const UPDATE_RENNARATED_BLOCK = 'UPDATE_RENNARATED_BLOCK';
-export const RESET_RENNARATIONS = 'RESET_RENNARATIONS';
-export const addRennarationBlock = (block) => ({
-  type: ADD_RENNARATED_BLOCK,
-  payload: block,
+
+export const ADD_RENNARATION_TITLE = 'ADD_RENNARATION_TITLE'
+export const ADD_RENARRATION_ID ='ADD_RENARRATION_ID'
+export const addRennarationTitle = (title) => ({
+  type: ADD_RENNARATION_TITLE,
+  payload: title,
 });
-export const removeRennaratedBlock = (blockId) => ({
-  type: REMOVE_RENNARATED_BLOCK,
-  payload: blockId,
+export const addRennarationId = (id) => ({
+  type: ADD_RENARRATION_ID,
+  payload: id,
 });
-export const updateRennaratedBlock = (id, updatedBlock) => ({
-  type: 'UPDATE_RENNARATED_BLOCK',
-  payload: { id, ...updatedBlock },
-});
-export const resetRennarations = () => ({
-  type: 'RESET_RENNARATIONS',
-});
+

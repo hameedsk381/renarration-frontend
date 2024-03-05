@@ -48,15 +48,14 @@ function RenarrationBlock({ block, noActions }) {
         await axios.delete(`${serverApi}/delete/${publicId}`);
         // console.log('media file deleted')
       } catch (error) {
-        // console.error('Error deleting image file:', error);
+        console.error('Error deleting image file:', error);
       }
     }
 
-    // Remove outline from the element in htmlContent
-    const updatedHtmlContent = removeOutlineFromElement(htmlforAnnotation, block.id);
-
-    // Optional: Dispatch an action to update the htmlContent in Redux
-    dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
+    if (htmlforAnnotation !== null) {
+      const updatedHtmlContent = removeOutlineFromElement(htmlforAnnotation, block.id);
+      dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
+    }
 
     setSnackbarMessage('Block deleted successfully');
     setSnackbarOpen(true);
@@ -68,7 +67,7 @@ function RenarrationBlock({ block, noActions }) {
 
   return (
     <>
-      <Card sx={{ borderTop: block.rennarationStatus ? '4px solid green' : '4px solid red' }}>
+      <Card sx={{ borderTop: block.renarrationStatus ? '4px solid green' : '4px solid red' }}>
         <CardMedia>
           <Box sx={{
             display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1,
@@ -98,7 +97,7 @@ function RenarrationBlock({ block, noActions }) {
         { !noActions && (
         <CardActions>
           <Button size="small" color="primary" onClick={() => { navigate('/edit-rennaration', { state: block.id }); }}>
-            {block.rennarationStatus ? 'Update' : 'Create'}
+            {block.renarrationStatus == true ? 'Update' : 'Create'}
           </Button>
           <Button size="small" color="primary" onClick={deleteBlock}>
             Delete

@@ -65,23 +65,32 @@ function UrlInput({ navigateTo }) {
   // );
 
   const handleNavigate = async () => {
-    if (isValidUrl) {
-      // console.log(inputValue)
-      dispatch(fetchStart());
-      await axios.post(extractApi, { url: inputValue }, { headers: getDeviceType }).then((res) => { dispatch(fetchSuccess(inputValue, res.data)); dispatch(setAnnotatedHtmlContent(res.data)); navigate(navigateTo); }).catch((err) => {
-        dispatch(fetchFailure(err.message)); setSnackbarMessage(errorMessage); // Update local snackbar message
-        setSnackbarOpen(true); // Open error snackbar
-        setInputValue('');
-      });
-    } else {
+    if (!isValidUrl) {
       setSnackbarMessage('Invalid URL. Example: https://www.example.com');
       setSnackbarOpen(true);
+      return; // Exit early if the URL is not valid
+    }
+  
+    dispatch(fetchStart());
+  
+    try {
+      const response = await axios.post(extractApi, { url: inputValue }, { headers: getDeviceType });
+      dispatch(fetchSuccess(inputValue, response.data));
+      dispatch(setAnnotatedHtmlContent(response.data));
+      navigate(navigateTo);
+    } catch (err) {
+      dispatch(fetchFailure(err.message));
+      setSnackbarMessage(errorMessage); // Assuming errorMessage is defined elsewhere
+      setSnackbarOpen(true);
+      setInputValue(''); // Consider keeping the input for user correction instead of clearing
     }
   };
+  
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
+      
+      if (inputValue !== '' && event.key === 'Enter') {
         handleNavigate();
       }
     };
@@ -100,6 +109,8 @@ function UrlInput({ navigateTo }) {
         }}
         style={wrapperStyle}
       >
+
+
         <input
           type="url"
           placeholder="Enter a URL, link you want to re-narrate with"

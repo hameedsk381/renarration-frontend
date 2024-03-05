@@ -5,9 +5,10 @@ import extractMedia from '../utils/extractMedia'
 import removeMedia from '../utils/removeMedia'
 
 const BlockListing = ({blocks}) => {
+  const renarratedBlocks = blocks.filter((block) => block.renarrationStatus === true);
   return (
     <Grid container p={3} spacing={2}>
-    {blocks && blocks.map((block) => (
+    {renarratedBlocks && renarratedBlocks.map((block) => (
       <Grid item key={block.id} xs={12} sm={6}>
         <Card>
           <CardHeader
