@@ -1,24 +1,13 @@
-# Stage 1: Build the application
-FROM node:20-alpine
-RUN addgroup app && adduser -S -G app app
-USER app
-# Set the working directory
+# Stage 1: Build the React application
+FROM node:20 AS build-stage
 WORKDIR /app
-
-# Copy package.json and package-lock.json
 COPY package*.json ./
-USER root
-RUN chown -R app:app .
-USER app
-# Install dependencies
 RUN npm install
-
-# Copy project files
 COPY . .
+RUN npm run build
 
-
-# Expose port 80
-EXPOSE 5173
-
-# Start nginx
-CMD npm run dev
+# Stage 2: Serve the application with nginx
+FROM nginx:stable-alpine AS production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
