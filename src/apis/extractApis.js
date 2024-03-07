@@ -1,5 +1,5 @@
 
-export const serverApi = import.meta.env.VITE_SERVER_API;
+export const serverApi = import.meta.env.VITE_SERVER_API || process.env.SERVER_URL;
 // export const serverApi = 'http://localhost:3000'
 export const extractApi = `${serverApi}/download`;
 export const submitApi = `${serverApi}/sweets/create-renarration`;
