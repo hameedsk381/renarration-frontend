@@ -108,10 +108,10 @@ const dispatch = useDispatch();
                   <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
                   <Paper variant="outlined" sx={{ p: 2, my: 3 }}>
               <Typography>{block.description}</Typography>
-              {block.image && (
+              {block.img && (
                         <Box
                           component="img"
-                          src={(block.image)}
+                          src={(block.img)}
                           alt="Renarration image"
                           sx={{
                                 width: '50%', height: 'auto', objectFit: 'cover', p: 0.5,
@@ -119,11 +119,11 @@ const dispatch = useDispatch();
                         />
                       )}
               <Typography my={2}>{block.desc}</Typography>
-              {block.audio && (
-                        <audio controls src={(block.audio)} style={{ marginBlock: '20px' }} />
+              {block.aud && (
+                        <audio controls src={(block.aud)} style={{ marginBlock: '20px' }} />
                       )}
-              {block.video && (
-                        <video controls width="100%" src={(block.video)} style={{ marginBlock: '20px' }} />
+              {block.vid && (
+                        <video controls width="100%" src={(block.vid)} style={{ marginBlock: '20px' }} />
                       )}
             </Paper>
                 </CardContent>

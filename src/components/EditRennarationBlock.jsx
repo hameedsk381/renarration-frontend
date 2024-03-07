@@ -70,7 +70,7 @@ function EditRennarationBlock() {
       for (const mediaType of ['audio', 'image', 'video']) {
         const file = formData[mediaType];
 
-        if (file) {
+        if (file instanceof File) {
           const formDataMedia = new FormData();
           formDataMedia.append('file', file);
 
@@ -104,9 +104,10 @@ function EditRennarationBlock() {
         navigate('/create-rennaration');
       }, 3000);
     } catch (error) {
-      // console.error('Error uploading file:', error);
-      setSnackbarMessage('Error uploading file. Please try again later.');
+      console.error('Error uploading file:', error);
+      setSnackbarMessage('Error uploading file. Please try again later.',error.message);
       setUpdateSnackbarOpen(true);
+      setLoading(false);
     }
   };
 
