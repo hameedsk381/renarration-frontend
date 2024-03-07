@@ -93,6 +93,7 @@ function RenarrationList() {
         headers: { 'Content-Type': 'application/json' },
       });
       handlePostSubmission(response.data);
+      navigate('/');
     } catch (error) {
       displaySnackbar(`Error updating renarration: ${error.message}`);
     }
