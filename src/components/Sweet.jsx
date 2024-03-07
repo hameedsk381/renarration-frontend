@@ -91,6 +91,7 @@ const dispatch = useDispatch();
                         <Box
                             key={index}
                             component="img"
+                            loading='lazy'
                             sx={{
                                 width: '50%',
                                 height: 'auto',
@@ -111,6 +112,7 @@ const dispatch = useDispatch();
               {block.img && (
                         <Box
                           component="img"
+                          loading='lazy'
                           src={(block.img)}
                           alt="Renarration image"
                           sx={{

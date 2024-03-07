@@ -13,8 +13,13 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import RenarrationDataGrid from '../../components/RenarrationDataGrid';
+import { serverApi } from '../../apis/extractApis';
 
 function Home() {
+  useEffect(() => {
+ console.log(serverApi)
+  }, [])
+  
   return (
     <>
       <Navbar />
