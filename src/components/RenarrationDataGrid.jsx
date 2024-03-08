@@ -1,10 +1,12 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Alert, Button, Container, Skeleton } from '@mui/material';
+import { Alert, Button, Container, Skeleton, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { getAllRenarrations } from '../apis/extractApis';
+import EditRenarration from './EditRenarration';
+import { ViewAgenda } from '@mui/icons-material';
 
 const fetchRenarrations = async () => {
   const response = await axios.get(getAllRenarrations);
@@ -19,21 +21,38 @@ function RenarrationDataGrid() {
   } = useQuery('renarrations', fetchRenarrations);
 
   const columns = [
-    { field: 'renarrationTitle', headerName: 'Renarration Title', flex: 1 },
+    { field: 'renarrationTitle', headerName: 'Renarration Title', flex: 0.4 }, // First column size is big
     {
       field: 'actions',
       headerName: 'Actions',
+      flex: 0.3,// Second column size is small
       sortable: false,
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => navigate(`/renarration-details/${params.row._id}`, { state: params.row._id })}
-        >
-          View
-        </Button>
+        <Stack gap={3} direction={'row'} sx={{ justifyContent: 'space-between' }}>
+          <Button
+            startIcon={<ViewAgenda/>}
+            variant="contained"
+            color="primary"
+            onClick={() => navigate(`/renarration-details/${params.row._id}`, { state: params.row._id })}
+          >
+            View
+          </Button>
+         
+        </Stack>
       ),
     },
+    {
+      field: 'edit',
+      headerName: 'Edit',
+      flex: 0.3,// Second column size is small
+      sortable: false,
+      renderCell: (params) => (
+        <Stack gap={3} direction={'row'} sx={{ justifyContent: 'space-between' }}>
+         
+          <EditRenarration/>
+        </Stack>
+      ),
+    }
   ];
 
   const rows = renarrations?.map((renarration, index) => ({

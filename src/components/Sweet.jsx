@@ -11,18 +11,11 @@ import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
 import { getAllRenarrations, sharingIdApi } from '../apis/extractApis';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
-import SharingIDModal from './SharingIdModal';
-import { addAnnotatedBlocks } from '../redux/actions/annotationActions';
-import { useDispatch } from 'react-redux';
-import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
 
 function Sweet() {
   const renarrationId = useParams().id;
   const [renarration, setRenarration] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSharingIdIncorrect, setIsSharingIdIncorrect] = useState(false);
-  const [resMessage, setresMessage] = useState('');
-const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const getRennaration = async () => {
@@ -36,29 +29,8 @@ const dispatch = useDispatch();
     }
   };
 
-  const handleEditClick = () => {
-    setIsModalOpen(true);
-    setIsSharingIdIncorrect(false);
-  };
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
-  const handleModalSubmit = async (sharingId) => {
-    try {
-      const response = await axios.post(sharingIdApi, { sharingId });
-      if (response.status === 200) {
-        dispatch(addAnnotatedBlocks(response.data.blocks));
-        dispatch(addRennarationTitle(response.data.renarrationTitle));
-        dispatch(addRennarationId(renarrationId));
-        navigate('/create-rennaration');
-      } else {
-        setIsSharingIdIncorrect(true);
-      }
-    } catch (error) {
-      setIsSharingIdIncorrect(true);
-      setresMessage(error.response.data);
-    }
-  };
+
+ 
   useEffect(() => {
     getRennaration();
     // console.log(renarrationId)
@@ -69,78 +41,70 @@ const dispatch = useDispatch();
       <Box>
         <Stack direction="row" justifyContent="space-between">
           <Button startIcon={<ArrowBack />} sx={{ m: 4 }} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
-          <Button endIcon={<Edit />} sx={{ m: 4 }} onClick={handleEditClick} variant="contained">Edit this Renarration</Button>
+         
         </Stack>
         <Typography textAlign="center" variant="h4">{renarration.renarrationTitle}</Typography>
-        <Grid container maxWidth="lg" spacing={2} p={4}>
+        <Stack component={Paper} elevation={0} spacing={2} p={4}>
 
           {renarration.blocks.map((block, index) => (
-            <Grid item key={index} xs={12} lg={4}>
-              <Card>
-                <CardHeader
-                  action={
-              <Button variant="outlined" size="small" endIcon={<NearMe />} href={block.source} target="_blank">source</Button>
-                                }
-                />
-                <CardMedia>
-                  <Box sx={{
-              display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1,
-            }}
-            >
-              {extractMedia(block.content).map((src, index) => (
-                        <Box
-                            key={index}
-                            component="img"
-                            loading='lazy'
-                            sx={{
-                                width: '50%',
-                                height: 'auto',
-                                objectFit: 'cover',
-                                p: 0.5,
-                              }}
-                            src={src}
-                            alt={`Renarration image ${index + 1}`}
-                          />
-                      ))}
+            <Card key={index} elevation={0}>
+              <CardHeader
+                action={
+                  <Button variant="outlined" size="small" endIcon={<NearMe />} href={block.source} target="_blank">source</Button>
+                }
+              />
+              <CardMedia>
+                <Box sx={{
+                  display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1,
+                }}
+                >
+                  {extractMedia(block.content).map((src, index) => (
+                    <Box
+                      key={index}
+                      component="img"
+                      loading='lazy'
+                      sx={{
+                        width: '50%',
+                        height: 'auto',
+                        objectFit: 'cover',
+                        p: 0.5,
+                      }}
+                      src={src}
+                      alt={`Renarration image ${index + 1}`}
+                    />
+                  ))}
 
-            </Box>
-                </CardMedia>
-                <CardContent>
-                  <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
-                  <Paper variant="outlined" sx={{ p: 2, my: 3 }}>
-              <Typography>{block.description}</Typography>
-              {block.img && (
-                        <Box
-                          component="img"
-                          loading='lazy'
-                          src={(block.img)}
-                          alt="Renarration image"
-                          sx={{
-                                width: '50%', height: 'auto', objectFit: 'cover', p: 0.5,
-                              }}
-                        />
-                      )}
-              <Typography my={2}>{block.desc}</Typography>
-              {block.aud && (
-                        <audio controls src={(block.aud)} style={{ marginBlock: '20px' }} />
-                      )}
-              {block.vid && (
-                        <video controls width="100%" src={(block.vid)} style={{ marginBlock: '20px' }} />
-                      )}
-            </Paper>
-                </CardContent>
+                </Box>
+              </CardMedia>
+              <CardContent>
+                <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
+                <Paper variant="outlined" sx={{ p: 2, my: 3 }}>
+                  <Typography>{block.description}</Typography>
+                  {block.img && (
+                    <Box
+                      component="img"
+                      loading='lazy'
+                      src={(block.img)}
+                      alt="Renarration image"
+                      sx={{
+                        width: '50%', height: 'auto', objectFit: 'cover', p: 0.5,
+                      }}
+                    />
+                  )}
+                  <Typography my={2}>{block.desc}</Typography>
+                  {block.aud && (
+                    <audio controls src={(block.aud)} style={{ marginBlock: '20px' }} />
+                  )}
+                  {block.vid && (
+                    <video controls width="100%" src={(block.vid)} style={{ marginBlock: '20px' }} />
+                  )}
+                </Paper>
+              </CardContent>
 
-              </Card>
-            </Grid>
+            </Card>
           ))}
-        </Grid>
-        <SharingIDModal
-          open={isModalOpen}
-          onClose={handleModalClose}
-          onSubmit={handleModalSubmit}
-          response={resMessage}
-          idVerifyStatus={isSharingIdIncorrect}
-        />
+        </Stack>
+      
 
       </Box>
     )

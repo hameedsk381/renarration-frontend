@@ -172,10 +172,7 @@ function RenarrationList() {
               />
 
             </Box>
-            <Box>
-              <Typography textAlign="center" variant="h4">{renarrationTitle}</Typography>
-              <BlockListing blocks={renarratedBlocks} />
-            </Box>
+            <BlockListing blocks={renarratedBlocks} />
           </>
         );
     }
