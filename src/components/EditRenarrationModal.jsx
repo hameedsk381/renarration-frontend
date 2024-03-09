@@ -57,7 +57,8 @@ function EditRenarrationModal({ isOpen, onClose, renarrationId }) {
       }}
     >
       <Box sx={{
-        width: 400,
+        width: '90%',
+        maxWidth: 300,
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 4,

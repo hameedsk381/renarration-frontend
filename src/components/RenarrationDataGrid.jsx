@@ -1,12 +1,26 @@
+
+
 import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { Alert, Button, Container, Skeleton, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import axios from 'axios';
-import { getAllRenarrations } from '../apis/extractApis';
-import EditRenarration from './EditRenarration';
+import {
+  Alert,
+  Container,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Stack
+} from '@mui/material';
 import { ViewAgenda } from '@mui/icons-material';
+import EditRenarration from './EditRenarration';
+import { getAllRenarrations } from '../apis/extractApis';
+import axios from 'axios';
 
 const fetchRenarrations = async () => {
   const response = await axios.get(getAllRenarrations);
@@ -17,58 +31,19 @@ const fetchRenarrations = async () => {
 function RenarrationDataGrid() {
   const navigate = useNavigate();
   const {
-    data: renarrations, isLoading, isError, error,
+    data: renarrations,
+    isLoading,
+    isError,
+    error,
   } = useQuery('renarrations', fetchRenarrations);
-
-  const columns = [
-    { field: 'renarrationTitle', headerName: 'Renarration Title', flex: 0.4 }, // First column size is big
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 0.3,// Second column size is small
-      sortable: false,
-      renderCell: (params) => (
-        <Stack gap={3} direction={'row'} sx={{ justifyContent: 'space-between' }}>
-          <Button
-            startIcon={<ViewAgenda/>}
-            variant="contained"
-            color="primary"
-            onClick={() => navigate(`/renarration-details/${params.row._id}`, { state: params.row._id })}
-          >
-            View
-          </Button>
-         
-        </Stack>
-      ),
-    },
-    {
-      field: 'edit',
-      headerName: 'Edit',
-      flex: 0.3,// Second column size is small
-      sortable: false,
-      renderCell: (params) => (
-        <Stack gap={3} direction={'row'} sx={{ justifyContent: 'space-between' }}>
-         
-          <EditRenarration/>
-        </Stack>
-      ),
-    }
-  ];
-
-  const rows = renarrations?.map((renarration, index) => ({
-    id: index,
-    renarrationTitle: renarration.renarrationTitle,
-    _id: renarration._id, // Assuming _id is unique for each renarration
-  })) || [];
 
   if (isLoading) {
     return (
       <Container maxWidth="lg" sx={{ my: 3 }}>
-        <Skeleton animation="wave" width="100" />
-        <Skeleton animation="wave" width="100" />
-        <Skeleton animation="wave" width="100" />
-        <Skeleton animation="wave" width="100" />
-        <Skeleton animation="wave" width="100" />
+        {/* Adjust the number and sizes of skeletons based on your table layout */}
+        <Skeleton animation="wave" height={60} />
+        <Skeleton animation="wave" height={60} />
+        <Skeleton animation="wave" height={60} />
       </Container>
     );
   }
@@ -76,33 +51,59 @@ function RenarrationDataGrid() {
   if (isError) {
     return (
       <Container maxWidth="lg" sx={{ my: 3 }}>
-        <p>
-          Error loading renarrations:
-          {error.message}
-        </p>
+        <Alert severity="error">
+          Error loading renarrations: {error.message}
+        </Alert>
       </Container>
     );
   }
 
-  if (rows.length === 0) {
+  if (!renarrations || renarrations.length === 0) {
     return (
-      <Alert severity="info" sx={{ m: 3 }}>
-        No sweets available.
-      </Alert>
+      <Container maxWidth="lg" sx={{ my: 3 }}>
+        <Alert severity="info">No renarrations available.</Alert>
+      </Container>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ my: 3 }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        checkboxSelection={false}
-      />
+    <Container maxWidth="lg" sx={{ my: { xs: 8, sm: 10, md: 14 } }}>
+      <TableContainer component={Paper} variant='outlined'>
+        <Table aria-label="responsive renarration table">
+          <TableHead>
+            <TableRow>
+              <TableCell >Renarration Title</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {renarrations.map((renarration) => (
+              <TableRow
+                key={renarration._id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {renarration.renarrationTitle}
+                </TableCell>
+                <TableCell align="right">
+                  <Button sx={{mr:3}}
+                    startIcon={<ViewAgenda />}
+                    variant="contained"
+                    onClick={() => navigate(`/renarration-details/${renarration._id}`)}
+                    size='small'
+                  >
+                    View
+                  </Button>
+                  <EditRenarration renarrationId={renarration._id} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 }
 
 export default RenarrationDataGrid;
+

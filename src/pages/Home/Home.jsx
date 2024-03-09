@@ -16,9 +16,7 @@ import RenarrationDataGrid from '../../components/RenarrationDataGrid';
 import { serverApi } from '../../apis/extractApis';
 
 function Home() {
-  useEffect(() => {
- console.log(serverApi)
-  }, [])
+ 
   
   return (
     <>

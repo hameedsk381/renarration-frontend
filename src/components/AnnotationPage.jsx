@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Alert, AlertTitle, AppBar, Box, Breadcrumbs, Button, CircularProgress, Container, FormControlLabel, Snackbar, Switch, Toolbar, Typography,
+  Alert, AlertTitle, AppBar, Box, Breadcrumbs, Button, Chip, CircularProgress, Container, FormControlLabel, Snackbar, Switch, Toolbar, Typography,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +17,7 @@ import { processHtml } from '../utils/processHtml';
 import {
   fetchFailure, fetchStart, fetchSuccess, resetState,
 } from '../redux/actions/urlActions';
-import { extractApi } from '../apis/extractApis';
+import { extractApi, sweetsbyurl } from '../apis/extractApis';
 import getDeviceType from '../utils/getDeviceType';
 import { removeOutlineFromOuterHtml } from '../utils/removeOutlineFromOuterHtml';
 
@@ -38,10 +38,19 @@ function AnnotationPage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [clickedElementContent, setClickedElementContent] = useState({ html: '' });
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
-
+const [urlsweets,setUrlsweets] = useState();
   useEffect(() => {
-    // console.log(annotationMode)
-  }, [annotationMode, annotationHtmlContent]);
+   fetchResponse()
+  }, [currentUrl]);
+  const fetchResponse = async () => {
+    try {
+      const response = await axios.post(sweetsbyurl, { source: currentUrl });
+      setUrlsweets(response.data);
+      // Handle the response as needed
+    } catch (error) {
+      // Handle any errors from the fetch
+    }
+  };
 
   const handleAnnotationModeChange = () => {
     dispatch(toggleAnnotationMode()); // Dispatch toggle action
@@ -174,25 +183,19 @@ function AnnotationPage() {
           label="Annotation Mode"
         />
 
-        <button className="app-bar-button" onClick={handleExit}>
+        <Button variant='contained' size='small' className="app-bar-button" onClick={handleExit}>
           Exit Renarration
-        </button>
+        </Button>
 
         {annotatedBlocks.length !== 0 && (
-        <button className="app-bar-button" onClick={navigateToRenarrationBlocks}>
+        <Button variant='contained' size='small' className="app-bar-button" onClick={navigateToRenarrationBlocks}>
           View Renarration Blocks
-        </button>
+        </Button>
         )}
       </div>
 
       <UrlInput />
-      {/* <Breadcrumbs aria-label="breadcrumb">
-                {history && history.map((obj, index) => (
-                    <Link key={index} color="inherit"  onClick={handleNavigationClick}>
-                      {obj.url}
-                    </Link>
-                ))}
-            </Breadcrumbs> */}
+    <Typography >No of sweets for this url : <Chip label={urlsweets && urlsweets.length} variant='filled'/></Typography>
       {!isFetching && annotationMode && (
         <div
           dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }}

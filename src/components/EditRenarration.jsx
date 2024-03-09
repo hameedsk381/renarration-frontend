@@ -8,7 +8,7 @@ function EditRenarration({ renarrationId }) {
 
   return (
     <>
-      <Button variant='contained' startIcon={<Edit/>} onClick={() => setIsModalOpen(true)}>Edit </Button>
+      <Button size='small' variant='contained' startIcon={<Edit/>} onClick={() => setIsModalOpen(true)}>Edit </Button>
       <EditRenarrationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
