@@ -38,7 +38,7 @@ function AnnotationPage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [clickedElementContent, setClickedElementContent] = useState({ html: '' });
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
-const [urlsweets,setUrlsweets] = useState();
+const [urlsweets,setUrlsweets] = useState(0);
   useEffect(() => {
    fetchResponse()
   }, [currentUrl]);
