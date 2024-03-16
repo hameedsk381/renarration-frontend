@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Alert, AlertTitle, AppBar, Box, Breadcrumbs, Button, Chip, CircularProgress, Container, FormControlLabel, Snackbar, Switch, Toolbar, Typography,
+  Alert, AlertTitle,  Button, Chip,  Container, FormControlLabel, Snackbar, Switch, Typography,
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux'; // Import the necessary action creators
 import axios from 'axios';
@@ -33,19 +33,19 @@ function AnnotationPage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
-  // const history = useSelector(state => state.history.history);
   const annotationMode = useSelector((state) => state.annotation.mode); // Get the annotation mode from Redux state
   const [openDialog, setOpenDialog] = useState(false);
   const [clickedElementContent, setClickedElementContent] = useState({ html: '' });
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
 const [urlsweets,setUrlsweets] = useState(0);
   useEffect(() => {
-   fetchResponse()
+   fetchResponse(),
+  console.log(initialHtmlContent)
   }, [currentUrl]);
   const fetchResponse = async () => {
     try {
       const response = await axios.post(sweetsbyurl, { source: currentUrl });
-      setUrlsweets(response.data);
+      setUrlsweets(response.data.length);
       // Handle the response as needed
     } catch (error) {
       // Handle any errors from the fetch
@@ -63,8 +63,9 @@ const [urlsweets,setUrlsweets] = useState(0);
   };
 
   const handleAnnotationClick = (event) => {
+    event.preventDefault();
     let elementId = event.target.dataset.id;
-    let existingBlock;
+
 
     if (!elementId) {
     // If the element does not have an ID, generate a new one
@@ -73,7 +74,7 @@ const [urlsweets,setUrlsweets] = useState(0);
     }
 
     // Check if a block with this ID already exists
-    existingBlock = annotatedBlocks.find((block) => block.id === elementId);
+    const existingBlock = annotatedBlocks.find((block) => block.id === elementId);
     if (existingBlock) {
       dispatch(removeAnnotatedBlock(existingBlock.id));
       const updatedHtmlContent = removeOutlineFromElement(annotationHtmlContent, existingBlock.id);
@@ -89,19 +90,21 @@ const [urlsweets,setUrlsweets] = useState(0);
   };
 
   const handleNavigationClick = async (event) => {
-  // Check if the clicked element is an anchor tag
+    event.preventDefault(); // Prevent default navigation
+    // Check if the clicked element is an anchor tag
     if (event.target.tagName === 'A') {
+   
       const href = event.target.getAttribute('href');
-
-      // If href exists and annotation mode is off, fetch new content
+  
+      // If href exists and is valid, perform operations without navigation
       if (href) {
-        event.stopPropagation(); // Prevent default navigation
+       // Stop the event from propagating further
         // console.log("URL to fetch:", href);
-
+  
         try {
           dispatch(fetchStart());
           const response = await axios.post(extractApi, { url: href }, { headers: { 'User-Agent': getDeviceType() } });
-          dispatch(fetchSuccess(response.data));
+          dispatch(fetchSuccess(href,response.data));
           dispatch(setAnnotatedHtmlContent(response.data));
         } catch (error) {
           dispatch(fetchFailure(error.message));
@@ -114,11 +117,11 @@ const [urlsweets,setUrlsweets] = useState(0);
         setSnackbarMessage('Invalid URL. Example: https://www.example.com');
         setSnackbarOpen(true);
       }
-    } else {
-      // If not an anchor tag or href is empty, let default behavior occur
-      // console.log("Not an anchor tag or no href, default click behavior.");
     }
+    // If not an anchor tag or href is empty, let default behavior occur
+    // console.log("Not an anchor tag or no href, default click behavior.");
   };
+  
 
   const handleMouseOver = (event) => {
   // Prevent event from affecting parent elements
@@ -195,7 +198,7 @@ const [urlsweets,setUrlsweets] = useState(0);
       </div>
 
       <UrlInput />
-    <Typography >No of sweets for this url : <Chip label={urlsweets && urlsweets.length} variant='filled'/></Typography>
+    {/* <Typography >No of sweets for this url : <Chip label={urlsweets && urlsweets} variant='filled'/></Typography> */}
       {!isFetching && annotationMode && (
         <div
           dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }}

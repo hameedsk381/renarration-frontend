@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start:dev": "vite --mode development",
+    "start:dev": "vite --mode development --host 0.0.0.0",
     "start": "vite --mode production",
     "build": "vite build",
     "lint": "eslint . --fix --ext js,jsx --report-unused-disable-directives --max-warnings 0",

@@ -70,7 +70,7 @@ function RenarrationDataGrid() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ my:2 }}>
+    <Container  sx={{ my:2 }}>
       <Stack my={3} direction={'row'} justifyContent={'space-between'}>
         <Typography variant='h5'>Latest Re-narrations</Typography>
         <TextField size='small' label="Search Renarrations" />
@@ -84,28 +84,45 @@ function RenarrationDataGrid() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {renarrations.map((renarration) => (
-              <TableRow
-                key={renarration._id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {renarration.renarrationTitle}
-                </TableCell>
-                <TableCell align="right">
-                  <Button sx={{mr:3}}
-                    startIcon={<Visibility />}
-                    variant="contained"
-                    onClick={() => navigate(`/renarration-details/${renarration._id}`)}
-                    size='small'
-                  >
-                    View
-                  </Button>
-                  <EditRenarration renarrationId={renarration._id} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+  {renarrations.map((renarration) => (
+    <TableRow
+      key={renarration._id}
+      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+    >
+      <TableCell 
+        component="th" 
+        scope="row" 
+        sx={{ 
+          fontSize: 'calc(12px + 0.5vw)',
+          whiteSpace: 'nowrap' ,
+          maxWidth:'100px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}
+      >
+        {renarration.renarrationTitle}
+      </TableCell>
+      <TableCell 
+        align="right"
+        sx={{
+          whiteSpace: 'nowrap' // Apply this if you want the content to dictate size without wrapping
+        }}
+      >
+        <Button
+          sx={{mr:3}}
+          startIcon={<Visibility />}
+          variant="contained"
+          onClick={() => navigate(`/renarration-details/${renarration._id}`)}
+          size='small'
+        >
+          View
+        </Button>
+        <EditRenarration renarrationId={renarration._id} />
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
         </Table>
       </TableContainer>
     </Container>

@@ -5,7 +5,8 @@ export const processHtml = (htmlString) => {
 
   allElements.forEach((el) => {
     el.removeAttribute('onclick');
-    el.removeAttribute('href');
+    el.removeAttribute('target');
+  
     // Add more attributes to remove if necessary
   });
 
