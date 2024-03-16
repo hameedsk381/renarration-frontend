@@ -44,9 +44,13 @@ function RenarrationDataGrid() {
     return (
       <Container maxWidth="lg" sx={{ my: 3 }}>
         {/* Adjust the number and sizes of skeletons based on your table layout */}
-        <Skeleton animation="wave" height={60} />
-        <Skeleton animation="wave" height={60} />
-        <Skeleton animation="wave" height={60} />
+        <Skeleton animation="wave" height={30} />
+        <Skeleton animation="wave" height={30} />
+        <Skeleton animation="wave" height={30} />
+        <Skeleton animation="wave" height={30} />
+        <Skeleton animation="wave" height={30} />
+        <Skeleton animation="wave" height={30} />
+        <Skeleton animation="wave" height={30} />
       </Container>
     );
   }
@@ -71,10 +75,10 @@ function RenarrationDataGrid() {
 
   return (
     <Container  sx={{ my:2 }}>
-      <Stack my={3} direction={'row'} justifyContent={'space-between'}>
+      {/* <Stack my={3} direction={'row'} justifyContent={'space-between'}>
         <Typography variant='h5'>Latest Re-narrations</Typography>
         <TextField size='small' label="Search Renarrations" />
-      </Stack>
+      </Stack> */}
       <TableContainer component={Paper} variant='outlined'>
         <Table aria-label="responsive renarration table">
           <TableHead>
