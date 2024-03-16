@@ -121,7 +121,7 @@ function RenarrationDataGrid() {
         >
           View
         </Button>
-        <EditRenarration renarrationId={renarration._id} />
+       
       </TableCell>
     </TableRow>
   ))}

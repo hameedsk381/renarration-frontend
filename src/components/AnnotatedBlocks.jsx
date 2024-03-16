@@ -15,16 +15,14 @@ function AnnotatedBlocks() {
   }, []);
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom sx={{ marginY: 4 ,textAlign:"center"}}>
+       <Button variant="contained" sx={{my:2}} color="primary" startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}>
+          Back to Annotate
+        </Button>
+      <Typography  gutterBottom sx={{ marginY: 4 ,textAlign:"center", '@media (max-width: 600px)': { fontSize: '2rem' } }}>
         Annotated Blocks
       </Typography>
 
-      <Stack direction="row" justifyContent="space-between">
-        <Button variant="contained" color="primary" startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}>
-          Back to Annotate
-        </Button>
-
-      </Stack>
+    
       <Grid container spacing={4} sx={{ marginTop: 2 }}>
         {annotatedBlocks && annotatedBlocks.map((block) => (
           <Grid item key={block.id} xs={12} md={6} lg={4}>

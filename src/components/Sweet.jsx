@@ -11,6 +11,7 @@ import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
 import { getAllRenarrations, sharingIdApi } from '../apis/extractApis';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
+import EditRenarration from './EditRenarration';
 
 function Sweet() {
   const renarrationId = useParams().id;
@@ -39,9 +40,9 @@ function Sweet() {
   return renarration
     ? (
       <Box>
-        <Stack direction="row" justifyContent="space-between">
-          <Button startIcon={<ArrowBack />} sx={{ m: 4 }} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
-         
+        <Stack m={4} direction="row" justifyContent="space-between">
+          <Button startIcon={<ArrowBack />}  onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
+          <EditRenarration renarrationId={renarration._id} />
         </Stack>
         <Typography textAlign="center" variant="h4">{renarration.renarrationTitle}</Typography>
         <Stack component={Paper} elevation={0} spacing={2} p={4}>

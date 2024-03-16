@@ -20,6 +20,7 @@ import {
 import { extractApi, sweetsbyurl } from '../apis/extractApis';
 import getDeviceType from '../utils/getDeviceType';
 import { removeOutlineFromOuterHtml } from '../utils/removeOutlineFromOuterHtml';
+import AnnotationNavbar from './AnnotationNavbar';
 
 function AnnotationPage() {
   const dispatch = useDispatch();
@@ -180,24 +181,9 @@ const [urlsweets,setUrlsweets] = useState(0);
   return (
     <>
 
-      <div className="app-bar">
-        <FormControlLabel
-          control={<Switch checked={annotationMode} onChange={handleAnnotationModeChange} color="primary" />}
-          label="Annotation Mode"
-        />
+      <AnnotationNavbar annotationMode={annotationMode} handleAnnotationModeChange={handleAnnotationModeChange} handleExit={handleExit} annotatedBlocks={annotatedBlocks} navigateToRenarrationBlocks={navigateToRenarrationBlocks}/>
 
-        <Button variant='contained' size='small' className="app-bar-button" onClick={handleExit}>
-          Exit Renarration
-        </Button>
-
-        {annotatedBlocks.length !== 0 && (
-        <Button variant='contained' size='small' className="app-bar-button" onClick={navigateToRenarrationBlocks}>
-          View Renarration Blocks
-        </Button>
-        )}
-      </div>
-
-      <UrlInput />
+      {/* <UrlInput /> */}
     {/* <Typography >No of sweets for this url : <Chip label={urlsweets && urlsweets} variant='filled'/></Typography> */}
       {!isFetching && annotationMode && (
         <div
