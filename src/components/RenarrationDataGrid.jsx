@@ -21,7 +21,6 @@ import {
   Input
 } from '@mui/material';
 import { ViewAgenda, Visibility } from '@mui/icons-material';
-import EditRenarration from './EditRenarration';
 import { getAllRenarrations } from '../apis/extractApis';
 import axios from 'axios';
 

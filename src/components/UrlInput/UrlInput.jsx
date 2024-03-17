@@ -34,35 +34,7 @@ function UrlInput({ navigateTo }) {
     }
     setSnackbarOpen(false);
   };
-  // const mutation = useMutation(
-  //   async (urlToDownload) => {
-  //     console.log("started fetching");
-  //     dispatch(fetchHtmlStart())
-
-  //     return await axios.post('http://localhost:2000/download', { url: urlToDownload,device: deviceType}, {
-  //       onUploadProgress: (progressEvent) => {
-  //         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-  //         dispatch(updateProgress(percentCompleted)); // Dispatch progress update
-  //       }
-  //     });
-  //   },
-  //   {
-  //     onSuccess: (response) => {
-  //       dispatch(fetchHtmlSuccess(response.data)); // Dispatch action with useDispatch
-  //       console.log('Received HTML content:', response.data);
-  //       navigate(navigateTo);
-
-  //       dispatch(resetProgress()); // Reset progress
-  //     },
-  //     onError: (error) => {
-  //       dispatch(fetchHtmlFailure(error.message)); // Dispatch action with useDispatch
-  //       setSnackbarMessage(errorMessage); // Update local snackbar message
-  //       setSnackbarOpen(true); // Open error snackbar
-  //       setInputValue('');
-  //       dispatch(resetProgress()); // Reset progress
-  //     },
-  //   }
-  // );
+ 
 
   const handleNavigate = async () => {
     if (!isValidUrl) {
@@ -128,7 +100,7 @@ function UrlInput({ navigateTo }) {
           endIcon={isFetching ? <CircularProgress value={progress} size={24} color="inherit" /> : <ArrowForward />}
           onClick={handleNavigate}
           style={buttonStyle}
-          sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+          sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: 'primary.main', '&:hover': { backgroundColor: 'primary.dark' } }}
           disabled={isFetching}
         >
           Renarrate-now

@@ -231,7 +231,7 @@ function RenarrationList() {
         </DialogActions>
       </Dialog>
 
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Snackbar  open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
         <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
           {snackbarMsg}
         </Alert>

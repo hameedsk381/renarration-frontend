@@ -9,12 +9,45 @@ import EditRennarationBlock from './components/EditRennarationBlock';
 import RenarrationList from './components/RennarationList';
 import AnnotationPage from './components/AnnotationPage';
 import Sweet from './components/Sweet';
-import AnnotatedBlocks from './components/AnnotatedBlocks';
 import UpdateSweet from './components/UpdateSweet';
+import { ThemeProvider } from '@emotion/react';
+import { CssBaseline, createTheme } from '@mui/material';
+import { useSelector } from 'react-redux';
+import {  themes } from './themes/themes';
+import { useEffect } from 'react';
 
 function App() {
+  const currentTheme = useSelector((state) => state.theme.currentTheme); // This should match a key in `themes`
+  const selectedTheme = themes.filter((item) => item.name === currentTheme)[0].theme;
+  const theme = createTheme(selectedTheme); // Retrieves the correct theme object
+  
+useEffect(() => {
+  console.log(currentTheme)
+ console.log(themes[currentTheme]);
+
+}, [])
+const theme2 = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#36454F',
+    },
+    secondary: {
+      main: '#008080',
+    },
+    background: {
+      default: '#DCDCDC',
+    },
+  },
+});
+
+
+
   return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline /> 
     <Router>
+
 
       <Routes>
         <Route exact path="/" element={<Home />} />
@@ -30,6 +63,7 @@ function App() {
       {/* <SimpleBottomNavigation /> */}
 
     </Router>
+    </ThemeProvider>
   );
 }
 

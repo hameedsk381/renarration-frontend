@@ -6,7 +6,7 @@ import {
 function Footer() {
   return (
     <Box sx={{
-      bgcolor: '#C1BEBE',
+      bgcolor: 'background.customBackground',
       py: 3,
       bottom: 0,
       left: 0,
@@ -21,9 +21,7 @@ function Footer() {
 
           The idea of the re-narration Web is to provide a person visiting a Web page, a comfortable narrative of the page content based on the visitor profile and contributions of alternative narratives made available by the community.
         </Typography>
-        <Typography variant="subtitle1" align="center" color="text.secondary" component="p">
-          Something here to give the footer a purpose!
-        </Typography>
+        
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
           {'© '}
           <Link color="inherit" href="https://yourwebsite.com/">

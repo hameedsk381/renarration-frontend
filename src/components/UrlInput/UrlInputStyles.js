@@ -18,7 +18,6 @@ export const inputStyle = {
 export const buttonStyle = {
   width: 'auto',
   flexShrink: 0,
-  background: '#575555',
   color: '#fff',
   border: 'none',
   cursor: 'pointer',
