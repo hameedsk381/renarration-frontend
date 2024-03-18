@@ -21,7 +21,7 @@ function Footer() {
 
           The idea of the re-narration Web is to provide a person visiting a Web page, a comfortable narrative of the page content based on the visitor profile and contributions of alternative narratives made available by the community.
         </Typography>
-        
+
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
           {'© '}
           <Link color="inherit" href="https://yourwebsite.com/">

@@ -1,9 +1,19 @@
-body{
-  margin: 0;
-  padding: 0;
-  background-color:#ffff;;
 
+
+body {
+  cursor: pointer;
 }
+
+a:hover, button:hover {
+  cursor:  pointer;
+}
+
+/* Apply animation to a custom element when hovering */
+.custom-hover-element:hover {
+  animation: pulse 1s infinite;
+}
+
+
 h1,h2,h3,h4,h5,h6{
   color: black;
   font-weight: bolder;
@@ -42,5 +52,17 @@ h1,h2,h3,h4,h5,h6{
 
   .app-bar .switch-container {
       margin-right: 10px; /* Adjust space around the switch */
+  }
+}
+/* Define keyframes for the animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }

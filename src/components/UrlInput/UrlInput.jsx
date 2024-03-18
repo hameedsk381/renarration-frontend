@@ -5,8 +5,6 @@ import {
 import { ArrowForward } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-import { useMutation } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { useUrlValidation } from '../../hooks/useUrlValidation';
 import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
@@ -14,6 +12,7 @@ import { fetchFailure, fetchStart, fetchSuccess } from '../../redux/actions/urlA
 import { extractApi } from '../../apis/extractApis';
 import { setAnnotatedHtmlContent } from '../../redux/actions/annotationActions';
 import getDeviceType from '../../utils/getDeviceType';
+import { showSnackbar } from '../../redux/actions/snackbarActions';
 
 function UrlInput({ navigateTo }) {
   const [inputValue, setInputValue] = useState('');
@@ -28,23 +27,18 @@ function UrlInput({ navigateTo }) {
   const navigate = useNavigate();
   const isValidUrl = useUrlValidation(inputValue);
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
+  const displaySnackbar = (message, type) => {
+    dispatch(showSnackbar(message, type));
   };
- 
 
   const handleNavigate = async () => {
     if (!isValidUrl) {
-      setSnackbarMessage('Invalid URL. Example: https://www.example.com');
-      setSnackbarOpen(true);
+      displaySnackbar('Invalid URL. Example: https://www.example.com', 'error');
       return; // Exit early if the URL is not valid
     }
-  
+
     dispatch(fetchStart());
-  
+
     try {
       const response = await axios.post(extractApi, { url: inputValue }, { headers: getDeviceType });
       dispatch(fetchSuccess(inputValue, response.data));
@@ -52,16 +46,13 @@ function UrlInput({ navigateTo }) {
       navigate(navigateTo);
     } catch (err) {
       dispatch(fetchFailure(err.message));
-      setSnackbarMessage(errorMessage); // Assuming errorMessage is defined elsewhere
-      setSnackbarOpen(true);
+      displaySnackbar(err.message, 'error');
       setInputValue(''); // Consider keeping the input for user correction instead of clearing
     }
   };
-  
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      
       if (inputValue !== '' && event.key === 'Enter') {
         handleNavigate();
       }
@@ -73,62 +64,39 @@ function UrlInput({ navigateTo }) {
   }, [handleNavigate]);
 
   return (
-    <>
-      <Paper
-        elevation={6}
-        sx={{
-          width: { lg: '50%', md: '75%' }, m: 2, marginTop: '-25px', marginInline: { lg: '25%', md: '10%' },
+    <Paper
+      elevation={6}
+      sx={{
+        width: { lg: '50%', md: '75%' }, m: 2, marginTop: '-25px', marginInline: { lg: '25%', md: '10%' },
+      }}
+      style={wrapperStyle}
+    >
+
+      <input
+        type="url"
+        placeholder="Enter a URL, link you want to re-narrate with"
+        style={inputStyle}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            handleNavigate();
+          }
         }}
-        style={wrapperStyle}
+      />
+
+      <Button
+        endIcon={isFetching ? <CircularProgress value={progress} size={24} color="inherit" /> : <ArrowForward />}
+        onClick={handleNavigate}
+        style={buttonStyle}
+        sx={{
+          borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: 'primary.main', '&:hover': { backgroundColor: 'primary.dark' },
+        }}
+        disabled={isFetching}
       >
-
-
-        <input
-          type="url"
-          placeholder="Enter a URL, link you want to re-narrate with"
-          style={inputStyle}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              handleNavigate();
-            }
-          }}
-        />
-
-        <Button
-          endIcon={isFetching ? <CircularProgress value={progress} size={24} color="inherit" /> : <ArrowForward />}
-          onClick={handleNavigate}
-          style={buttonStyle}
-          sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: 'primary.main', '&:hover': { backgroundColor: 'primary.dark' } }}
-          disabled={isFetching}
-        >
-          Renarrate-now
-        </Button>
-      </Paper>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="error" sx={{ width: '100%', whiteSpace: 'pre-line' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={mutationErrorSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setMutationErrorSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-      >
-        <Alert onClose={() => setMutationErrorSnackbarOpen(false)} severity="error" sx={{ width: '100%', whiteSpace: 'pre-line' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-
-    </>
+        Renarrate-now
+      </Button>
+    </Paper>
   );
 }
 

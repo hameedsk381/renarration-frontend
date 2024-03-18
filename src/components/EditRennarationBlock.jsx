@@ -105,7 +105,7 @@ function EditRennarationBlock() {
       }, 3000);
     } catch (error) {
       console.error('Error uploading file:', error);
-      setSnackbarMessage('Error uploading file. Please try again later.',error.message);
+      setSnackbarMessage('Error uploading file. Please try again later.', error.message);
       setUpdateSnackbarOpen(true);
       setLoading(false);
     }
@@ -190,7 +190,7 @@ function UploadInput({
       </label>
       {formData[type] && (
         <Box mt={2} position="relative">
-          <React.Suspense fallback={<CircularProgress/>}>
+          <React.Suspense fallback={<CircularProgress />}>
             {type === 'image' && <img src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} alt="Preview" width="100%" />}
             {type === 'audio' && <audio controls src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} />}
             {type === 'video' && <video controls width="100%" src={formData[type] instanceof File ? URL.createObjectURL(formData[type]) : formData[type]} />}

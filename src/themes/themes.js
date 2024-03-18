@@ -1,8 +1,10 @@
-
 export const themes = [
   {
     name: 'roseGarden',
     theme: {
+      typography: {
+        fontFamily: 'Roboto',
+      },
       palette: {
         mode: 'light',
         primary: {
@@ -21,6 +23,9 @@ export const themes = [
   {
     name: 'royalMajesty',
     theme: {
+      typography: {
+        fontFamily: 'Verdana, sans-serif',
+      },
       palette: {
         mode: 'light',
         primary: {
@@ -39,6 +44,9 @@ export const themes = [
   {
     name: 'forestWhisper',
     theme: {
+      typography: {
+        fontFamily: 'Georgia, serif',
+      },
       palette: {
         mode: 'light',
         primary: {
@@ -57,6 +65,9 @@ export const themes = [
   {
     name: 'sunsetGlow',
     theme: {
+      typography: {
+        fontFamily: 'Times New Roman, serif',
+      },
       palette: {
         mode: 'light',
         primary: {
@@ -75,6 +86,9 @@ export const themes = [
   {
     name: 'sereneSky',
     theme: {
+      typography: {
+        fontFamily: 'Courier New, monospace',
+      },
       palette: {
         mode: 'light',
         primary: {
@@ -90,22 +104,25 @@ export const themes = [
       },
     },
   },
-{
-  name: 'darkTheme',
-  theme: {
-    palette: {
-      mode: 'dark',
-      primary: {
-        main: '#2F4F4F',
+  {
+    name: 'darkTheme',
+    theme: {
+      typography: {
+        fontFamily: 'Arial, sans-serif',
       },
-      secondary: {
-        main: '#708090',
-      },
-      background: {
-        default: '#2F4F4F', // Dark background color
-        customBackground: '#708090', // Dark background color
+      palette: {
+        mode: 'dark',
+        primary: {
+          main: '#2F4F4F',
+        },
+        secondary: {
+          main: '#708090',
+        },
+        background: {
+          default: '#2F4F4F', // Dark background color
+          customBackground: '#708090', // Dark background color
+        },
       },
     },
   },
-},
 ];

@@ -16,8 +16,6 @@ import RenarrationDataGrid from '../../components/RenarrationDataGrid';
 import { serverApi } from '../../apis/extractApis';
 
 function Home() {
- 
-  
   return (
     <>
       <Navbar />

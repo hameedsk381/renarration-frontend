@@ -22,7 +22,7 @@ function Sweet() {
   const getRennaration = async () => {
     try {
       const res = await axios.get(`${getAllRenarrations}/${renarrationId}`);
-    
+
       setRenarration({ ...res.data, blocks: res.data.blocks });
       // console.log(res.data);
     } catch (error) {
@@ -30,8 +30,6 @@ function Sweet() {
     }
   };
 
-
- 
   useEffect(() => {
     getRennaration();
     // console.log(renarrationId)
@@ -41,14 +39,14 @@ function Sweet() {
     ? (
       <Box>
         <Stack m={4} direction="row" justifyContent="space-between">
-          <Button startIcon={<ArrowBack />}  onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
+          <Button startIcon={<ArrowBack />} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
           <EditRenarration renarrationId={renarration._id} />
         </Stack>
         <Typography textAlign="center" variant="h4">{renarration.renarrationTitle}</Typography>
         <Stack component={Paper} elevation={0} spacing={2} m={4}>
 
           {renarration.blocks.map((block, index) => (
-            <Card key={index} elevation={0} >
+            <Card key={index} elevation={0}>
               <CardHeader
                 action={
                   <Button variant="outlined" size="small" endIcon={<NearMe />} href={block.source} target="_blank">source</Button>
@@ -63,7 +61,7 @@ function Sweet() {
                     <Box
                       key={index}
                       component="img"
-                      loading='lazy'
+                      loading="lazy"
                       sx={{
                         width: '50%',
                         height: 'auto',
@@ -84,7 +82,7 @@ function Sweet() {
                   {block.img && (
                     <Box
                       component="img"
-                      loading='lazy'
+                      loading="lazy"
                       src={(block.img)}
                       alt="Renarration image"
                       sx={{
@@ -105,7 +103,6 @@ function Sweet() {
             </Card>
           ))}
         </Stack>
-      
 
       </Box>
     )

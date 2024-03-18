@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
@@ -18,11 +16,11 @@ import {
   Stack,
   Typography,
   TextField,
-  Input
+  Input,
 } from '@mui/material';
 import { ViewAgenda, Visibility } from '@mui/icons-material';
-import { getAllRenarrations } from '../apis/extractApis';
 import axios from 'axios';
+import { getAllRenarrations } from '../apis/extractApis';
 
 const fetchRenarrations = async () => {
   const response = await axios.get(getAllRenarrations);
@@ -58,7 +56,9 @@ function RenarrationDataGrid() {
     return (
       <Container maxWidth="lg" sx={{ my: 3 }}>
         <Alert severity="error">
-          Error loading renarrations: {error.message}
+          Error loading renarrations:
+          {' '}
+          {error.message}
         </Alert>
       </Container>
     );
@@ -73,58 +73,58 @@ function RenarrationDataGrid() {
   }
 
   return (
-    <Container  sx={{ my:2 }}>
+    <Container sx={{ my: 2 }}>
       {/* <Stack my={3} direction={'row'} justifyContent={'space-between'}>
         <Typography variant='h5'>Latest Re-narrations</Typography>
         <TextField size='small' label="Search Renarrations" />
       </Stack> */}
-      <TableContainer component={Paper} variant='outlined'>
+      <TableContainer component={Paper} variant="outlined">
         <Table aria-label="responsive renarration table">
           <TableHead>
             <TableRow>
-              <TableCell >Renarration Title</TableCell>
+              <TableCell>Renarration Title</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-  {renarrations.map((renarration) => (
-    <TableRow
-      key={renarration._id}
-      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-    >
-      <TableCell 
-        component="th" 
-        scope="row" 
-        sx={{ 
-          fontSize: 'calc(12px + 0.5vw)',
-          whiteSpace: 'nowrap' ,
-          maxWidth:'100px',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }}
-      >
-        {renarration.renarrationTitle}
-      </TableCell>
-      <TableCell 
-        align="right"
-        sx={{
-          whiteSpace: 'nowrap' // Apply this if you want the content to dictate size without wrapping
-        }}
-      >
-        <Button
-          sx={{mr:3}}
-          startIcon={<Visibility />}
-          variant="contained"
-          onClick={() => navigate(`/renarration-details/${renarration._id}`)}
-          size='small'
-        >
-          View
-        </Button>
-       
-      </TableCell>
-    </TableRow>
-  ))}
-</TableBody>
+            {renarrations.map((renarration) => (
+              <TableRow
+                key={renarration._id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell
+                  component="th"
+                  scope="row"
+                  sx={{
+                    fontSize: 'calc(12px + 0.5vw)',
+                    whiteSpace: 'nowrap',
+                    maxWidth: '100px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {renarration.renarrationTitle}
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    whiteSpace: 'nowrap', // Apply this if you want the content to dictate size without wrapping
+                  }}
+                >
+                  <Button
+                    sx={{ mr: 3 }}
+                    startIcon={<Visibility />}
+                    variant="contained"
+                    onClick={() => navigate(`/renarration-details/${renarration._id}`)}
+                    size="small"
+                  >
+                    View
+                  </Button>
+
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
 
         </Table>
       </TableContainer>
@@ -133,4 +133,3 @@ function RenarrationDataGrid() {
 }
 
 export default RenarrationDataGrid;
-

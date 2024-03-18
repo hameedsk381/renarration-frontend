@@ -5,7 +5,9 @@ import { resetState } from '../redux/actions/urlActions';
 import { resetAnnotations } from '../redux/actions/annotationActions';
 import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
 
-const useRenarration = ({ dispatch, navigate, renarrationTitle, renarratedBlocks, renarrationId }) => {
+const useRenarration = ({
+  dispatch, navigate, renarrationTitle, renarratedBlocks, renarrationId,
+}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMsg, setSnackbarMsg] = useState('');
@@ -27,7 +29,7 @@ const useRenarration = ({ dispatch, navigate, renarrationTitle, renarratedBlocks
 
       const requestBody = {
         renarrationTitle,
-        blocks: renarratedBlocks.map(block => ({
+        blocks: renarratedBlocks.map((block) => ({
           content: block.content,
           id: block.id,
           desc: block.desc,
@@ -50,12 +52,12 @@ const useRenarration = ({ dispatch, navigate, renarrationTitle, renarratedBlocks
         displaySnackbar(`Error submitting renarration: ${error.message}`);
       }
     } else {
-      setActiveStep(currentStep => currentStep + 1);
+      setActiveStep((currentStep) => currentStep + 1);
     }
   }, [activeStep, renarrationTitle, renarratedBlocks, renarrationId, displaySnackbar, navigate]);
 
   const handleBack = useCallback(() => {
-    setActiveStep(currentStep => currentStep - 1);
+    setActiveStep((currentStep) => currentStep - 1);
   }, []);
 
   const handleSnackbarClose = useCallback(() => {
@@ -67,7 +69,7 @@ const useRenarration = ({ dispatch, navigate, renarrationTitle, renarratedBlocks
     dispatch(resetState());
     dispatch(resetAnnotations());
     dispatch(addRennarationTitle(''));
-    dispatch(addRennarationId(''))
+    dispatch(addRennarationId(''));
     localStorage.clear();
     sessionStorage.clear();
     navigate('/'); // Or navigate to a specific route

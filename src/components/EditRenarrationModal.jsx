@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { Modal, Box, Typography, TextField, Button, Alert } from '@mui/material';
+import {
+  Modal, Box, Typography, TextField, Button, Alert,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { sharingIdApi } from '../apis/extractApis';
 import { addAnnotatedBlocks } from '../redux/actions/annotationActions';
 import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
-
 
 function EditRenarrationModal({ isOpen, onClose, renarrationId }) {
   const [sharingId, setSharingId] = useState('');
@@ -62,7 +63,8 @@ function EditRenarrationModal({ isOpen, onClose, renarrationId }) {
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 4,
-      }}>
+      }}
+      >
         <Typography id="edit-renarration-modal-title" variant="h6" component="h2">
           Enter Sharing ID
         </Typography>

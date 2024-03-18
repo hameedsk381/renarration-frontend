@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box,  Button, Stepper, Step, StepLabel, TextField, Snackbar, Alert, Container, Paper,  Dialog, DialogContentText, DialogContent, DialogTitle, DialogActions,
+  Box, Button, Stepper, Step, StepLabel, TextField, Snackbar, Alert, Container, Paper, Dialog, DialogContentText, DialogContent, DialogTitle, DialogActions,
 } from '@mui/material';
 import axios from 'axios';
+import { ContentCopy } from '@mui/icons-material';
 import { resetState } from '../redux/actions/urlActions';
 import { resetAnnotations } from '../redux/actions/annotationActions';
 import { getAllRenarrations, submitApi } from '../apis/extractApis';
 import AnnotatedBlocks from './AnnotatedBlocks';
 import BlockListing from './BlockListing';
 import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
-import { ContentCopy } from '@mui/icons-material';
+import { setTheme } from '../redux/actions/themeActions.js';
+import { showSnackbar } from '../redux/actions/snackbarActions.js';
 
 function RenarrationList() {
   const navigate = useNavigate();
@@ -20,14 +22,13 @@ function RenarrationList() {
   const [modalOpen, setModalOpen] = useState(false); // State for controlling modal open/close
   const [sharingIdText, setSharingId] = useState('');
   const [activeStep, setActiveStep] = useState(0);
-
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMsg, setsnackbarMsg] = useState('');
   const dispatch = useDispatch();
   const renarrationTitle = useSelector((state) => state.renarration.renarrationTitle);
   const renarrationId = useSelector((state) => state.renarration.renarrationId);
   const steps = ['Create Renarration', 'Submit Renarration'];
-
+  const displaySnackbar = (message, type) => {
+    dispatch(showSnackbar(message, type));
+  };
   const handleNext = async () => {
     // Proceed only if it's the last step
     if (activeStep !== steps.length - 1) {
@@ -37,7 +38,7 @@ function RenarrationList() {
 
     // Validation checks
     if (!renarrationTitle.trim()) {
-      displaySnackbar('Please give the title to renarration');
+      displaySnackbar('Please give the title to renarration', 'info');
       return;
     }
 
@@ -54,7 +55,7 @@ function RenarrationList() {
   // Prepare request body
   const prepareRequestBody = () => ({
     renarrationTitle,
-    blocks: renarratedBlocks.map(block => ({
+    blocks: renarratedBlocks.map((block) => ({
       content: block.content,
       id: block.id,
       desc: block.desc,
@@ -67,12 +68,6 @@ function RenarrationList() {
     })),
   });
 
-  // Display Snackbar
-  const displaySnackbar = (message) => {
-    setSnackbarOpen(true);
-    setsnackbarMsg(message);
-  };
-
   // Submit new renarration
   const submitNewRenarration = async (requestBody) => {
     try {
@@ -81,7 +76,7 @@ function RenarrationList() {
       });
       handlePostSubmission(response.data);
     } catch (error) {
-      displaySnackbar(`Error submitting renarration: ${error.message}`);
+      displaySnackbar('Error submitting renarration', 'error');
       console.error(error.message);
     }
   };
@@ -95,15 +90,15 @@ function RenarrationList() {
       handlePostSubmission(response.data);
       navigate('/');
     } catch (error) {
-      displaySnackbar(`Error updating renarration: ${error.message}`);
+      displaySnackbar('Error updating renarration', 'error');
+      console.error(error.message);
     }
   };
-
 
   // State for storing sharing ID
 
   const handlePostSubmission = (data) => {
-    displaySnackbar(data.message);
+    displaySnackbar(data.message, 'success');
 
     if (data.sharingId) {
       setTimeout(() => {
@@ -119,7 +114,7 @@ function RenarrationList() {
     downloadSharingId(sharingIdText); // Download the sharing ID
     navigate('/'); // Navigate after modal is closed
   };
-  const handleCopy = () => { navigator.clipboard.writeText(sharingIdText); setSnackbarOpen(true); setsnackbarMsg('Sharing ID copied successfully'); handleModalClose(); }
+  const handleCopy = () => { navigator.clipboard.writeText(sharingIdText); displaySnackbar('sharing ID copied succesfully', 'success'); handleModalClose(); };
 
   // Download Sharing ID
   const downloadSharingId = (sharingId) => {
@@ -136,21 +131,16 @@ function RenarrationList() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
   const handleExit = () => {
     dispatch(resetState());
     dispatch(resetAnnotations());
     dispatch(addRennarationTitle(''));
     dispatch(addRennarationId(''));
+    dispatch(setTheme('roseGarden'));
     localStorage.clear(); // Clear local storage
     sessionStorage.clear(); // Clear session storage (if you use it)
   };
   const getStepContent = (stepIndex) => {
-
-
-
     switch (stepIndex) {
       case 0:
         return (
@@ -221,7 +211,7 @@ function RenarrationList() {
         <DialogTitle>Sharing ID</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-          {sharingIdText}
+            {sharingIdText}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -231,11 +221,6 @@ function RenarrationList() {
         </DialogActions>
       </Dialog>
 
-      <Snackbar  open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-          {snackbarMsg}
-        </Alert>
-      </Snackbar>
     </Container>
   );
 }

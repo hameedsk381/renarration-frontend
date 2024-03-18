@@ -1,22 +1,25 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Select, MenuItem } from '@mui/material';
 import { setTheme } from '../redux/actions/themeActions.js';
 import { themes } from '../themes/themes.js';
 
-const ThemeSelector = () => {
+function ThemeSelector() {
   const dispatch = useDispatch();
-
+  const currentTheme = useSelector((state) => state.theme.currentTheme); // This should match a key in `themes`
   const handleChange = (event) => {
     dispatch(setTheme(event.target.value));
   };
 
   return (
-    <Select variant='standard' disableUnderline onChange={handleChange} defaultValue={themes[0].name}>
-      {themes.map((theme => (<MenuItem value={theme.name}>{theme.name.charAt(0).toUpperCase() + theme.name.slice(1)}</MenuItem>)))}
-     
+    <Select variant="standard" disableUnderline onChange={handleChange} value={currentTheme} defaultValue={currentTheme}>
+      {themes.map((theme) => (
+        <MenuItem key={theme.name} value={theme.name}>
+          {theme.name.charAt(0).toUpperCase() + theme.name.slice(1)}
+        </MenuItem>
+      ))}
     </Select>
   );
-};
+}
 
 export default ThemeSelector;

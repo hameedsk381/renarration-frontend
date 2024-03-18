@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Alert, AlertTitle,  Button, Chip,  Container, FormControlLabel, Snackbar, Switch, Typography,
+  Alert, AlertTitle, Button, Chip, Container, FormControlLabel, Snackbar, Switch, Typography,
 } from '@mui/material';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux'; // Import the necessary action creators
 import axios from 'axios';
@@ -38,10 +38,10 @@ function AnnotationPage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [clickedElementContent, setClickedElementContent] = useState({ html: '' });
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
-const [urlsweets,setUrlsweets] = useState(0);
+  const [urlsweets, setUrlsweets] = useState(0);
   useEffect(() => {
-   fetchResponse(),
-  console.log(initialHtmlContent)
+    fetchResponse(),
+    console.log(initialHtmlContent);
   }, [currentUrl]);
   const fetchResponse = async () => {
     try {
@@ -66,7 +66,6 @@ const [urlsweets,setUrlsweets] = useState(0);
   const handleAnnotationClick = (event) => {
     event.preventDefault();
     let elementId = event.target.dataset.id;
-
 
     if (!elementId) {
     // If the element does not have an ID, generate a new one
@@ -94,18 +93,17 @@ const [urlsweets,setUrlsweets] = useState(0);
     event.preventDefault(); // Prevent default navigation
     // Check if the clicked element is an anchor tag
     if (event.target.tagName === 'A') {
-   
       const href = event.target.getAttribute('href');
-  
+
       // If href exists and is valid, perform operations without navigation
       if (href) {
-       // Stop the event from propagating further
+        // Stop the event from propagating further
         // console.log("URL to fetch:", href);
-  
+
         try {
           dispatch(fetchStart());
           const response = await axios.post(extractApi, { url: href }, { headers: { 'User-Agent': getDeviceType() } });
-          dispatch(fetchSuccess(href,response.data));
+          dispatch(fetchSuccess(href, response.data));
           dispatch(setAnnotatedHtmlContent(response.data));
         } catch (error) {
           dispatch(fetchFailure(error.message));
@@ -122,7 +120,6 @@ const [urlsweets,setUrlsweets] = useState(0);
     // If not an anchor tag or href is empty, let default behavior occur
     // console.log("Not an anchor tag or no href, default click behavior.");
   };
-  
 
   const handleMouseOver = (event) => {
   // Prevent event from affecting parent elements
@@ -181,10 +178,13 @@ const [urlsweets,setUrlsweets] = useState(0);
   return (
     <>
 
-      <AnnotationNavbar annotationMode={annotationMode} handleAnnotationModeChange={handleAnnotationModeChange} handleExit={handleExit} annotatedBlocks={annotatedBlocks} navigateToRenarrationBlocks={navigateToRenarrationBlocks}/>
+      <AnnotationNavbar annotationMode={annotationMode} handleAnnotationModeChange={handleAnnotationModeChange} handleExit={handleExit} annotatedBlocks={annotatedBlocks} navigateToRenarrationBlocks={navigateToRenarrationBlocks} />
 
       {/* <UrlInput /> */}
-    <Typography >No of sweets for this url : <Chip label={urlsweets && urlsweets} variant='filled'/></Typography>
+      <Typography>
+        No of sweets for this url :
+        <Chip label={urlsweets && urlsweets} variant="filled" />
+      </Typography>
       {!isFetching && annotationMode && (
         <div
           dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }}
@@ -195,10 +195,10 @@ const [urlsweets,setUrlsweets] = useState(0);
       )}
       {initialHtmlContent === null && (
         <Container>
-         <Alert severity="info">
-  <AlertTitle>URL</AlertTitle>
-  copy the url of any web page and paste it above to renarrate
-</Alert>
+          <Alert severity="info">
+            <AlertTitle>URL</AlertTitle>
+            copy the url of any web page and paste it above to renarrate
+          </Alert>
         </Container>
       )}
       {!isFetching && !annotationMode && (
