@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box, Card, CardContent, CardMedia, Typography, Grid, Button, Stepper, Step, StepLabel, TextField, Snackbar, Alert, Container, Paper, CardHeader, Stack, Modal, IconButton, Dialog, DialogContentText, DialogContent, DialogTitle, DialogActions, CircularProgress,
+  Box,  Button, Stepper, Step, StepLabel, TextField, Snackbar, Alert, Container, Paper,  Dialog, DialogContentText, DialogContent, DialogTitle, DialogActions,
 } from '@mui/material';
 import axios from 'axios';
 import { resetState } from '../redux/actions/urlActions';

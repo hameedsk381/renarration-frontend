@@ -6,14 +6,14 @@ export const themes = [
       palette: {
         mode: 'light',
         primary: {
-          main: '#E91E63',
+          main: '#ff414e',
         },
         secondary: {
           main: '#98FB98',
         },
         background: {
-          default: '#FFFAF0', // Light background color
-          customBackground: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)', // Gradient background color
+          default: '#8076a3', // Light background color
+          customBackground: '#fbe3e8', // Gradient background color
         },
       },
     },
@@ -24,14 +24,14 @@ export const themes = [
       palette: {
         mode: 'light',
         primary: {
-          main: '#4169E1',
+          main: '#c89666',
         },
         secondary: {
           main: '#FFD700',
         },
         background: {
-          default: '#FFF0F5', // Light background color
-          customBackground: '#4A235A', // Dark background color
+          default: '#2d545e', // Light background color
+          customBackground: '#e1b382', // Dark background color
         },
       },
     },
@@ -42,14 +42,14 @@ export const themes = [
       palette: {
         mode: 'light',
         primary: {
-          main: '#228B22',
+          main: '#c9af98',
         },
         secondary: {
           main: '#8FBC8F',
         },
         background: {
-          default: '#F0FFF0', // Light background color
-          customBackground: '#1E8449', // Dark background color
+          default: '#3a4660', // Light background color
+          customBackground: '#c9af98', // Dark background color
         },
       },
     },
@@ -60,14 +60,14 @@ export const themes = [
       palette: {
         mode: 'light',
         primary: {
-          main: '#FF4500',
+          main: '#ff414e',
         },
         secondary: {
           main: '#6A5ACD',
         },
         background: {
-          default: '#F8F8FF', // Light background color
-          customBackground: '#2E86C1', // Dark background color
+          default: '#ff414e', // Light background color
+          customBackground: '#ffde22', // Dark background color
         },
       },
     },
@@ -90,4 +90,22 @@ export const themes = [
       },
     },
   },
+{
+  name: 'darkTheme',
+  theme: {
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: '#2F4F4F',
+      },
+      secondary: {
+        main: '#708090',
+      },
+      background: {
+        default: '#2F4F4F', // Dark background color
+        customBackground: '#708090', // Dark background color
+      },
+    },
+  },
+},
 ];

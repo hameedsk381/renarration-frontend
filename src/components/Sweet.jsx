@@ -45,10 +45,10 @@ function Sweet() {
           <EditRenarration renarrationId={renarration._id} />
         </Stack>
         <Typography textAlign="center" variant="h4">{renarration.renarrationTitle}</Typography>
-        <Stack component={Paper} elevation={0} spacing={2} p={4}>
+        <Stack component={Paper} elevation={0} spacing={2} m={4}>
 
           {renarration.blocks.map((block, index) => (
-            <Card key={index} elevation={0}>
+            <Card key={index} elevation={0} >
               <CardHeader
                 action={
                   <Button variant="outlined" size="small" endIcon={<NearMe />} href={block.source} target="_blank">source</Button>
