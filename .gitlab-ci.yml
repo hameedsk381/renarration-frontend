@@ -5,8 +5,8 @@ build_project:
   image: node:lts
   stage: build
   script:
-    - yarn install --frozen-lockfile
-    - yarn build
+    - npm install --frozen-lockfile
+    - npm run build
   artifacts:
     paths:
       - dist/
