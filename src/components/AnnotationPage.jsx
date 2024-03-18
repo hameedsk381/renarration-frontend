@@ -184,7 +184,7 @@ const [urlsweets,setUrlsweets] = useState(0);
       <AnnotationNavbar annotationMode={annotationMode} handleAnnotationModeChange={handleAnnotationModeChange} handleExit={handleExit} annotatedBlocks={annotatedBlocks} navigateToRenarrationBlocks={navigateToRenarrationBlocks}/>
 
       {/* <UrlInput /> */}
-    {/* <Typography >No of sweets for this url : <Chip label={urlsweets && urlsweets} variant='filled'/></Typography> */}
+    <Typography >No of sweets for this url : <Chip label={urlsweets && urlsweets} variant='filled'/></Typography>
       {!isFetching && annotationMode && (
         <div
           dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }}
