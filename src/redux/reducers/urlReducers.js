@@ -8,7 +8,7 @@ export const initialState = {
   history: [], // History of URLs visited
 };
 
-export const urlReducer = (state = initialState, action) => {
+const urlReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_START':
       return {
@@ -22,7 +22,12 @@ export const urlReducer = (state = initialState, action) => {
         initialHtmlContent: action.payload.htmlContent,
         currentUrl: action.payload.url, // Update current URL on success
         errorMessage: '',
-        history: [...state.history, { url: action.payload.url, htmlContent: action.payload.htmlContent }],
+        history: [...state.history,
+          {
+            url: action.payload.url,
+            htmlContent: action.payload.htmlContent,
+          },
+        ],
       };
     case 'FETCH_FAILURE':
       return {

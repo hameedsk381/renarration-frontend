@@ -1,4 +1,4 @@
-export const themes = [
+const themes = [
   {
     name: 'roseGarden',
     theme: {
@@ -92,13 +92,13 @@ export const themes = [
       palette: {
         mode: 'light',
         primary: {
-          main: '#87CEEB',
+          main: '#F39C12',
         },
         secondary: {
           main: '#F0F8FF',
         },
         background: {
-          default: '#E0FFFF', // Light background color
+          default: '#393939', // Light background color
           customBackground: '#F39C12', // Dark background color
         },
       },
@@ -109,6 +109,7 @@ export const themes = [
     theme: {
       typography: {
         fontFamily: 'Arial, sans-serif',
+
       },
       palette: {
         mode: 'dark',
@@ -119,10 +120,18 @@ export const themes = [
           main: '#708090',
         },
         background: {
-          default: '#2F4F4F', // Dark background color
-          customBackground: '#708090', // Dark background color
+          default: '#111', // Dark background color
+          customBackground: '#111', // Dark background color
+        },
+      },
+      overrides: {
+        MuiTypography: {
+          root: {
+            color: 'white',
+          },
         },
       },
     },
   },
 ];
+export default themes;

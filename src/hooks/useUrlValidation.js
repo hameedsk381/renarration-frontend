@@ -1,6 +1,4 @@
-// useUrlValidation.js
-
-export const useUrlValidation = (url) => {
+export default function useUrlValidation(url) {
   const isValidUrl = (urlString) => {
     const urlPattern = new RegExp(
       '^(https?:\\/\\/|ipfs:\\/\\/)?'
@@ -12,4 +10,4 @@ export const useUrlValidation = (url) => {
   };
 
   return isValidUrl(url);
-};
+}

@@ -10,7 +10,7 @@ import removeOutlineFromElement from '../utils/removeOutline';
 import removeMedia from '../utils/removeMedia';
 import extractMedia from '../utils/extractMedia';
 import { removeAnnotatedBlock, setAnnotatedHtmlContent } from '../redux/actions/annotationActions';
-import { extractPublicId } from '../utils/extractPublicId';
+import extractPublicId from '../utils/extractPublicId';
 import { serverApi } from '../apis/extractApis';
 
 function RenarrationBlock({ block, noActions }) {
@@ -23,35 +23,6 @@ function RenarrationBlock({ block, noActions }) {
   const deleteBlock = async () => {
     // Dispatch action to delete the block
     dispatch(removeAnnotatedBlock(block.id));
-    // Check block for audio, video, and image and delete if not null
-    if (block.aud) {
-      try {
-        const publicId = extractPublicId(block.aud);
-        await axios.delete(`${serverApi}/delete/${publicId}`);
-        // console.log('media file deleted')
-      } catch (error) {
-        // console.error('Error deleting audio file:', error);
-      }
-    }
-    if (block.vid) {
-      try {
-        const publicId = extractPublicId(block.vid);
-        await axios.delete(`${serverApi}/delete/${publicId}`);
-        // console.log('media file deleted')
-      } catch (error) {
-        // console.error('Error deleting video file:', error);
-      }
-    }
-    if (block.img) {
-      try {
-        const publicId = extractPublicId(block.img);
-        await axios.delete(`${serverApi}/delete/${publicId}`);
-        // console.log('media file deleted')
-      } catch (error) {
-        console.error('Error deleting image file:', error);
-      }
-    }
-
     if (htmlforAnnotation !== null) {
       const updatedHtmlContent = removeOutlineFromElement(htmlforAnnotation, block.id);
       dispatch(setAnnotatedHtmlContent(updatedHtmlContent));

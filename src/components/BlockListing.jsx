@@ -1,65 +1,103 @@
-import { NearMe } from '@mui/icons-material';
+import { Edit } from '@mui/icons-material';
 import {
-  Box, Button, Card, CardContent, CardHeader, CardMedia, Grid, Paper, Stack, Typography,
+ Button, Card, CardContent, 
+ CardHeader, CardMedia,  Paper, Stack, 
 } from '@mui/material';
-import React from 'react';
+import React, {  useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
+import Annotator from './Annotator';
+import { removeAnnotatedBlock, updateAnnotatedBlock } from '../redux/actions/annotationActions';
 
 function BlockListing({ blocks }) {
   const renarratedBlocks = blocks;
+  const dispatch = useDispatch();
+  const [openDialog, setOpenDialog] = useState(false);
+  const annotatedBlocks = useSelector((state) => state.annotation.annotatedBlocks);
+  const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
+  const [clickedElementContent, setClickedElementContent] = useState('');
+  const [initialBodycontent, setInitialBodyContent] = useState();
+  const handleEdit = (id, elementcontent, bodycontent) => {
+    setCurrentBlockId(id);
+    setOpenDialog(true);
+    setClickedElementContent(elementcontent);
+    setInitialBodyContent(bodycontent);
+  };
+  const handleSave = (htmlContent, annotationContent) => {
+    const existingBlockIndex = annotatedBlocks.findIndex((block) => block.target.id === currentBlockId);
+
+    const existingBlock = annotatedBlocks[existingBlockIndex];
+
+    // Update the body value of the existing block
+    const updatedBlock = {
+      ...existingBlock,
+      body: {
+        ...existingBlock.body,
+        value: annotationContent, // Update this with the new body value
+      },
+    };
+
+    // Dispatch the action to update the annotated block
+    dispatch(updateAnnotatedBlock(existingBlock.target.id, updatedBlock));
+    setOpenDialog(false);
+  };
+  const deleteBlock = () => {
+    // Dispatch action to delete the block
+    dispatch(removeAnnotatedBlock(currentBlockId));
+
+    // setSnackbarMessage('Block deleted successfully');
+    // setSnackbarOpen(true);
+    setOpenDialog(false);
+  };
   return (
-    <Stack component={Paper} my={3} p={2} spacing={3}>
+    <Stack my={3} p={2} spacing={3}>
+
       {renarratedBlocks && renarratedBlocks.map((block) => (
-        <Card key={block.id} variant="elevation" elevation={0}>
+        <Card key={block.target.id} variant="elevation" elevation={0}>
           <CardHeader
-            action={
-              <Button variant="outlined" size="small" endIcon={<NearMe />} href={block.source} target="_blank">source</Button>
-          }
             subheader={new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+            action={
+              <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value)} startIcon={<Edit />}>Edit</Button>
+
+            }
           />
           <CardMedia>
             <Stack direction="row" spacing={1} justifyContent="center">
-              {extractMedia(block.content).map((src, index) => (
+              {extractMedia(block.target.value).map((src, index) => (
                 <img
                   key={index}
                   style={{
                     width: '50%', height: 'auto', objectFit: 'cover', padding: 0.5,
                   }}
                   src={src}
-                  alt={`Renarration image ${index + 1}`}
+                  alt={`Renarration  ${index + 1}`}
                 />
               ))}
             </Stack>
           </CardMedia>
           <CardContent>
-            <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
+            <div dangerouslySetInnerHTML={{ __html: removeMedia(block.target.value) }} />
             <Paper
               variant="outlined"
               sx={{
-                p: 2, my: 3, bgcolor: '#1c1c1c', color: 'white',
+                p: 2, my: 3,
               }}
             >
-              {block.img && (
-              <img
-                src={block.img}
-                alt="Renarration image"
-                style={{
-                  width: '50%', height: 'auto', objectFit: 'cover', padding: 0.5,
-                }}
-              />
-              )}
-              <Typography my={2} sx={{ color: 'white' }}>{block.desc}</Typography>
-              {block.aud && (
-              <audio controls src={block.aud} style={{ marginBlock: '20px' }} />
-              )}
-              {block.vid && (
-              <video controls width="100%" src={block.vid} style={{ marginBlock: '20px' }} />
-              )}
+              <div dangerouslySetInnerHTML={{ __html: block.body.value }} />
             </Paper>
           </CardContent>
+
         </Card>
       ))}
+      <Annotator
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        content={clickedElementContent}
+        onSave={handleSave}
+        onDelete={deleteBlock}
+        initialValue={initialBodycontent}
+      />
     </Stack>
   );
 }

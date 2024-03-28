@@ -1,126 +1,133 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
-  Alert, Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, Paper, Stack, Typography,
+  AppBar, Box, Button, Card, CardContent, CircularProgress, Toolbar,
 } from '@mui/material';
-import {
-  ArrowBack, ArrowForward, Edit, NearMe,
-} from '@mui/icons-material';
-import extractMedia from '../utils/extractMedia';
-import removeMedia from '../utils/removeMedia';
-import { getAllRenarrations, sharingIdApi } from '../apis/extractApis';
-import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
-import EditRenarration from './EditRenarration';
+import { ArrowBack, NavigateNext } from '@mui/icons-material';
+import { extractApi, getBlockById } from '../apis/extractApis';
+
+const styleHtmlString = (htmlString) => {
+  // Wrap the HTML string in a container with the specified style
+  const styledHtmlString = `
+    <div>
+      ${htmlString}
+    </div>
+  `;
+
+  return styledHtmlString;
+};
 
 function Sweet() {
-  const renarrationId = useParams().id;
-  const [renarration, setRenarration] = useState(null);
-
+  const { id } = useParams();
+  const [node, setNode] = useState(null);
+  const [htmlContent, setHtmlContent] = useState(null);
+  const [annotationNode, setAnnotationNode] = useState(null);
   const navigate = useNavigate();
-
-  const getRennaration = async () => {
+  const [source, setSource] = useState('/');
+  const fetchData = async () => {
     try {
-      const res = await axios.get(`${getAllRenarrations}/${renarrationId}`);
+      const res = await axios.get(`${getBlockById}/${id}`); // Assuming the correct endpoint
 
-      setRenarration({ ...res.data, blocks: res.data.blocks });
-      // console.log(res.data);
+      const block = res.data;
+      const webpage = await axios.post(
+        extractApi,
+        { url: block.source },
+      );
+
+      setSource(block.source);
+      setNode(block.target.id);
+      setHtmlContent(webpage.data);
+      setAnnotationNode(styleHtmlString(block.body.value));
     } catch (error) {
-      // console.log(error);
+      // Handle the error
+    }
+  };
+  const highlightElement = (htmlContent, node, annotationNode) => {
+    if (htmlContent && node) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent.replace(/href=".*?"/g, ''), 'text/html');
+
+      const nodes = doc.querySelectorAll(`[data-id="${node}"]`);
+      if (nodes.length > 0) {
+        const targetNode = nodes[0];
+
+        // Create a wrapper div for both the original node and the annotation
+        const wrapperDiv = doc.createElement('div');
+        wrapperDiv.style.backgroundColor = '#C9E3FE';
+        wrapperDiv.style.padding = '10px'; // Adjust padding as needed
+        wrapperDiv.style.width = '100%';
+        wrapperDiv.style.marginBlock = '10px';
+
+        const details = doc.createElement('details');
+        const summary = doc.createElement('summary');
+        summary.textContent = 'View original story';
+        details.appendChild(summary);
+        const originalNode = targetNode.cloneNode(true);
+        details.appendChild(originalNode);
+        // Add a divider between the original node and the annotation
+        const divider = doc.createElement('hr');
+        details.appendChild(divider);
+
+        wrapperDiv.appendChild(details);
+
+        // Create a div for the annotation content and append it to the wrapper
+        const annotationDiv = doc.createElement('div');
+        annotationDiv.innerHTML = annotationNode;
+        wrapperDiv.appendChild(annotationDiv);
+
+        // Replace the original node with the wrapper in the DOM structure
+        targetNode.parentNode.replaceChild(wrapperDiv, targetNode);
+
+        // Serialize the modified document back to HTML string
+        const htmlString = new XMLSerializer().serializeToString(doc);
+        return htmlString;
+      }
+      
+      return `<html>
+                <body>
+                    <p>No sweet found</p>
+                </body>
+            </html>`;
     }
   };
 
   useEffect(() => {
-    getRennaration();
-    // console.log(renarrationId)
-  }, [renarrationId]);
-  const skeletons = Array.from({ length: 6 }, (_, index) => index);
-  return renarration
-    ? (
-      <Box>
-        <Stack m={4} direction="row" justifyContent="space-between">
-          <Button startIcon={<ArrowBack />} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
-          <EditRenarration renarrationId={renarration._id} />
-        </Stack>
-        <Typography textAlign="center" variant="h4">{renarration.renarrationTitle}</Typography>
-        <Stack component={Paper} elevation={0} spacing={2} m={4}>
+    fetchData();
+  }, [id]);
 
-          {renarration.blocks.map((block, index) => (
-            <Card key={index} elevation={0}>
-              <CardHeader
-                action={
-                  <Button variant="outlined" size="small" endIcon={<NearMe />} href={block.source} target="_blank">source</Button>
-                }
-              />
-              <CardMedia>
-                <Box sx={{
-                  display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1,
-                }}
-                >
-                  {extractMedia(block.content).map((src, index) => (
-                    <Box
-                      key={index}
-                      component="img"
-                      loading="lazy"
-                      sx={{
-                        width: '50%',
-                        height: 'auto',
-                        objectFit: 'cover',
-                        p: 0.5,
-                      }}
-                      src={src}
-                      alt={`Renarration image ${index + 1}`}
-                    />
-                  ))}
-
-                </Box>
-              </CardMedia>
-              <CardContent>
-                <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
-                <Paper variant="outlined" sx={{ p: 2, my: 3 }}>
-                  <Typography>{block.description}</Typography>
-                  {block.img && (
-                    <Box
-                      component="img"
-                      loading="lazy"
-                      src={(block.img)}
-                      alt="Renarration image"
-                      sx={{
-                        width: '50%', height: 'auto', objectFit: 'cover', p: 0.5,
-                      }}
-                    />
-                  )}
-                  <Typography my={2}>{block.desc}</Typography>
-                  {block.aud && (
-                    <audio controls src={(block.aud)} style={{ marginBlock: '20px' }} />
-                  )}
-                  {block.vid && (
-                    <video controls width="100%" src={(block.vid)} style={{ marginBlock: '20px' }} />
-                  )}
-                </Paper>
-              </CardContent>
-
-            </Card>
-          ))}
-        </Stack>
-
-      </Box>
-    )
-    : (
-      <>
-        <Button startIcon={<ArrowBack />} sx={{ m: 4 }} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
-        <Grid container spacing={2} p={3}>
-
-          {skeletons.map((_, index) => (
-            <Grid key={index} item lg={3} md={4} xs={12}>
-              <RenarrationBlockSkeleton key={index} />
-            </Grid>
-          ))}
-
-        </Grid>
-
-      </>
+  if (!node || !htmlContent) {
+    return (
+      <div style={{
+        display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',
+      }}
+      >
+        <CircularProgress />
+      </div>
     );
-}
+  }
 
+  return (
+    <Box>
+      <AppBar position="sticky">
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Button onClick={() => { navigate(-1); }} color="inherit" startIcon={<ArrowBack />} aria-label="settings">
+            Go back
+          </Button>
+          <Button color="inherit" href={source} target="_blank" endIcon={<NavigateNext />} aria-label="settings">
+            View original page
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Card>
+
+        <CardContent>
+
+          <div dangerouslySetInnerHTML={{ __html: highlightElement(htmlContent, node, annotationNode) }} />
+        </CardContent>
+      </Card>
+    </Box>
+
+  );
+}
 export default Sweet;

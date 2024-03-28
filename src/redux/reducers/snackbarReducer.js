@@ -26,5 +26,4 @@ const snackbarReducer = (state = initialState, action) => {
       return state;
   }
 };
-
 export default snackbarReducer;

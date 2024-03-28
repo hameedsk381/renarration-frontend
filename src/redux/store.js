@@ -8,7 +8,7 @@ const loadState = () => {
   try {
     const serializedState = localStorage.getItem('state');
     if (serializedState === null) {
-      return undefined; // If no state in local storage, return undefined to use reducer's initial state
+      return undefined;
     }
     return JSON.parse(serializedState);
   } catch (err) {

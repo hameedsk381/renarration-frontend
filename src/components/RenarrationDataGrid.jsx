@@ -13,12 +13,9 @@ import {
   TableRow,
   Paper,
   Button,
-  Stack,
-  Typography,
-  TextField,
-  Input,
+
 } from '@mui/material';
-import { ViewAgenda, Visibility } from '@mui/icons-material';
+import {  Visibility } from '@mui/icons-material';
 import axios from 'axios';
 import { getAllRenarrations } from '../apis/extractApis';
 
@@ -73,7 +70,7 @@ function RenarrationDataGrid() {
   }
 
   return (
-    <Container sx={{ my: 2 }}>
+    <Container sx={{ my: 4 }}>
       {/* <Stack my={3} direction={'row'} justifyContent={'space-between'}>
         <Typography variant='h5'>Latest Re-narrations</Typography>
         <TextField size='small' label="Search Renarrations" />
@@ -114,7 +111,7 @@ function RenarrationDataGrid() {
                   <Button
                     sx={{ mr: 3 }}
                     startIcon={<Visibility />}
-                    variant="contained"
+                    variant="outlined"
                     onClick={() => navigate(`/renarration-details/${renarration._id}`)}
                     size="small"
                   >

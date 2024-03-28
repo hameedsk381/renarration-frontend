@@ -1,35 +1,42 @@
 import React from 'react';
 import {
-  Box, FormControlLabel, Switch, Button, Grid,
+  FormControlLabel, Switch,
+   Button, AppBar, Toolbar,
+    Stack,  Container, 
 } from '@mui/material';
-
+import { ArrowForward, ExitToApp } from '@mui/icons-material';
+import UrlInput from './UrlInput/UrlInput';
+import SweetsMenu from './SweetsMenu';
 function AnnotationNavbar({
-  annotationMode, handleAnnotationModeChange, handleExit, navigateToRenarrationBlocks, annotatedBlocks,
+  annotationMode,
+  handleAnnotationModeChange,
+  handleExit,
+  navigateToRenarrationBlocks,
+  annotatedBlocks,
 }) {
   return (
-    <Box sx={{ p: 2, mb: 4, backgroundColor: 'grey.100' }}>
-      <Grid container alignItems="center" spacing={2} justifyContent="space-between">
-        <Grid item xs={12} sm="auto" sx={{ flexGrow: 1 }}>
+    <AppBar elevation={0} position="sticky">
+      <Toolbar component={Container} sx={{ justifyContent: 'space-between', p: 1, flexDirection: { xs: 'column', md: 'row' } }}>
+        <Stack>
           <FormControlLabel
-            control={<Switch checked={annotationMode} onChange={handleAnnotationModeChange} color="primary" />}
-            label="Annotation Mode"
+            color="text.secondary"
+            control={<Switch checked={annotationMode} onChange={handleAnnotationModeChange} color="default" />}
+            label={annotationMode ? 'Renarration mode is on' : 'Renarration mode  is off'}
           />
-        </Grid>
-        {annotatedBlocks.length !== 0 && (
-        <Grid item>
-          <Button variant="contained" size="small" onClick={navigateToRenarrationBlocks} sx={{ textTransform: 'none' }}>
-            View Renarration Blocks
+          {annotatedBlocks.length !== 0 && (
+          <Button endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="inherit">
+            View Renarrated blocks
           </Button>
-        </Grid>
-        )}
-        <Grid item>
-          <Button variant="contained" size="small" onClick={handleExit} sx={{ textTransform: 'none' }}>
-            Exit Renarration
+          )}
+          <Button endIcon={<ExitToApp />} onClick={handleExit} color="inherit">
+            exit renarration
           </Button>
-        </Grid>
+        </Stack>
+        <SweetsMenu  />
+        <UrlInput annotationNav />
+      </Toolbar>
 
-      </Grid>
-    </Box>
+    </AppBar>
   );
 }
 export default AnnotationNavbar;

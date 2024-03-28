@@ -1,7 +1,7 @@
 import {
-  Button, Container, Grid, Stack, Typography,
+  Button, Container, Grid, Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
@@ -10,9 +10,7 @@ import RenarrationBlock from './RenarrationBlock';
 function AnnotatedBlocks() {
   const navigate = useNavigate();
   const { annotatedBlocks } = useSelector((state) => state.annotation);
-  useEffect(() => {
-    // console.log(annotatedBlocks);
-  }, []);
+
   return (
     <Container maxWidth="lg">
       <Button variant="contained" sx={{ my: 2 }} color="primary" startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}>
