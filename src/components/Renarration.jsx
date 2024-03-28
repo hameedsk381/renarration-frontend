@@ -50,7 +50,7 @@ function Renarration() {
             <Card key={block.target.id} variant="elevation" elevation={0}>
               <CardHeader
                 action={
-                  <Button variant="outlined" size="small" endIcon={<NearMe />} href={`/sweet/${block._id}`} target="_blank">view orginal story</Button>
+                  <Button variant="outlined" size="small" endIcon={<NearMe />} onClick={()=>{navigate(`/sweet/${block._id}`)}} >view orginal story</Button>
             }
                 subheader={new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
               />
