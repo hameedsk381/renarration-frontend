@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Alert, AlertTitle,  Container,  Paper, Snackbar,
+  Alert, AlertTitle, Container, Paper, Snackbar,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'; 
@@ -39,7 +39,6 @@ function AnnotationPage() {
   const [clickedElementContent, setClickedElementContent] = useState({ html: '' });
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
   const [currentXpath, setCurrentXpath] = useState(null); // State to hold the current xpath
-  const selectedBlock = annotatedBlocks.find((block) => block.target.id === currentBlockId);
   const [initialBodycontent, setInitialBodyContent] = useState();
 
   const handleAnnotationModeChange = () => {
@@ -55,8 +54,7 @@ function AnnotationPage() {
     // Dispatch action to delete the block
     dispatch(removeAnnotatedBlock(currentBlockId));
     if (annotationHtmlContent !== null) {
-      const updatedHtmlContent = 
-      removeOutlineFromElement(annotationHtmlContent, currentBlockId);
+      const updatedHtmlContent = removeOutlineFromElement(annotationHtmlContent, currentBlockId);
       dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
     }
 
@@ -72,7 +70,6 @@ function AnnotationPage() {
     // Check if a block with this ID already exists
     const existingBlock = annotatedBlocks.find((block) => block.target.id === elementId);
     if (existingBlock) {
-    
       setInitialBodyContent(existingBlock.body.value);
       event.target.classList.remove('hover-effect');
       const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
@@ -179,8 +176,7 @@ function AnnotationPage() {
       // Dispatch the action to update the annotated block
       dispatch(updateAnnotatedBlock(existingBlock.target.id, updatedBlock));
     } else {
-      createAnnotation(initialHtmlContent, htmlContent, annotationContent, 
-        currentBlockId, currentUrl, currentXpath);
+      createAnnotation(initialHtmlContent, htmlContent, annotationContent, currentBlockId, currentUrl, currentXpath)
 
       // Update the htmlContent to include the outline for the annotated element
       const updatedHtmlContent = outlineElement(annotationHtmlContent, currentBlockId);
@@ -215,7 +211,7 @@ function AnnotationPage() {
       />
 
       {!isFetching && annotationMode && (
-        <Paper
+        <Container
           dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }}
           onClick={handleAnnotationClick}
           onMouseOver={handleMouseOver}
@@ -231,7 +227,7 @@ function AnnotationPage() {
         </Container>
       )}
       {!isFetching && !annotationMode && (
-        <Paper dangerouslySetInnerHTML={{ __html: initialHtmlContent }} 
+        <Container dangerouslySetInnerHTML={{ __html: initialHtmlContent }} 
         onClick={handleNavigationClick} />
 
       )}
