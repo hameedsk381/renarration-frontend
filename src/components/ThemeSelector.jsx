@@ -2,11 +2,11 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Select, MenuItem } from '@mui/material';
 import { setTheme } from '../redux/actions/themeActions.js';
-import { themes } from '../themes/themes.js';
+import themes from '../themes/themes';
 
 function ThemeSelector() {
   const dispatch = useDispatch();
-  const currentTheme = useSelector((state) => state.theme.currentTheme); // This should match a key in `themes`
+  const currentTheme = useSelector((state) => state.theme.currentTheme);
   const handleChange = (event) => {
     dispatch(setTheme(event.target.value));
   };

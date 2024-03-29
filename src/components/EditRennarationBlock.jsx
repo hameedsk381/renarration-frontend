@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Button, Container, Stack, TextField, Snackbar, Alert, IconButton, Box, Typography, CircularProgress,
+  Button, Container, Stack, TextField, Snackbar, Alert, IconButton, Box, CircularProgress,
 } from '@mui/material';
 import {
   ArrowBack, Audiotrack, Cancel, Image, VideoLibraryOutlined,
 } from '@mui/icons-material';
 import axios from 'axios';
 import RenarrationBlock from './RenarrationBlock';
-import Recording from './Recording';
 import { updateAnnotatedBlock } from '../redux/actions/annotationActions';
-import { serverApi, uploadFileApi } from '../apis/extractApis';
-import { extractPublicId } from '../utils/extractPublicId';
+import { uploadFileApi } from '../apis/extractApis';
 
 function EditRennarationBlock() {
   const location = useLocation();
@@ -43,11 +41,11 @@ function EditRennarationBlock() {
 
   const handleFileChange = (mediaType, event) => {
     const file = event.target.files[0];
-    // if (file.size > 10485760) {
-    //   setSnackbarMessage('File size exceeds 10MB limit. Please choose a smaller file.');
-    //   setSnackbarOpen(true);
-    //   return;
-    // }
+    if (file.size > 104857600) {
+      setSnackbarMessage('File size exceeds 100MB limit. Please choose a smaller file.');
+      setSnackbarOpen(true);
+      return;
+    }
     setFormData((prevFormData) => ({ ...prevFormData, [mediaType]: file }));
   };
   const handleCancelMedia = async (mediaType) => {
@@ -74,7 +72,7 @@ function EditRennarationBlock() {
           const formDataMedia = new FormData();
           formDataMedia.append('file', file);
 
-          const response = await axios.post(uploadFileApi, formDataMedia, {
+          const response = axios.post(uploadFileApi, formDataMedia, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },

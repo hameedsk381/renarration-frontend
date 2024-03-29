@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import {
-  AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemText, useTheme, useMediaQuery, ListItemButton, Button, FormControlLabel, Switch, Select, MenuItem,
-} from '@mui/material';
+  AppBar, Toolbar,  Typography,  List, ListItem} from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
-import { themes } from '../../themes/themes.js';
-import { setTheme } from '../../redux/actions/themeActions.js';
-import ThemeSelector from '../ThemeSelector.jsx';
+
+// import ThemeSelector from '../ThemeSelector.jsx';
 
 function Navbar() {
   const menuItems = [
@@ -18,12 +13,12 @@ function Navbar() {
   ];
 
   return (
-    <AppBar sx={{ backgroundColor: 'background.customBackground', border: 'none' }} position="static">
+    <AppBar sx={{ backgroundColor: 'transparent', border: 'none', backgroundImage: 'none' }} elevation={0} position="static">
       <Toolbar>
-        <Typography sx={{ flexGrow: 1, fontSize: { xs: '20px', md: '35px' } }}>
+        <Typography sx={{ flexGrow: 1, fontSize: { xs: '20px', md: '35px',color:"black" } }}>
           SWeets
         </Typography>
-        <ThemeSelector />
+        {/* <ThemeSelector /> */}
         <List sx={{ display: { xs: 'none', md: 'flex' } }}>
           {menuItems.map((item, index) => (
             <ListItem key={index}>

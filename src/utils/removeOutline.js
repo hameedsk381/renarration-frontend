@@ -8,7 +8,8 @@ function removeOutlineFromElement(htmlString, dataId) {
   } else {
     const allElements = doc.querySelectorAll('*');
     allElements.forEach((el) => {
-      el.style.outline = ''; // Remove the outline style from all elements
+      const ele = el;
+      ele.style.outline = ''; // Remove the outline style from all elements
     });
   }
   // console.log(`deleted block ${dataId}`)

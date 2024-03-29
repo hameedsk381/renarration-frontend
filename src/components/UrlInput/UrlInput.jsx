@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Alert, Button, CircularProgress, Paper, Snackbar, Box, Typography, LinearProgress,
+  Box, Button, CircularProgress, IconButton, Input, Paper,
 } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { useUrlValidation } from '../../hooks/useUrlValidation';
+import { useSelector, useDispatch } from 'react-redux';
+import useUrlValidation from '../../hooks/useUrlValidation';
 import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
 import { fetchFailure, fetchStart, fetchSuccess } from '../../redux/actions/urlActions';
 import { extractApi } from '../../apis/extractApis';
@@ -14,16 +15,11 @@ import { setAnnotatedHtmlContent } from '../../redux/actions/annotationActions';
 import getDeviceType from '../../utils/getDeviceType';
 import { showSnackbar } from '../../redux/actions/snackbarActions';
 
-function UrlInput({ navigateTo }) {
+function UrlInput({ navigateTo, homepage, annotationNav }) {
   const [inputValue, setInputValue] = useState('');
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
   const progress = useSelector((state) => state.url.progress);
-  const isFetching = useSelector((state) => state.url.isFetching); // Get state with useSelector
-  const errorMessage = useSelector((state) => state.url.errorMessage); // Get state with useSelector
-  const dispatch = useDispatch(); // Get dispatch function with useDispatch
-
+  const isFetching = useSelector((state) => state.url.isFetching);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const isValidUrl = useUrlValidation(inputValue);
 
@@ -40,14 +36,20 @@ function UrlInput({ navigateTo }) {
     dispatch(fetchStart());
 
     try {
-      const response = await axios.post(extractApi, { url: inputValue }, { headers: getDeviceType });
+      const response = await axios.post(
+        extractApi,
+        { url: inputValue },
+        { headers: getDeviceType },
+      );
       dispatch(fetchSuccess(inputValue, response.data));
       dispatch(setAnnotatedHtmlContent(response.data));
-      navigate(navigateTo);
+      dispatch(showSnackbar('Content fetched successfully', 'success'));
+      { navigateTo && navigate(navigateTo); }
+      setInputValue('');
     } catch (err) {
       dispatch(fetchFailure(err.message));
       displaySnackbar(err.message, 'error');
-      setInputValue(''); // Consider keeping the input for user correction instead of clearing
+      setInputValue('');
     }
   };
 
@@ -64,40 +66,76 @@ function UrlInput({ navigateTo }) {
   }, [handleNavigate]);
 
   return (
-    <Paper
-      elevation={6}
-      sx={{
-        width: { lg: '50%', md: '75%' }, m: 2, marginTop: '-25px', marginInline: { lg: '25%', md: '10%' },
-      }}
-      style={wrapperStyle}
-    >
+    <>
+      {annotationNav ? (
+        <Box bgcolor="white" px={1.5} py={1} sx={{ my: { xs: 2, md: 0 } }}>
+          <Input
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleNavigate();
+              }
+            }}
+            value={inputValue}
+            endAdornment={(
+              <IconButton
+                onClick={handleNavigate}
+                disabled={isFetching}
+              >
+                {isFetching ? <CircularProgress value={progress} size={24} color="inherit" />
+                 : <ArrowForward />}
+              </IconButton>
+)}
+            placeholder="Enter a URL to renarrate"
+            size="small"
+            sx={{ width: '289px' }}
+          />
+        </Box>
+      ) : (
+        <Paper
+          elevation={6}
+          sx={{
+            width: { lg: '50%', md: '75%' },
+            m: 2,
+            marginTop: homepage ? '-25px' : '-40px',
+            marginInline: { lg: '25%', md: '10%' },
+          }}
+          style={wrapperStyle}
+        >
 
-      <input
-        type="url"
-        placeholder="Enter a URL, link you want to re-narrate with"
-        style={inputStyle}
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') {
-            handleNavigate();
-          }
-        }}
-      />
+          <input
+            type="url"
+            placeholder="Enter a URL, link you want to re-narrate with"
+            style={inputStyle}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleNavigate();
+              }
+            }}
+          />
 
-      <Button
-        endIcon={isFetching ? <CircularProgress value={progress} size={24} color="inherit" /> : <ArrowForward />}
-        onClick={handleNavigate}
-        style={buttonStyle}
-        sx={{
-          borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: 'primary.main', '&:hover': { backgroundColor: 'primary.dark' },
-        }}
-        disabled={isFetching}
-      >
-        Renarrate-now
-      </Button>
-    </Paper>
+          <Button
+            endIcon={isFetching ? <CircularProgress value={progress} size={24} color="inherit" /> : <ArrowForward />}
+            onClick={handleNavigate}
+            style={buttonStyle}
+            sx={{
+              borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: 'primary.main', 
+              '&:hover': { backgroundColor: 'primary.dark' },
+            }}
+            disabled={isFetching}
+          >
+            Renarrate-now
+          </Button>
+        </Paper>
+      ) }
+
+    </>
+
   );
 }
-
+UrlInput.propTypes = {
+  navigateTo: PropTypes.string, // Add props validation
+};
 export default UrlInput;

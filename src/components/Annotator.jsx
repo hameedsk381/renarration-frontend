@@ -1,56 +1,178 @@
-import React from 'react';
+import React, { useRef, useCallback} from 'react';
 import {
-  Modal, Box, Typography, Button,
+  Drawer, Box, Typography, Divider, Container, Button, ButtonGroup, Stack, IconButton,
 } from '@mui/material';
+import HtmlToReact from './HtmlToReact';
+import SunEditor from 'suneditor-react';
+import 'suneditor/dist/css/suneditor.min.css';
+import {
+  Audiotrack, Close, Image, VideoCameraBack,
+} from '@mui/icons-material';
 
 function Annotator({
-  open, onClose, content, onSave,
+  open, onClose, content, onSave, initialValue, onDelete,
 }) {
-  const handleSave = () => {
-    onSave(content); // Call the onSave function passed from the parent component
-    onClose(); // Close the modal after onSave is called
+  const editorRef = useRef(null);
+  const handleSave = (bodycontent) => {
+    onSave(content, bodycontent);
+    onClose();
   };
 
   const handleClose = () => {
-    onClose(); // Close the modal
+    onClose();
   };
 
-  // Custom style for the modal
-  const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%', // Adjust the width as needed
-    maxHeight: '80vh', // Adjust the max height as needed
-    overflowY: 'auto', // Allow vertical scrolling
-    bgcolor: 'background.paper',
-    border: '1px solid #ccc',
-    boxShadow: 24,
-    p: 4,
-    borderRadius: 2,
-  };
+  const setSunEditorRef = useCallback((ref) => {
+    if (ref) {
+    
+      editorRef.current = ref;
+      // console.log(editorRef)
+    } else {
+      // console.log('Editor reference is null or undefined');
+    }
+  }, []);
 
+  const handleSubmit = () => {
+    // console.log('Submit button clicked');
+    if (editorRef.current) {
+      const submissioncontent = editorRef.current.getContents();
+      // console.log('Editor content:', content);
+      handleSave(submissioncontent);
+    } else {
+      // console.log('Editor ref is not available');
+    }
+  };
+  const handleUploadVideo = () => {
+    const fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('accept', 'video/*,max-size=20000');
+    fileInput.addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const videoBlob = await fetch(URL.createObjectURL(file)).then((r) => r.blob());
+        const videoUrl = URL.createObjectURL(videoBlob);
+        const sunEditor = editorRef.current;
+        // console.log(sunEditor);
+        sunEditor.insertHTML(`<video controls src="${videoUrl}"></video>`);
+      }
+    });
+    fileInput.click();
+  };
+  const handleAudioUpload = () => {
+    const fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('accept', 'audio/*,max-size=20000');
+    fileInput.addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const audioBlob = await fetch(URL.createObjectURL(file)).then((r) => r.blob());
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const sunEditor = editorRef.current;
+        // console.log(sunEditor);
+        sunEditor.insertHTML(`<audio controls src="${audioUrl}"></audio>`);
+      }
+    });
+    fileInput.click();
+  };
+  const handleImageUpload = () => {
+    const fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('accept', 'image/*,max-size=20000');
+    fileInput.addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const imgBlob = await fetch(URL.createObjectURL(file)).then((r) => r.blob());
+        const imgUrl = URL.createObjectURL(imgBlob);
+        const sunEditor = editorRef.current;
+        // console.log(sunEditor);
+        sunEditor.insertHTML(`<img controls src="${imgUrl}"></img>`);
+      }
+    });
+    fileInput.click();
+  };
   return (
-    <Modal
+    <Drawer
       open={open}
+      anchor="bottom"
       onClose={handleClose}
-      aria-labelledby="annotator-modal-title"
-      aria-describedby="annotator-modal-description"
+      sx={{
+        '.MuiDrawer-paper': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100dvh',
+          '@media (min-width:600px)': { height: '600px' },
+          borderTopRightRadius: '20px',
+          borderTopLeftRadius: '20px',
+        },
+      }}
     >
-      <Box sx={modalStyle}>
-        <Typography id="annotator-modal-title" variant="h6" component="h2">
-          Add Annotation
+      <IconButton
+        sx={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+        }}
+        onClick={onClose}
+      >
+        <Close />
+      </IconButton>
+      <Container sx={{ width: '100%', height: '100%' }}>
+        <Typography fontSize={22} fontWeight="bold" fontFamily="sans-serif"
+         textAlign="left" textTransform="uppercase" mt={1} my={2}>
+          Add your annotation here
         </Typography>
-        <Box id="annotator-modal-description" sx={{ mt: 2 }}>
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+        <Divider />
+        <Box sx={{ my: 2, maxHeight: '130px', overflow: 'auto' }}>
+          <HtmlToReact content={content} />
         </Box>
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button sx={{ mr: 1 }} onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>ADD</Button>
-        </Box>
-      </Box>
-    </Modal>
+        <Divider sx={{ mb: 2 }} variant="fullWidth" />
+        <SunEditor
+          defaultValue={initialValue}
+          getSunEditorInstance={setSunEditorRef}
+          autoFocus
+          setOptions={{
+            mode: 'classic',
+            audioUrlInput: true,
+            buttonList: [
+              ['undo', 'redo'],
+              ['font', 'fontSize', 'formatBlock'],
+              ['paragraphStyle', 'blockquote'],
+              ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+              ['fontColor', 'hiliteColor', 'textStyle'],
+              ['removeFormat'],
+              '/', // Line break
+              ['outdent', 'indent'],
+              ['align', 'horizontalRule', 'list', 'lineHeight'],
+              ['table', 'link'], 
+              ['fullScreen', 'showBlocks', 'codeView'],
+              ['preview', 'print'],
+              ['save', 'template'],
+              ['dir', 'dir_ltr', 'dir_rtl'],
+            ],
+          }}
+          onAudioUpload={handleAudioUpload}
+          height="200px"
+          placeholder="Type your content here.."
+        />
+        <Stack m={2} justifyContent="space-between" direction="row">
+          <ButtonGroup variant="contained" size="small">
+            <Button startIcon={<VideoCameraBack />} onClick={handleUploadVideo}>Upload Video</Button>
+            <Button startIcon={<Audiotrack />} onClick={handleAudioUpload}>Upload Audio</Button>
+            <Button startIcon={<Image />} onClick={handleImageUpload}>Upload image</Button>
+          </ButtonGroup>
+          <Stack direction="row" spacing={3}>
+            {initialValue === '' ? <Button variant="outlined" color="error"
+             onClick={handleClose}>cancel</Button>
+             : <Button variant="outlined" color="error" onClick={onDelete}>delete</Button>}
+            <Button variant="contained" color="success" onClick={handleSubmit}>
+              {initialValue === '' ? 'ADD to Re-narration' : 'Update Re-narration'}
+              </Button>
+          </Stack>
+        </Stack>
+      </Container>
+    </Drawer>
   );
 }
 

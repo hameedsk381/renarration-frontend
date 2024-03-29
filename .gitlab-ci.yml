@@ -1,0 +1,14 @@
+stages:
+  - build
+
+build_project:
+  image: node:lts
+  stage: build
+  script:
+    - npm install --frozen-lockfile
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - main
