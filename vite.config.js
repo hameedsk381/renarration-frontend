@@ -7,5 +7,8 @@ export default defineConfig(({ mode }) => {
   loadEnv(mode, process.cwd());
   return {
     plugins: [million.vite({ auto: true }), react()],
+    server: {
+      historyApiFallback: true,
+    },
   };
 });
