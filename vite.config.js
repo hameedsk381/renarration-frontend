@@ -1,5 +1,8 @@
+// eslint-disable-next-line import/no-unresolved
 import million from 'million/compiler';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig, loadEnv } from 'vite';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
