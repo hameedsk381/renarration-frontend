@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Alert, AlertTitle, Container, Paper, Snackbar,
+  Alert, AlertTitle, Container, Snackbar,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'; 
@@ -65,6 +65,7 @@ function AnnotationPage() {
   const handleAnnotationClick = (event) => {
     event.preventDefault();
     const elementId = event.target.dataset.id;
+console.log(elementId);
 
     const xpath = generateXPath(event.target);
     // Check if a block with this ID already exists

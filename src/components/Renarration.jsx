@@ -3,7 +3,7 @@ import {  useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
  Box, Button, Card, CardContent, CardHeader,
-  CardMedia,  Grid, Paper, Stack, Typography,
+  CardMedia,  Container,  Grid, Paper, Stack, Typography,
 } from '@mui/material';
 import {
   ArrowBack,  NearMe,
@@ -38,7 +38,7 @@ function Renarration() {
   const skeletons = Array.from({ length: 6 }, (_, index) => index);
   return renarration
     ? (
-      <Box>
+      <Container>
         <Stack m={4} direction="row" justifyContent="space-between">
           <Button startIcon={<ArrowBack />} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
           <EditRenarration renarrationId={renarration._id} />
@@ -50,7 +50,7 @@ function Renarration() {
             <Card key={block.target.id} variant="elevation" elevation={0}>
               <CardHeader
                 action={
-                  <Button variant="outlined" size="small" endIcon={<NearMe />} onClick={()=>{navigate(`/sweet/${block._id}`)}} >view orginal story</Button>
+                  <Button variant="outlined" size="small" endIcon={<NearMe />} onClick={()=>{navigate(`/sweet/${block._id}`)}} >view in original site</Button>
             }
                 subheader={new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
               />
@@ -83,10 +83,10 @@ function Renarration() {
           ))}
         </Stack>
 
-      </Box>
+      </Container>
     )
     : (
-      <>
+      <Container>
         <Button startIcon={<ArrowBack />} sx={{ m: 4 }} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
         <Grid container spacing={2} p={3}>
 
@@ -98,7 +98,7 @@ function Renarration() {
 
         </Grid>
 
-      </>
+      </Container>
     );
 }
 
