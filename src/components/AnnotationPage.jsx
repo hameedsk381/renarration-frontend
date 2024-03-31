@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Alert, AlertTitle, Container, Snackbar,
+  Alert, AlertTitle, Button, Container, Snackbar, Stack,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'; 
@@ -22,6 +22,7 @@ import AnnotationNavbar from './AnnotationNavbar';
 import { showSnackbar } from '../redux/actions/snackbarActions';
 import generateXPath from '../utils/generateXPath';
 import removeOutlineFromElement from '../utils/removeOutline';
+import { ArrowForward, ExitToApp } from '@mui/icons-material';
 
 function AnnotationPage() {
   const dispatch = useDispatch();
@@ -232,7 +233,19 @@ console.log(elementId);
         onClick={handleNavigationClick} />
 
       )}
-
+ <Stack component={'footer'}  position={'sticky'} justifyContent={'space-between'} direction={{ xs: 'column', md: 'row' }} bgcolor={'#F5F5F5'} px={10} py={2} sx={{ bottom: 0, width: '100%', zIndex: 100 }}>
+         
+ <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error">
+           exit renarration
+         </Button>
+         {annotatedBlocks.length !== 0 && (
+         <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success">
+           View Renarrated blocks
+         </Button>
+         )}
+         
+         
+       </Stack>
       <Annotator
         open={openDialog}
         onClose={() => setOpenDialog(false)}

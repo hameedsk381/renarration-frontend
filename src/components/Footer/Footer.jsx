@@ -1,39 +1,22 @@
-import React from 'react';
-import {
-  Box, Container, Typography, Link,
-} from '@mui/material';
+import { Copyright } from '@mui/icons-material'
+import { Container, Typography, Stack } from '@mui/material'
+import React from 'react'
 
-function Footer() {
+const Footer = () => {
   return (
-    <Box sx={{
-      bgcolor: 'background.customBackground',
-      py: 3,
-      bottom: 0,
-      left: 0,
-      right: 0,
-    }}
-    >
-      <Container maxWidth="lg">
-        <Typography align="center" gutterBottom>
-          A Web framework for contributing alternative narratives to Web content and to compose renditions based on the user's literacy level or reading-comfort preferences. Re-narration Web is modeled as a distributed social networking for the purpose of making Web-content available for a person who is not comfortable reading text or for a person in a foreign context. Individuals contributing to alternative narratives is the key aspect of re-narration Web.
-
-          An individual can choose to provide alternative narration to any specific entity such as an image, a paragraph or subtitles for a segment of a video and such.
-
-          The idea of the re-narration Web is to provide a person visiting a Web page, a comfortable narrative of the page content based on the visitor profile and contributions of alternative narratives made available by the community.
+    <Stack sx={{bgcolor:'#F6FBFF'}} p={3} direction={{ xs: 'column', md: 'row' }}>
+      <Container sx={{display:"flex",flexDirection:{ xs: 'column', md: 'row'},justifyContent:'space-between'}} >
+        <Typography sx={{fontSize: 12, color: '#898383'}} textAlign={{xs:'center',md:'start'}}>
+          <Copyright sx={{fontSize:'12px'}}/> 2024 <a style={{fontSize: 12, color: '#898383'}} href="https://open.janastu.org" target="_blank">janastu.org</a> Inc . <a href='https://gitlab.com/servelots/papad/papad-api/-/blob/prod/LICENSE' target='_blank' style={{fontSize: 12, color: '#898383'}}>GNU AGPLv3</a>
         </Typography>
-
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-          {'© '}
-          <Link color="inherit" href="https://yourwebsite.com/">
-            SWeets
-          </Link>
-          {' '}
-          {new Date().getFullYear()}
-          .
-        </Typography>
+        <Stack direction={'row'} justifyContent={'space-between'} spacing={4} fontSize={{xs:'12px',md:'14px'}} my={{xs:2,md:0}}>
+          <a style={{textTransform:'initial',textDecoration:'none',color:'#898383',cursor:"pointer"}}>Documentation</a>
+          <a style={{textTransform:'initial',textDecoration:'none',color:'#898383',cursor:"pointer"}}>Re-narration Repo</a>
+          <a style={{textTransform:'initial',textDecoration:'none',color:'#898383',cursor:"pointer"}} >File an issue</a>
+        </Stack>
       </Container>
-    </Box>
-  );
+    </Stack>
+  )
 }
 
-export default Footer;
+export default Footer

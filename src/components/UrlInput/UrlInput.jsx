@@ -93,7 +93,7 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
         </Box>
       ) : (
         <Paper
-          elevation={6}
+          variant='outlined'
           sx={{
             width: { lg: '50%', md: '75%' },
             m: 2,
@@ -106,7 +106,7 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
           <input
             type="url"
             placeholder="Enter a URL, link you want to re-narrate with"
-            style={inputStyle}
+            style={{ ...inputStyle, backgroundColor: '#D9D9D9' }}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => {
@@ -121,12 +121,13 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
             onClick={handleNavigate}
             style={buttonStyle}
             sx={{
-              borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: 'primary.main', 
-              '&:hover': { backgroundColor: 'primary.dark' },
+              borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: '#575555', 
+              '&:hover': { backgroundColor: '#575555' },textTransform:'initial',fontWeight:'semibold'
             }}
             disabled={isFetching}
+          
           >
-            Renarrate-now
+            Re-narrate now
           </Button>
         </Paper>
       ) }

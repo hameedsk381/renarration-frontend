@@ -13,6 +13,8 @@ import {
   TableRow,
   Paper,
   Button,
+  Typography,
+  Stack,
 
 } from '@mui/material';
 import {  Visibility } from '@mui/icons-material';
@@ -70,25 +72,22 @@ function RenarrationDataGrid() {
   }
 
   return (
-    <Container sx={{ my: 4 }}>
+    <Container sx={{ my: 4,mb:8 }}>
+
+      <Typography fontWeight={'semibold'} sx={{ color: '#0069D2', mx: 2 ,fontSize:28}}>Latest Re-narrations</Typography>
       {/* <Stack my={3} direction={'row'} justifyContent={'space-between'}>
-        <Typography variant='h5'>Latest Re-narrations</Typography>
-        <TextField size='small' label="Search Renarrations" />
       </Stack> */}
-      <TableContainer component={Paper} variant="outlined">
+      <TableContainer>
         <Table aria-label="responsive renarration table">
           <TableHead>
             <TableRow>
-              <TableCell>Renarration Title</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell sx={{fontSize:21,fontWeight:'bold'}}>Renarration Title</TableCell>
+              <TableCell sx={{fontSize:21,fontWeight:'bold'}} align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {renarrations.map((renarration) => (
-              <TableRow
-                key={renarration._id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
+            {renarrations.map((renarration, index) => (
+              <TableRow key={renarration._id} sx={{ height: '62px' }}>
                 <TableCell
                   component="th"
                   scope="row"
@@ -117,12 +116,10 @@ function RenarrationDataGrid() {
                   >
                     View
                   </Button>
-
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-
         </Table>
       </TableContainer>
     </Container>

@@ -8,7 +8,7 @@ import {
     Stack,
 } from '@mui/material';
 import axios from 'axios';
-import { ArrowBack, ContentCopy } from '@mui/icons-material';
+import { ArrowBack, ContentCopy, ExitToApp } from '@mui/icons-material';
 import { resetState } from '../redux/actions/urlActions';
 import { resetAnnotations } from '../redux/actions/annotationActions';
 import { getAllRenarrations, submitApi } from '../apis/extractApis';
@@ -117,56 +117,63 @@ function RenarrationList() {
 
 
   return (
+   <>
     <Container
-      variant="outlined"
-      component={Paper}
-      maxWidth="lg"
-      sx={{
-        width: '100%', p: 4, my: 2, backgroundColor: '#f3f3f3',
-      }}
-    >
-      <Stack direction="row" justifyContent="space-between">
-        <Button variant="contained" startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}> Back to Annotate</Button>
-        <Button variant="contained" onClick={handleExit} disabled={renarratedBlocks.length === 0}>
-          Exit Renarration
-        </Button>
-      </Stack>
-      <Box>
-        <TextField
-          label="Renarration Title"
-          value={renarrationTitle}
-          onChange={(e) => dispatch(addRennarationTitle(e.target.value))}
-          margin="normal"
-          required
-          fullWidth
-        />
+     
 
-      </Box>
-      <BlockListing blocks={renarratedBlocks} />
+     maxWidth="lg"
+     sx={{
+       width: '100%', p: 4, my: 2,
+     }}
+   >
+     <Stack direction="row" justifyContent="space-between">
+       <Button variant="contained" sx={{textTransform:'initial'}} startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}> Back to Re-narration</Button>
+      
+     </Stack>
+     <Box>
+       <TextField
+         label="Renarration Title"
+         placeholder='Give the title that describes the context of your re-narration. Example: Explaining what fundamental rights are to a 5 year old'
+         value={renarrationTitle}
+         onChange={(e) => dispatch(addRennarationTitle(e.target.value))}
+         margin="normal"
+         required
+         fullWidth
+         sx={{mt:4}}
+       />
 
-      <Stack direction="row" justifyContent="flex-end" spacing={1} px={2} pb={2}>
-        <Button variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">Publish</Button>
-      </Stack>
-      <Dialog
-        open={modalOpen}
-        keepMounted
-        onClose={handleModalClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>Sharing ID</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {sharingIdText}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCopy} startIcon={<ContentCopy />}>
-            Copy
-          </Button>
-        </DialogActions>
-      </Dialog>
+     </Box>
+     <BlockListing blocks={renarratedBlocks} />
 
-    </Container>
+   
+    
+     <Dialog
+       open={modalOpen}
+       keepMounted
+       onClose={handleModalClose}
+       aria-describedby="alert-dialog-slide-description"
+     >
+       <DialogTitle>Sharing ID</DialogTitle>
+       <DialogContent>
+         <DialogContentText id="alert-dialog-slide-description">
+           {sharingIdText}
+         </DialogContentText>
+       </DialogContent>
+       <DialogActions>
+         <Button onClick={handleCopy} startIcon={<ContentCopy />}>
+           Copy
+         </Button>
+       </DialogActions>
+     </Dialog>
+   
+   </Container>
+   <Stack direction={'row'} justifyContent={'space-between'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
+   <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{mx:"8%"}}>
+              exit renarration
+            </Button>
+            <Button sx={{mx:"8%"}} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">Publish Re-narration</Button>
+   </Stack>
+   </>
   );
 }
 

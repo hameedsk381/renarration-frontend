@@ -5,7 +5,7 @@ import {
 
 function Hero() {
   return (
-    <Box sx={{ backgroundColor: 'background.customBackground' }}>
+    <Box sx={{ backgroundColor: '#C1BEBE' }}>
       <Container maxWidth="sm" sx={{ justifyContent: 'center', alignItems: 'center', pb: 4 }}>
         <Typography color="text.primary" variant="h6" gutterBottom>
           Welcome to Web Re-narration

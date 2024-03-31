@@ -1,5 +1,5 @@
 import {
-  AppBar, Toolbar,  Typography,  List, ListItem} from '@mui/material';
+  AppBar, Toolbar,  Typography,  List, ListItem, Container} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 // import ThemeSelector from '../ThemeSelector.jsx';
@@ -13,8 +13,8 @@ function Navbar() {
   ];
 
   return (
-    <AppBar sx={{ backgroundColor: 'transparent', border: 'none', backgroundImage: 'none' }} elevation={0} position="static">
-      <Toolbar>
+    <AppBar sx={{ backgroundColor: '#C1BEBE', border: 'none', backgroundImage: 'none' }} elevation={0} position="static">
+      <Toolbar component={Container}>
         <Typography sx={{ flexGrow: 1, fontSize: { xs: '20px', md: '35px',color:"black" } }}>
           SWeets
         </Typography>
