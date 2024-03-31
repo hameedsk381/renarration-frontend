@@ -3,21 +3,25 @@ import {  useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
  Box, Button, Card, CardContent, CardHeader,
-  CardMedia,  Container,  Grid, Paper, Stack, Typography,
+  CardMedia,  Container,  Drawer,  Grid, Paper, Stack, Typography,
 } from '@mui/material';
 import {
-  ArrowBack,  NearMe,
+  ArrowBack,  CopyAll,  NearMe, Share,
 } from '@mui/icons-material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
 import { getAllRenarrations} from '../apis/extractApis';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
 import EditRenarration from './EditRenarration';
+import { showSnackbar } from '../redux/actions/snackbarActions';
+import { useDispatch } from 'react-redux';
 
 function Renarration() {
   const renarrationId = useParams().id;
   const [renarration, setRenarration] = useState(null);
-
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const currentUrl = window.location.href;
+const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const getRennaration = async () => {
@@ -30,7 +34,45 @@ function Renarration() {
       // console.log(error);
     }
   };
+  const handleShareOption = (option) => {
+    switch (option) {
+      case 'whatsapp':
+        shareToWhatsApp();
+        break;
+      case 'facebook':
+        shareToFacebook();
+        break;
+      case 'twitter':
+        shareToTwitter();
+        break;
+      default:
+        break;
+    }
+  };
 
+  const shareToWhatsApp = () => {
+    const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(currentUrl)}`;
+    shareUrl(whatsappUrl);
+  };
+
+  const shareToFacebook = () => {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+    shareUrl(facebookUrl);
+  };
+
+  const shareToTwitter = () => {
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}`;
+    shareUrl(twitterUrl);
+  };
+  const shareUrl = async (url) => {
+    try {
+      await navigator.share({ url });
+    } catch (error) {
+      console.error('Error sharing:', error);
+      // Fallback for browsers that don't support the Web Share API
+      window.open(url, '_blank');
+    }
+  };
   useEffect(() => {
     getRennaration();
     // console.log(renarrationId)
@@ -43,14 +85,15 @@ function Renarration() {
           <Button startIcon={<ArrowBack />} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
           <EditRenarration renarrationId={renarration._id} />
         </Stack>
-        <Typography textAlign="center" variant="h4">{renarration.renarrationTitle}</Typography>
-        <Stack component={Paper} elevation={8} spacing={2} m={4}>
-
-          {renarration.blocks.map((block) => (
-            <Card key={block.target.id} variant="elevation" elevation={0}>
+        <Typography textAlign="center" variant="h4" my={3}>{renarration.renarrationTitle}</Typography>
+        {renarration.blocks.map((block) => (
+            <Card key={block.target.id} variant="elevation" elevation={3} sx={{p:2}} >
               <CardHeader
                 action={
-                  <Button variant="outlined" size="small" endIcon={<NearMe />} onClick={()=>{navigate(`/sweet/${block._id}`)}} >view in original site</Button>
+                 <Stack direction={'row'} spacing={2}>
+                   <Button variant="outlined" size="small" endIcon={<NearMe />} onClick={()=>{navigate(`/sweet/${block._id}`)}} >view in original site</Button>
+                   <Button variant="outlined" size="small" endIcon={<Share />} onClick={() =>{setOpenDrawer(true) }}>share</Button>
+                 </Stack>
             }
                 subheader={new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
               />
@@ -81,8 +124,19 @@ function Renarration() {
               </CardContent>
             </Card>
           ))}
-        </Stack>
-
+          <Drawer
+        anchor="bottom"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+      >
+        <div style={{ width: 250 }}>
+          <Button onClick={() => handleShareOption('whatsapp')}>WhatsApp</Button>
+          <Button onClick={() => handleShareOption('facebook')}>Facebook</Button>
+          <Button onClick={() => handleShareOption('twitter')}>Twitter</Button>
+          <Button startIcon={<CopyAll/>} onClick={() => { navigator.clipboard.writeText(window.location.href);dispatch(showSnackbar("Copied succesffuly", 'success')); }}>Copy</Button>
+          {/* Add buttons for other platforms if needed */}
+        </div>
+      </Drawer>
       </Container>
     )
     : (
