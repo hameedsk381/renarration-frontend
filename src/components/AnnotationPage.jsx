@@ -210,7 +210,7 @@ console.log(elementId);
         />
       )}
       {initialHtmlContent === null && (
-        <Container>
+        <Container sx={{p:3}}>
           <Alert severity="info">
             <AlertTitle>URL</AlertTitle>
             copy the url of any web page and paste it above to renarrate
