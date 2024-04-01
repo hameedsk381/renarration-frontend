@@ -17,9 +17,12 @@ import {
   Stack,
 
 } from '@mui/material';
-import {  Visibility } from '@mui/icons-material';
+import {  Share, Visibility } from '@mui/icons-material';
 import axios from 'axios';
 import { getAllRenarrations } from '../apis/extractApis';
+import { useDispatch } from 'react-redux';
+import { openModal } from '../redux/actions/modalActions';
+import ShareRenarration from './Share';
 
 const fetchRenarrations = async () => {
   const response = await axios.get(getAllRenarrations);
@@ -29,6 +32,7 @@ const fetchRenarrations = async () => {
 
 function RenarrationDataGrid() {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const {
     data: renarrations,
     isLoading,
@@ -72,17 +76,17 @@ function RenarrationDataGrid() {
   }
 
   return (
-    <Container sx={{ my: 4,mb:8 }}>
+    <Container maxWidth="lg" sx={{ my: 4,mb:8 }}>
 
       <Typography fontWeight={'semibold'} sx={{ color: '#0069D2', mx: 2 ,fontSize:28}}>Latest Re-narrations</Typography>
       {/* <Stack my={3} direction={'row'} justifyContent={'space-between'}>
       </Stack> */}
       <TableContainer>
-        <Table aria-label="responsive renarration table">
+        <Table  aria-label="responsive renarration table">
           <TableHead>
             <TableRow>
-              <TableCell sx={{fontSize:21,fontWeight:'bold'}}>Renarration Title</TableCell>
-              <TableCell sx={{fontSize:21,fontWeight:'bold'}} align="right">Actions</TableCell>
+              <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}}>Renarration Title</TableCell>
+              <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}} align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -102,19 +106,30 @@ function RenarrationDataGrid() {
                   {renarration.renarrationTitle}
                 </TableCell>
                 <TableCell
-                  align="right"
+                  align="center"
                   sx={{
-                    whiteSpace: 'nowrap', // Apply this if you want the content to dictate size without wrapping
+                    whiteSpace: 'nowrap'
                   }}
                 >
                   <Button
-                    sx={{ mr: 3 }}
+                 
                     startIcon={<Visibility />}
                     variant="outlined"
+                    color='success'
                     onClick={() => navigate(`/renarration-details/${renarration._id}`)}
                     size="small"
+                    sx={{ fontSize: { xs: 12, md: 14 },mr:2 }}
                   >
                     View
+                  </Button>
+                  <Button
+                    startIcon={<Share />}
+                    variant="outlined"
+                    onClick={() => dispatch(openModal(<ShareRenarration id={`renarration-details/${renarration._id}`}/>))}
+                    size="small"
+                    sx={{ fontSize: { xs: 12, md: 14 } }}
+                  >
+                    share
                   </Button>
                 </TableCell>
               </TableRow>

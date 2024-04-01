@@ -9,10 +9,7 @@ import UrlInput from './UrlInput/UrlInput';
 import SweetsMenu from './SweetsMenu';
 function AnnotationNavbar({
   annotationMode,
-  handleAnnotationModeChange,
-  handleExit,
-  navigateToRenarrationBlocks,
-  annotatedBlocks,
+  handleAnnotationModeChange
 }) {
   return (
     <AppBar elevation={0} position="sticky">
@@ -20,7 +17,11 @@ function AnnotationNavbar({
        
       <FormControlLabel
             color="text.secondary"
-            control={<Switch checked={annotationMode} onChange={handleAnnotationModeChange} color="default" />}
+            control={<Switch sx={{
+              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                backgroundColor: 'white',
+              },
+            }} checked={annotationMode} onChange={handleAnnotationModeChange} color="info" />}
             label={annotationMode ? 'Renarration mode is on' : 'Renarration mode  is off'}
           />
         <SweetsMenu  />

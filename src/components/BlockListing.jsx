@@ -53,7 +53,7 @@ function BlockListing({ blocks }) {
   return (
     <Stack my={5} p={2} component={Paper} elevation={1} >
 
-      {renarratedBlocks && renarratedBlocks.map((block) => (
+      {renarratedBlocks && renarratedBlocks.map((block,index) => (
        <Stack>
          <Stack direction={'row'} justifyContent={'space-between'} >
           <Typography>{new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
@@ -82,7 +82,7 @@ function BlockListing({ blocks }) {
              
               <div dangerouslySetInnerHTML={{ __html: block.body.value }} />
             </Paper>
-            <Divider variant='middle' sx={{my:3}}/>
+            <Divider variant='middle' sx={{my:3, display: index === renarratedBlocks.length - 1 ? 'none' : 'block'}}/>
        </Stack>
       ))}
         

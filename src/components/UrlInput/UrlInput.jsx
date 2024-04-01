@@ -68,7 +68,7 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
   return (
     <>
       {annotationNav ? (
-        <Box bgcolor="white" px={1.5} py={1} sx={{ my: { xs: 2, md: 0 } }}>
+        <Box  px={1.5} py={1} sx={{ my: { xs: 2, md: 0 } }}>
           <Input
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => {
@@ -83,12 +83,13 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
                 disabled={isFetching}
               >
                 {isFetching ? <CircularProgress value={progress} size={24} color="inherit" />
-                 : <ArrowForward />}
+                 : <ArrowForward sx={{color:'white'}} />}
               </IconButton>
 )}
-            placeholder="Enter a URL to renarrate"
+            placeholder="Add a URL you want to renarrate"
             size="small"
-            sx={{ width: '289px' }}
+            disableUnderline
+            sx={{ width: '289px', color: 'white',borderBottom:"1px solid white"  }}
           />
         </Box>
       ) : (

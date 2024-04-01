@@ -16,6 +16,8 @@ import BlockListing from './BlockListing';
 import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
 import { showSnackbar } from '../redux/actions/snackbarActions.js';
 import processRenarratedBlocks from '../utils/processRenarratedBlocks.js';
+import { openModal } from '../redux/actions/modalActions.js';
+import Confirmation from '../utils/Confirmation.jsx';
 
 function RenarrationList() {
   const navigate = useNavigate();
@@ -91,9 +93,9 @@ function RenarrationList() {
     dispatch(resetAnnotations());
     dispatch(addRennarationTitle(''));
     dispatch(addRennarationId(''));
-    navigate('/');
     localStorage.clear(); // Clear local storage
     sessionStorage.clear(); // Clear session storage (if you use it)
+    navigate('/'); // Navigate to the home page or any other page
   };
   const handleNext = async () => {
     // Validation checks
