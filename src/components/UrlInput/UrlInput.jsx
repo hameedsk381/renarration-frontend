@@ -33,14 +33,15 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
       return; // Exit early if the URL is not valid
     }
 
-    dispatch(fetchStart());
+  
 
     try {
+      dispatch(fetchStart());
       const response = await axios.post(
         extractApi,
-        { url: inputValue },
-        { headers: getDeviceType },
+        { url: inputValue }
       );
+      console.log(response.data);
       dispatch(fetchSuccess(inputValue, response.data));
       dispatch(setAnnotatedHtmlContent(response.data));
       dispatch(showSnackbar('Content fetched successfully', 'success'));
@@ -68,8 +69,8 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
   return (
     <>
       {annotationNav ? (
-        <Box  px={1.5} py={1} sx={{ my: { xs: 2, md: 0 } }}>
-          <Input
+        <Box  px={1.5} py={1} sx={{ mt: { xs: 2, md: 0 } }}>
+          <Input 
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
@@ -81,6 +82,7 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
               <IconButton
                 onClick={handleNavigate}
                 disabled={isFetching}
+                size='small'
               >
                 {isFetching ? <CircularProgress value={progress} size={24} color="inherit" />
                  : <ArrowForward sx={{color:'white'}} />}

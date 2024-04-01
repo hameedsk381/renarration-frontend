@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Alert, AlertTitle, Button, Container, Snackbar, Stack,
+  Alert, AlertTitle, Button, Container, Paper, Snackbar, Stack,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'; 
@@ -202,7 +202,7 @@ console.log(elementId);
       />
 
       {!isFetching && annotationMode && (
-        <Container
+        <Container sx={{my:3}}
           dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }}
           onClick={handleAnnotationClick}
           onMouseOver={handleMouseOver}
@@ -222,16 +222,16 @@ console.log(elementId);
         onClick={handleNavigationClick} />
 
       )}
- <Stack component={'footer'}  position={'sticky'} justifyContent={'space-between'} direction={{ xs: 'column', md: 'row' }} bgcolor={'#F5F5F5'} px={10} py={2} sx={{ bottom: 0, width: '100%', zIndex: 100 }}>
+   <Stack direction={'row'} justifyContent={'space-around'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
          
- <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error">
+ <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{ fontSize: { xs: 8, md: 14 } }}>
            exit renarration
          </Button>
-         {annotatedBlocks.length !== 0 && (
-         <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success">
+         
+        <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success" sx={{ fontSize: { xs: 8, md: 14 } }} disabled={annotatedBlocks.length === 0} >
            View Renarrated blocks
          </Button>
-         )}
+      
          
          
        </Stack>

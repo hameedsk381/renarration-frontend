@@ -101,8 +101,6 @@ function Annotator({
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100dvh',
-          '@media (min-width:600px)': { height: '600px' },
           borderTopRightRadius: '20px',
           borderTopLeftRadius: '20px',
         },
@@ -119,8 +117,7 @@ function Annotator({
         <Close />
       </IconButton>
       <Container sx={{ width: '100%', height: '100%' }}>
-        <Typography fontSize={22} fontWeight="bold" fontFamily="sans-serif"
-         textAlign="left" textTransform="uppercase" mt={1} my={2}>
+        <Typography sx={{ fontSize: { xs: 16, md: 22 }, fontWeight: 'bold', fontFamily: 'sans-serif', textAlign: 'left', textTransform: 'uppercase', mt: 1, my: 2 }}>
           Add your annotation here
         </Typography>
         <Divider />
@@ -133,7 +130,7 @@ function Annotator({
           getSunEditorInstance={setSunEditorRef}
           autoFocus
           setOptions={{
-            mode: 'classic',
+            mode: 'balloon-always',
             audioUrlInput: true,
             buttonList: [
               ['undo', 'redo'],
@@ -156,17 +153,17 @@ function Annotator({
           height="200px"
           placeholder="Type your content here.."
         />
-        <Stack m={2} justifyContent="space-between" direction="row">
+        <Stack m={2} justifyContent="space-between" direction={{ xs: 'column', md: 'row' }}>
           <ButtonGroup variant="contained" size="small">
-            <Button startIcon={<VideoCameraBack />} onClick={handleUploadVideo}>Upload Video</Button>
-            <Button startIcon={<Audiotrack />} onClick={handleAudioUpload}>Upload Audio</Button>
-            <Button startIcon={<Image />} onClick={handleImageUpload}>Upload image</Button>
+            <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<VideoCameraBack />} onClick={handleUploadVideo}>Upload Video</Button>
+            <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<Audiotrack />} onClick={handleAudioUpload}>Upload Audio</Button>
+            <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<Image />} onClick={handleImageUpload}>Upload image</Button>
           </ButtonGroup>
-          <Stack direction="row" spacing={3}>
-            {initialValue === '' ? <Button variant="outlined" color="error"
+          <Stack direction="row" spacing={3} justifyContent={'space-between'} mt={{xs:2,md:0}}>
+            {initialValue === '' ? <Button sx={{fontSize:{xs:8,md:14}}} variant="outlined" color="error"
              onClick={handleClose}>cancel</Button>
-             : <Button variant="outlined" color="error" onClick={onDelete}>delete</Button>}
-            <Button variant="contained" color="success" onClick={handleSubmit}>
+             : <Button sx={{fontSize:{xs:8,md:14}}} variant="outlined" color="error" onClick={onDelete}>delete</Button>}
+            <Button sx={{fontSize:{xs:8,md:14}}} variant="contained" color="success" onClick={handleSubmit}>
               {initialValue === '' ? 'ADD to Re-narration' : 'Update Re-narration'}
               </Button>
           </Stack>

@@ -73,7 +73,12 @@ function RenarrationList() {
   const handleModalClose = () => {
     setModalOpen(false); // Close the modal
     downloadSharingId(sharingIdText); // Download the sharing ID
-    handleExit();
+    dispatch(resetState());
+    dispatch(resetAnnotations());
+    dispatch(addRennarationTitle(''));
+    dispatch(addRennarationId(''));
+    localStorage.clear(); // Clear local storage
+    navigate('/');
   };
   const handleCopy = () => { navigator.clipboard.writeText(sharingIdText); displaySnackbar('sharing ID copied succesfully', 'success'); handleModalClose(); };
 
@@ -89,13 +94,7 @@ function RenarrationList() {
   };
 
   const handleExit = () => {
-    dispatch(resetState());
-    dispatch(resetAnnotations());
-    dispatch(addRennarationTitle(''));
-    dispatch(addRennarationId(''));
-    localStorage.clear(); // Clear local storage
-    sessionStorage.clear(); // Clear session storage (if you use it)
-    navigate('/'); // Navigate to the home page or any other page
+    dispatch(openModal(<Confirmation/>));
   };
   const handleNext = async () => {
     // Validation checks
@@ -170,10 +169,10 @@ function RenarrationList() {
    
    </Container>
    <Stack direction={'row'} justifyContent={'space-between'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
-   <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{mx:"8%"}}>
+   <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{mx:{xs:3,md:'8%'},fontSize:{xs:8,md:14}}}>
               exit renarration
             </Button>
-            <Button sx={{mx:"8%"}} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">Publish Re-narration</Button>
+            <Button sx={{mx:{xs:3,md:'8%'},fontSize:{xs:8,md:14}}} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">Publish Re-narration</Button>
    </Stack>
    </>
   );

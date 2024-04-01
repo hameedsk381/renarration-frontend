@@ -15,8 +15,7 @@ const Confirmation = () => {
       dispatch(resetAnnotations());
       dispatch(addRennarationTitle(''));
       dispatch(addRennarationId(''));
-      localStorage.clear(); // Clear local storage
-      sessionStorage.clear(); // Clear session storage (if you use it)
+     localStorage.removeItem('state') // Clear specific item in local storage
       navigate('/'); // Navigate to the home page or any other page
       dispatch(closeModal())
     };

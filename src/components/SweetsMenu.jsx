@@ -56,6 +56,7 @@ function SweetsMenu({ options }) {
       onChange={handleMenuOpen}
       onResize={handleAccordionResize}
       sx={{ width: '300px' }}
+      
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
         <Typography color="primary">
