@@ -60,7 +60,7 @@ function SweetsMenu({ options }) {
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
         <Typography color="primary">
-          No of sweets for this url :
+          No of SWeEts for this url :
         </Typography>
         <Chip sx={{ mx: 2 }} color="info" size="small" label={urlsweets && urlsweets.length} variant="filled" />
 

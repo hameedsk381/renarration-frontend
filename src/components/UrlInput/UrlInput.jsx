@@ -96,12 +96,11 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
         </Box>
       ) : (
         <Paper
-          variant='outlined'
+          
           sx={{
             width: { lg: '50%', md: '75%' },
-            m: 2,
-            marginTop: homepage ? '-25px' : '-40px',
-            marginInline: { lg: '25%', md: '10%' },
+            mx: 2,
+          marginInline: { lg: '25%', md: '10%' },
           }}
           style={wrapperStyle}
         >
@@ -122,10 +121,10 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
           <Button
             endIcon={isFetching ? <CircularProgress value={progress} size={24} color="inherit" /> : <ArrowForward />}
             onClick={handleNavigate}
+            variant='contained'
             style={buttonStyle}
             sx={{
-              borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: '#575555', 
-              '&:hover': { backgroundColor: '#575555' },textTransform:'initial',fontWeight:'semibold'
+              borderTopLeftRadius: 0, borderBottomLeftRadius: 0,textTransform:'initial',fontWeight:'semibold'
             }}
             disabled={isFetching}
           

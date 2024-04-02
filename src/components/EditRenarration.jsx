@@ -31,7 +31,7 @@ function EditRenarration({  renarrationId }) {
   const handleSubmit = async () => {
     if(sharingId === '')
     {
-      setError('please eneter your shring id');
+      setError('please enter your shring id');
       return
     }
     setIsSubmitting(true);
@@ -48,7 +48,7 @@ function EditRenarration({  renarrationId }) {
       if (error.message === 'Network Error') {
         setError('Check your internet connection...or server is down try again after sometime');
       } else {
-        setError(error.response.data);
+        setError('Opps! You have entered a wrong ID. Try again please');
       }
       console.log(error);
     } finally {

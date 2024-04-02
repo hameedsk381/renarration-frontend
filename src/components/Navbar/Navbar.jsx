@@ -1,5 +1,5 @@
 import {
-  AppBar, Toolbar,  Typography,  List, ListItem, Container} from '@mui/material';
+  AppBar, Toolbar,  Typography,  List, ListItem, Container, Stack} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 // import ThemeSelector from '../ThemeSelector.jsx';
@@ -13,16 +13,19 @@ function Navbar() {
   ];
 
   return (
-    <AppBar sx={{ backgroundColor: '#C1BEBE', border: 'none', backgroundImage: 'none' }} elevation={0} position="static">
-      <Toolbar component={Container}>
-        <Typography sx={{ flexGrow: 1, fontSize: { xs: '20px', md: '35px',color:"black" } }}>
-          SWeets
-        </Typography>
+    <AppBar sx={{ backgroundColor: 'transparent', border: 'none', backgroundImage: 'none' }} elevation={0} position="static">
+      <Toolbar component={Container} sx={{justifyContent:'space-between',my:2}}>
+      <Stack color={'black'}>
+          <Typography sx={{fontWeight:'bold',fontSize:{xs:24, md:32}}}  >
+            SWeEts
+         </Typography>
+          <Typography sx={{fontWeight:'semibold',fontSize:{xs:8, md:12}}}>Semantic Web Entities</Typography>
+          </Stack>
         {/* <ThemeSelector /> */}
         <List sx={{ display: { xs: 'none', md: 'flex' } }}>
           {menuItems.map((item, index) => (
             <ListItem key={index}>
-              <Link style={{ textDecoration: 'none', color: 'black' }} to={item.href}>{item.text}</Link>
+              <Link style={{ textDecoration: 'none', color: 'black',fontFamily:'Roboto' }} to={item.href}>{item.text}</Link>
             </ListItem>
           ))}
         </List>

@@ -3,10 +3,10 @@ import {  useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
   AppBar,
- Box, Button, Container,  Divider,  Drawer,  Grid, Paper, Stack, Toolbar, Typography,
+ Box, Button, Container,  Divider,  Drawer,  Grid, IconButton, Paper, Stack, Toolbar, Typography,
 } from '@mui/material';
 import {
-  ArrowBack,  CopyAll,  Edit,  NearMe, Share,
+  ArrowBack,  CopyAll,  Edit,  Facebook,  NearMe, Share, Speaker, Twitter, WhatsApp,
 } from '@mui/icons-material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
@@ -17,6 +17,8 @@ import { showSnackbar } from '../redux/actions/snackbarActions';
 import { useDispatch } from 'react-redux';
 import { openModal } from '../redux/actions/modalActions';
 import EditRenarration from './EditRenarration';
+import DoctoString from '../utils/DoctoSTring';
+import ShareRenarration from './Share';
 
 function Renarration() {
   const renarrationId = useParams().id;
@@ -36,7 +38,16 @@ const dispatch = useDispatch();
       // console.log(error);
     }
   };
- 
+  const speak = (textvalue) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(textvalue);
+      const voices = window.speechSynthesis.getVoices();
+      utterance.voice = voices[0];
+      if (!window.speechSynthesis.speaking) {
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+  };
   const handleEdit = ()=>{
     dispatch(openModal( <EditRenarration
       renarrationId={renarrationId}
@@ -79,7 +90,7 @@ const dispatch = useDispatch();
     <Typography sx={{fontSize:{xs:12,md:16}}}>{new Date(block.createdAt).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
     <Stack direction={'row'} spacing={2} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                    <Button variant="outlined" color='success' size="small" endIcon={<NearMe />} sx={{fontSize:{xs:8,md:12}}} onClick={()=>{navigate(`/sweet/${block._id}`)}} >read original site</Button>
-                   <Button variant="outlined" size="small" endIcon={<Share />} sx={{fontSize:{xs:8,md:12}}} onClick={() =>{setOpenDrawer(true) }}>share</Button>
+                   <Button variant="outlined" size="small" endIcon={<Share />} sx={{fontSize:{xs:8,md:12}}} onClick={() =>{dispatch(openModal(<ShareRenarration />)) }}>share</Button>
                  </Stack>
    </Stack>
  <Stack direction="row" spacing={1} justifyContent="center">
@@ -96,6 +107,7 @@ const dispatch = useDispatch();
       </Stack>
       <div dangerouslySetInnerHTML={{ __html: removeMedia(block.target.value) }} />
       <Typography textTransform={'uppercase'} fontSize={12} color={'#6B96C0'} mt={2}>The Re-narration</Typography>
+      {/* <IconButton onClick={speak(DoctoString(block.body.value))}><Speaker/></IconButton> */}
       <Paper
         variant="outlined"
         sx={{
@@ -115,19 +127,7 @@ const dispatch = useDispatch();
       <Button sx={{mr:12}} variant="contained" color='success' startIcon={<Edit />} onClick={handleEdit} >Edit Renarration </Button>
 
    </Stack>
-          <Drawer
-        anchor="bottom"
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-      >
-        <div style={{ width: 250 }}>
-          <Button onClick={() => handleShareOption('whatsapp')}>WhatsApp</Button>
-          <Button onClick={() => handleShareOption('facebook')}>Facebook</Button>
-          <Button onClick={() => handleShareOption('twitter')}>Twitter</Button>
-          <Button startIcon={<CopyAll/>} onClick={() => { navigator.clipboard.writeText(window.location.href);dispatch(showSnackbar("Copied succesffuly", 'success')); }}>Copy</Button>
-          {/* Add buttons for other platforms if needed */}
-        </div>
-      </Drawer>
+         
       </>
     )
     : (

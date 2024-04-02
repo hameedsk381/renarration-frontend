@@ -228,7 +228,7 @@ console.log(elementId);
            exit renarration
          </Button>
          
-        <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success" sx={{ fontSize: { xs: 8, md: 14 } }} disabled={annotatedBlocks.length === 0} >
+        <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success" sx={{ fontSize: { xs: 8, md: 14 },display:!annotationMode ? 'none' : 'flex' }} disabled={annotatedBlocks.length === 0 }  >
            View Renarrated blocks
          </Button>
       

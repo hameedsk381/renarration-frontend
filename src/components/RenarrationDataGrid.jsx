@@ -86,7 +86,7 @@ function RenarrationDataGrid() {
           <TableHead>
             <TableRow>
               <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}}>Renarration Title</TableCell>
-              <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}} align="center">Actions</TableCell>
+              <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}} align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -106,7 +106,7 @@ function RenarrationDataGrid() {
                   {renarration.renarrationTitle}
                 </TableCell>
                 <TableCell
-                  align="center"
+                  align="right"
                   sx={{
                     whiteSpace: 'nowrap'
                   }}
@@ -125,7 +125,7 @@ function RenarrationDataGrid() {
                   <Button
                     startIcon={<Share />}
                     variant="outlined"
-                    onClick={() => dispatch(openModal(<ShareRenarration id={`renarration-details/${renarration._id}`}/>))}
+                    onClick={() => dispatch(openModal(<ShareRenarration id={renarration._id} route={'renarration-details'}/>))}
                     size="small"
                     sx={{ fontSize: { xs: 12, md: 14 } }}
                   >

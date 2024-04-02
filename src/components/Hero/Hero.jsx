@@ -5,10 +5,10 @@ import {
 
 function Hero() {
   return (
-    <Box sx={{ backgroundColor: '#C1BEBE' }}>
+    <Box >
       <Container maxWidth="sm" sx={{ justifyContent: 'center', alignItems: 'center', pb: 4 }}>
         <Typography color="text.primary" variant="h6" gutterBottom>
-          Welcome to Web Re-narration
+          Welcome to Web of Semantic Web Entities
         </Typography>
         <Typography color="text.primary" variant="h4" gutterBottom>
           Read. Re-narrate. Share.

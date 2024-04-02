@@ -152,9 +152,10 @@ function Annotator({
           onAudioUpload={handleAudioUpload}
           height="200px"
           placeholder="Type your content here.."
+          
         />
         <Stack m={2} justifyContent="space-between" direction={{ xs: 'column', md: 'row' }}>
-          <ButtonGroup variant="contained" size="small">
+          <ButtonGroup variant="contained" size="small" sx={{backgroundColor:'transparent'}}>
             <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<VideoCameraBack />} onClick={handleUploadVideo}>Upload Video</Button>
             <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<Audiotrack />} onClick={handleAudioUpload}>Upload Audio</Button>
             <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<Image />} onClick={handleImageUpload}>Upload image</Button>
