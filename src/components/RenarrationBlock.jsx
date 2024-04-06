@@ -1,86 +1,97 @@
-import {
-  Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Typography, Snackbar, Alert,
-} from '@mui/material';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
-import axios from 'axios';
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import extractMedia from "../utils/extractMedia";
+import { Edit, NearMe, Share } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import Annotator from "./Annotator";
+import { removeAnnotatedBlock, updateAnnotatedBlock } from "../redux/actions/annotationActions";
+import ShareRenarration from "./Share";
+import { useNavigate } from "react-router-dom";
 
-import { useDispatch, useSelector } from 'react-redux';
-import removeOutlineFromElement from '../utils/removeOutline';
-import removeMedia from '../utils/removeMedia';
-import extractMedia from '../utils/extractMedia';
-import { removeAnnotatedBlock, setAnnotatedHtmlContent } from '../redux/actions/annotationActions';
-import extractPublicId from '../utils/extractPublicId';
-import { serverApi } from '../apis/extractApis';
 
-function RenarrationBlock({ block, noActions }) {
-  const navigate = useNavigate();
+function RenarrationBlock({ block , editing ,view}) {
   const dispatch = useDispatch();
-  const { htmlforAnnotation } = useSelector((state) => state.annotation);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-
-  const deleteBlock = async () => {
-    // Dispatch action to delete the block
-    dispatch(removeAnnotatedBlock(block.id));
-    if (htmlforAnnotation !== null) {
-      const updatedHtmlContent = removeOutlineFromElement(htmlforAnnotation, block.id);
-      dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
-    }
-
-    setSnackbarMessage('Block deleted successfully');
-    setSnackbarOpen(true);
+  const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+  const annotatedBlocks = useSelector((state) => state.annotation.annotatedBlocks);
+  const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
+  const [clickedElementContent, setClickedElementContent] = useState('');
+  const [initialBodycontent, setInitialBodyContent] = useState();
+  const [tags, setTags] = useState([]);
+  const handleEdit = (id, elementcontent, bodycontent,tags) => {
+    console.log(elementcontent,bodycontent);
+    setCurrentBlockId(id);
+    setOpenDialog(true);
+    setClickedElementContent(elementcontent);
+    setInitialBodyContent(bodycontent);
+    setTags(tags)
   };
+  const handleSave = (htmlContent, annotationContent,tags) => {
+    const existingBlockIndex = annotatedBlocks.findIndex((block) => block.target.id === currentBlockId);
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+    const existingBlock = annotatedBlocks[existingBlockIndex];
+
+    // Update the body value of the existing block
+    const updatedBlock = {
+      ...existingBlock,
+      tags:tags,
+      body: {
+        ...existingBlock.body,
+        value: annotationContent, // Update this with the new body value
+      },
+    };
+
+    // Dispatch the action to update the annotated block
+    dispatch(updateAnnotatedBlock(existingBlock.target.id, updatedBlock));
+    setOpenDialog(false);
+  };
+  const deleteBlock = () => {
+    // Dispatch action to delete the block
+    dispatch(removeAnnotatedBlock(currentBlockId));
+
+    // setSnackbarMessage('Block deleted successfully');
+    // setSnackbarOpen(true);
+    setOpenDialog(false);
   };
 
   return (
     <>
-      <Card sx={{ borderTop: block.renarrationStatus ? '4px solid green' : '4px solid red' }}>
-        <CardMedia>
-          <Box sx={{
-            display: 'flex', flexWrap: 'wrap', justifyContent: 'center', p: 1,
-          }}
-          >
-            {extractMedia(block.content).map((src, index) => (
+  
+             {editing &&  <Stack direction={'row'} justifyContent={'flex-end'}  >
+                <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value,block.tags)} size='small' startIcon={<Edit />}>Edit</Button>
+              </Stack>}
+           {view &&    <Stack direction={'row'} justifyContent={'flex-end'} my={2}>
+           <Button variant="outlined" color='success' size="small" endIcon={<NearMe />} sx={{fontSize:{xs:8,md:12}}} onClick={()=>{navigate(`/sweet/${block._id}`)}} >read original site</Button>
+   </Stack>}
+              <Stack direction="row" spacing={1} justifyContent="center">
+                {extractMedia(block.target.value).map((src, index) => (
+                  <img
+                    key={index}
+                    style={{
+                      width: '50%', height: 'auto', objectFit: 'cover', padding: 0.5,
+                    }}
+                    src={src}
+                    alt={`Renarration  ${index + 1}`}
+                  />
+                ))}
+              </Stack>
               <Box
-                key={index}
-                component="img"
                 sx={{
-                  width: '50%',
-                  height: 'auto',
-                  objectFit: 'cover',
-                  p: 0.5,
+                  px: 2
                 }}
-                src={src}
-                alt={`Renarration image ${index + 1}`}
-              />
-            ))}
-          </Box>
-        </CardMedia>
-        <CardContent sx={{ maxHeight: '200px', overflowY: 'auto' }}>
-          <div dangerouslySetInnerHTML={{ __html: removeMedia(block.content) }} />
-          {/* <Typography>{desc}</Typography> */}
-        </CardContent>
-
-        { !noActions && (
-        <CardActions>
-          <Button size="small" color="primary" onClick={() => { navigate('/edit-rennaration', { state: block.id }); }}>
-            {block.renarrationStatus == true ? 'Update' : 'Create'}
-          </Button>
-          <Button size="small" color="primary" onClick={deleteBlock}>
-            Delete
-          </Button>
-        </CardActions>
-        )}
-      </Card>
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity="success">
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+              >
+                <div dangerouslySetInnerHTML={{ __html: block.body.value }} />
+              </Box>
+           
+            <Annotator
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        content={clickedElementContent}
+        onSave={handleSave}
+        onDelete={deleteBlock}
+        initialValue={initialBodycontent}
+        annotatedtags={tags}
+      />
     </>
   );
 }

@@ -19,6 +19,7 @@ import { openModal } from '../redux/actions/modalActions';
 import EditRenarration from './EditRenarration';
 import DoctoString from '../utils/DoctoSTring';
 import ShareRenarration from './Share';
+import RenarrationBlock from './RenarrationBlock';
 
 function Renarration() {
   const renarrationId = useParams().id;
@@ -85,40 +86,7 @@ const dispatch = useDispatch();
           <Container sx={{p:2,mb:5,mt:3,bgcolor:{xs:'transparent',md:'background.paper'}}} component={Paper} elevation={0} >
 
 {renarration && renarration.blocks.map((block,index) => (
- <Stack key={block._id}>
-   <Stack direction={'row'} justifyContent={'space-between'} my={2}>
-    <Typography sx={{fontSize:{xs:12,md:16}}}>{new Date(block.createdAt).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
-    <Stack direction={'row'} spacing={2} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                   <Button variant="outlined" color='success' size="small" endIcon={<NearMe />} sx={{fontSize:{xs:8,md:12}}} onClick={()=>{navigate(`/sweet/${block._id}`)}} >read original site</Button>
-                   <Button variant="outlined" size="small" endIcon={<Share />} sx={{fontSize:{xs:8,md:12}}} onClick={() =>{dispatch(openModal(<ShareRenarration />)) }}>share</Button>
-                 </Stack>
-   </Stack>
- <Stack direction="row" spacing={1} justifyContent="center">
-        {extractMedia(block.target.value).map((src, index) => (
-          <img
-            key={index}
-            style={{
-              width: '50%', height: 'auto', objectFit: 'cover', padding: 0.5,
-            }}
-            src={src}
-            alt={`Renarration  ${index + 1}`}
-          />
-        ))}
-      </Stack>
-      <div dangerouslySetInnerHTML={{ __html: removeMedia(block.target.value) }} />
-      <Typography textTransform={'uppercase'} fontSize={12} color={'#6B96C0'} mt={2}>The Re-narration</Typography>
-      {/* <IconButton onClick={speak(DoctoString(block.body.value))}><Speaker/></IconButton> */}
-      <Paper
-        variant="outlined"
-        sx={{
-          p: 2, my: 1
-        }}
-      >
-       
-        <div dangerouslySetInnerHTML={{ __html: block.body.value }} />
-      </Paper>
-      <Divider variant='middle' sx={{my:3, display: index === renarration.blocks.length - 1 ? 'none' : 'block'}}/>
- </Stack>
+<RenarrationBlock block={block} key={block._id} view />
 ))}
 </Container>
 <Stack direction={'row'} justifyContent={'flex-end'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={2}>

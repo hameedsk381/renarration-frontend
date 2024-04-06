@@ -154,6 +154,7 @@ console.log(elementId);
       source: url,
       tags:tags,
       renarrationStatus: true,
+      position: { x: 0, y: 0 }
     };
     
     // console.log(annotation);

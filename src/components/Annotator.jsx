@@ -134,9 +134,9 @@ function Annotator({
         </Box>
         <Divider sx={{ mb: 2 }} variant="fullWidth" />
         <div ref={setQuillRef} style={{ height: '200px', marginBottom: '20px',overflow:'auto' }} />
-        <Stack direction="row" spacing={2} my={2}>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} my={2} justifyContent={'space-between'}>
       
-          <Stack direction={'row'} sx={{ border: tags.length >= 3 ? 'none' : '1px solid rgba(0, 0, 0, 0.12)' }} px={1}>
+          <Stack direction={'row'} sx={{ display: tags.length >= 3 ? 'none' : 'block',border:'1px solid rgba(0, 0, 0, 0.12)' }} px={1}>
             <input
               placeholder="Enter tag"
               style={{ border: 'none', outline: 'none' }}
@@ -147,21 +147,24 @@ function Annotator({
             />
             <Button sx={{ display: tags.length >= 3 && 'none'}} startIcon={<Add />} onClick={handleTagAdd}>add</Button>
           </Stack>
-        
-        </Stack>
-        <Stack direction={'row'}>
+          <Stack direction={'row'}>
          
-          {tags.map((tag, index) => (
-            <Chip variant='outlined' key={index} label={tag} style={{ margin: '0.3rem', marginRight: '5px' }} onDelete={() => handleDeleteTag(index)} />
-          ))}
-        </Stack>
-        <Stack direction="row" spacing={3} justifyContent={'space-between'} mt={{ xs: 2, md: 0 }} mb={2}>
+         {tags.map((tag, index) => (
+           <Chip variant='outlined' key={index} label={tag} style={{ margin: '0.3rem', marginRight: '5px' }} onDelete={() => handleDeleteTag(index)} />
+         ))}
+          
+       </Stack>
+          <Stack direction="row" spacing={3} mt={{ xs: 2, md: 0 }} mb={2} justifyContent={'space-between'}>
             {initialValue === '' ? <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="outlined" color="error" onClick={onClose}>cancel</Button>
               : <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="outlined" color="error" onClick={onDelete}>delete</Button>}
             <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="contained" color="success" onClick={handleSubmit} >
               {initialValue === '' ? 'Publish sweet' : 'Update Sweet'}
             </Button>
           </Stack>
+        </Stack>
+       
+      
+       
       </Container>
     </Drawer>
   );

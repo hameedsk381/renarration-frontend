@@ -9,6 +9,7 @@ const initialAnnState = {
   mode: false,
   htmlforAnnotation: null,
   annotatedBlocks: [],
+  
 };
 
 const annotationReducer = (state = initialAnnState, action) => {
