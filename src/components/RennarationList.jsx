@@ -18,6 +18,7 @@ import { showSnackbar } from '../redux/actions/snackbarActions.js';
 import processRenarratedBlocks from '../utils/processRenarratedBlocks.js';
 import { openModal } from '../redux/actions/modalActions.js';
 import Confirmation from '../utils/Confirmation.jsx';
+import SweetSearch from './SweetSearch.jsx';
 
 function RenarrationList() {
   const navigate = useNavigate();
@@ -128,8 +129,8 @@ function RenarrationList() {
      }}
    >
      <Stack direction="row" justifyContent="space-between">
-       <Button variant="contained" sx={{textTransform:'initial'}} startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}> Back to Re-narration</Button>
-      
+       <Button variant="contained" sx={{textTransform:'initial'}} startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}> Back to Annotation</Button>
+     <SweetSearch/>
      </Stack>
      <Box>
        <TextField

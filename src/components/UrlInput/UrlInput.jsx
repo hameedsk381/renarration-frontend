@@ -98,9 +98,9 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
         <Paper
           
           sx={{
-            width: { lg: '50%', md: '75%' },
+        
             mx: 2,
-          marginInline: { lg: '25%', md: '10%' },
+          marginInline: { lg: '10%', md: '10%' },
           }}
           style={wrapperStyle}
         >

@@ -5,8 +5,8 @@ import {
 
 function Hero() {
   return (
-    <Box >
-      <Container maxWidth="sm" sx={{ justifyContent: 'center', alignItems: 'center', pb: 4 }}>
+
+      <Container maxWidth="lg" sx={{ justifyContent: 'center', alignItems: 'center', pb: 4 }}>
         <Typography color="text.primary" variant="h6" gutterBottom>
           Welcome to Web of Semantic Web Entities
         </Typography>
@@ -18,7 +18,7 @@ function Hero() {
         </Typography>
 
       </Container>
-    </Box>
+  
   );
 }
 

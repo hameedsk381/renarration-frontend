@@ -1,100 +1,108 @@
-import React, { useRef, useCallback} from 'react';
-import {
-  Drawer, Box, Typography, Divider, Container, Button, ButtonGroup, Stack, IconButton,
-} from '@mui/material';
-import HtmlToReact from './HtmlToReact';
-import SunEditor from 'suneditor-react';
-import 'suneditor/dist/css/suneditor.min.css';
-import {
-  Audiotrack, Close, Image, VideoCameraBack,
-} from '@mui/icons-material';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import Drawer from '@mui/material/Drawer';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Close from '@mui/icons-material/Close';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Chip from '@mui/material/Chip';
+import Add from '@mui/icons-material/Add';
+import { useDispatch } from 'react-redux';
+import Quill from 'quill'; // Import Quill
+import 'quill/dist/quill.snow.css'; // Import Quill's Snow theme CSS
+import { showSnackbar } from '../redux/actions/snackbarActions';
+import HtmlToReact from './HtmlToReact'
+import { Alert } from '@mui/material';
 
 function Annotator({
-  open, onClose, content, onSave, initialValue, onDelete,
+  open, onClose, content, onSave, initialValue, onDelete, annotatedtags
 }) {
-  const editorRef = useRef(null);
-  const handleSave = (bodycontent) => {
-    onSave(content, bodycontent);
-    onClose();
-  };
+  const [quill, setQuill] = useState(null); 
+  const quillRef = useRef(null); 
+  const [tagInput, setTagInput] = useState('');
+  const [tags, setTags] = useState(annotatedtags);
+  const dispatch = useDispatch();
 
-  const handleClose = () => {
-    onClose();
-  };
 
-  const setSunEditorRef = useCallback((ref) => {
+  useEffect(() => {
+    setTags(annotatedtags);
+  }, [annotatedtags]);
+  
+  const setQuillRef = useCallback((ref) => {
     if (ref) {
-    
-      editorRef.current = ref;
-      // console.log(editorRef)
-    } else {
-      // console.log('Editor reference is null or undefined');
+      const q = new Quill(ref, {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline'],
+            ['link', 'image'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['clean'],
+          ],
+        },
+      });
+      if (initialValue) {
+        q.clipboard.dangerouslyPasteHTML(initialValue);
+      }
+      setQuill(q); 
+      quillRef.current = q; 
     }
-  }, []);
+  }, [initialValue]);
+
+  const handleSave = (bodycontent,anntags) => {
+    onSave(content, bodycontent, anntags);
+    onClose();
+  };
 
   const handleSubmit = () => {
-    // console.log('Submit button clicked');
-    if (editorRef.current) {
-      const submissioncontent = editorRef.current.getContents();
-      // console.log('Editor content:', content);
-      handleSave(submissioncontent);
+    if (quill) {
+      const submissionContent = quill.root.innerHTML; // Get Quill content
+      if(submissionContent.trim() === '<p><br></p>'){
+        dispatch(showSnackbar('please annoate','info'))
+        return
+      }
+    if(tags.length === 0 ){
+      dispatch(showSnackbar('please add atleast one tag','info'))
+      return
+    }
+    console.log(submissionContent)
+      handleSave(submissionContent,tags);
     } else {
-      // console.log('Editor ref is not available');
+      // Quill instance is not available
     }
   };
-  const handleUploadVideo = () => {
-    const fileInput = document.createElement('input');
-    fileInput.setAttribute('type', 'file');
-    fileInput.setAttribute('accept', 'video/*,max-size=20000');
-    fileInput.addEventListener('change', async (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const videoBlob = await fetch(URL.createObjectURL(file)).then((r) => r.blob());
-        const videoUrl = URL.createObjectURL(videoBlob);
-        const sunEditor = editorRef.current;
-        // console.log(sunEditor);
-        sunEditor.insertHTML(`<video controls src="${videoUrl}"></video>`);
-      }
-    });
-    fileInput.click();
+
+  const handleTagAdd = () => {
+    if (tagInput.trim() !== '' && tags.length < 3 && !tags.includes(tagInput.trim())) {
+      const updatedTags = [...tags, tagInput.trim()]; // Update tags array
+      setTags(updatedTags);
+      setTagInput(''); // Clear input
+    } else {
+      dispatch(showSnackbar('Tags should not be repeated', 'error'));
+    }
   };
-  const handleAudioUpload = () => {
-    const fileInput = document.createElement('input');
-    fileInput.setAttribute('type', 'file');
-    fileInput.setAttribute('accept', 'audio/*,max-size=20000');
-    fileInput.addEventListener('change', async (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const audioBlob = await fetch(URL.createObjectURL(file)).then((r) => r.blob());
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const sunEditor = editorRef.current;
-        // console.log(sunEditor);
-        sunEditor.insertHTML(`<audio controls src="${audioUrl}"></audio>`);
-      }
-    });
-    fileInput.click();
+
+  const handleDeleteTag = (index) => {
+    const updatedTags = tags.filter((_, i) => i !== index);
+    setTags(updatedTags);
   };
-  const handleImageUpload = () => {
-    const fileInput = document.createElement('input');
-    fileInput.setAttribute('type', 'file');
-    fileInput.setAttribute('accept', 'image/*,max-size=20000');
-    fileInput.addEventListener('change', async (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const imgBlob = await fetch(URL.createObjectURL(file)).then((r) => r.blob());
-        const imgUrl = URL.createObjectURL(imgBlob);
-        const sunEditor = editorRef.current;
-        // console.log(sunEditor);
-        sunEditor.insertHTML(`<img controls src="${imgUrl}"></img>`);
-      }
-    });
-    fileInput.click();
+
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleTagAdd();
+    }
   };
+
+
   return (
     <Drawer
       open={open}
       anchor="bottom"
-      onClose={handleClose}
+      onClose={onClose}
       sx={{
         '.MuiDrawer-paper': {
           display: 'flex',
@@ -125,53 +133,37 @@ function Annotator({
           <HtmlToReact content={content} />
         </Box>
         <Divider sx={{ mb: 2 }} variant="fullWidth" />
-        <SunEditor
-          defaultValue={initialValue}
-          getSunEditorInstance={setSunEditorRef}
-          autoFocus
-          setOptions={{
-            mode: 'balloon-always',
-            audioUrlInput: true,
-            buttonList: [
-              ['undo', 'redo'],
-              ['font', 'fontSize', 'formatBlock'],
-              ['paragraphStyle', 'blockquote'],
-              ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
-              ['fontColor', 'hiliteColor', 'textStyle'],
-              ['removeFormat'],
-              '/', // Line break
-              ['outdent', 'indent'],
-              ['align', 'horizontalRule', 'list', 'lineHeight'],
-              ['table', 'link'], 
-              ['fullScreen', 'showBlocks', 'codeView'],
-              ['preview', 'print'],
-              ['save', 'template'],
-              ['dir', 'dir_ltr', 'dir_rtl'],
-            ],
-          }}
-          onAudioUpload={handleAudioUpload}
-          height="200px"
-          placeholder="Type your content here.."
-          
-        />
-        <Stack m={2} justifyContent="space-between" direction={{ xs: 'column', md: 'row' }}>
-          <ButtonGroup variant="contained" size="small" sx={{backgroundColor:'transparent'}}>
-            <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<VideoCameraBack />} onClick={handleUploadVideo}>Upload Video</Button>
-            <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<Audiotrack />} onClick={handleAudioUpload}>Upload Audio</Button>
-            <Button sx={{fontSize:{xs:8,md:14}}} startIcon={<Image />} onClick={handleImageUpload}>Upload image</Button>
-          </ButtonGroup>
-          <Stack direction="row" spacing={3} justifyContent={'space-between'} mt={{xs:2,md:0}}>
-            {initialValue === '' ? <Button sx={{fontSize:{xs:8,md:14}}} variant="outlined" color="error"
-             onClick={handleClose}>cancel</Button>
-             : <Button sx={{fontSize:{xs:8,md:14}}} variant="outlined" color="error" onClick={onDelete}>delete</Button>}
-            <Button sx={{fontSize:{xs:8,md:14}}} variant="contained" color="success" onClick={handleSubmit}>
-              {initialValue === '' ? 'ADD to Re-narration' : 'Update Re-narration'}
-              </Button>
+        <div ref={setQuillRef} style={{ height: '200px', marginBottom: '20px',overflow:'auto' }} />
+        <Stack direction="row" spacing={2} my={2}>
+      
+          <Stack direction={'row'} sx={{ border: tags.length >= 3 ? 'none' : '1px solid rgba(0, 0, 0, 0.12)' }} px={1}>
+            <input
+              placeholder="Enter tag"
+              style={{ border: 'none', outline: 'none' }}
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={handleInputKeyDown}
+              hidden={tags.length >= 3}
+            />
+            <Button sx={{ display: tags.length >= 3 && 'none'}} startIcon={<Add />} onClick={handleTagAdd}>add</Button>
           </Stack>
+        
         </Stack>
+        <Stack direction={'row'}>
+         
+          {tags.map((tag, index) => (
+            <Chip variant='outlined' key={index} label={tag} style={{ margin: '0.3rem', marginRight: '5px' }} onDelete={() => handleDeleteTag(index)} />
+          ))}
+        </Stack>
+        <Stack direction="row" spacing={3} justifyContent={'space-between'} mt={{ xs: 2, md: 0 }} mb={2}>
+            {initialValue === '' ? <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="outlined" color="error" onClick={onClose}>cancel</Button>
+              : <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="outlined" color="error" onClick={onDelete}>delete</Button>}
+            <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="contained" color="success" onClick={handleSubmit} >
+              {initialValue === '' ? 'Publish sweet' : 'Update Sweet'}
+            </Button>
+          </Stack>
       </Container>
     </Drawer>
   );
 }
-
 export default Annotator;
