@@ -9,14 +9,16 @@ function BlockListing({ blocks }) {
 
 
   return (
-    <Stack component={Paper} variant='outlined' my={5} p={2} >
+    <Stack  variant='outlined' my={5} p={2} >
 
   
-        {renarratedBlocks && renarratedBlocks.map((block,index) => (
-          
-            <RenarrationBlock block={block} editing/>
-        
-        ))}
+        <Grid container spacing={2}>
+          {renarratedBlocks && renarratedBlocks.map((block,index) => (
+            <Grid item key={index}>
+              <RenarrationBlock block={block} editing />
+            </Grid>
+          ))}
+        </Grid>
     
      {/* <DraggableList/> */}
     </Stack>

@@ -83,12 +83,13 @@ const dispatch = useDispatch();
   </Container>
         <Divider />
        
-          <Container sx={{p:2,mb:5,mt:3,bgcolor:{xs:'transparent',md:'background.paper'}}} component={Paper} elevation={0} >
-
-{renarration && renarration.blocks.map((block,index) => (
-<RenarrationBlock block={block} key={block._id} view />
-))}
-</Container>
+          <Grid container spacing={3} sx={{m:3}}>
+            {renarration && renarration.blocks.map((block,index) => (
+              <Grid item key={block._id}>
+                <RenarrationBlock block={block} view />
+              </Grid>
+            ))}
+          </Grid>
 <Stack direction={'row'} justifyContent={'flex-end'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={2}>
    
      

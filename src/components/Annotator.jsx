@@ -15,21 +15,24 @@ import Quill from 'quill'; // Import Quill
 import 'quill/dist/quill.snow.css'; // Import Quill's Snow theme CSS
 import { showSnackbar } from '../redux/actions/snackbarActions';
 import HtmlToReact from './HtmlToReact'
-import { Alert } from '@mui/material';
+import { Alert, TextField } from '@mui/material';
 
 function Annotator({
-  open, onClose, content, onSave, initialValue, onDelete, annotatedtags
+  open, onClose, content, onSave, initialValue, onDelete, annotatedtags ,title
 }) {
   const [quill, setQuill] = useState(null); 
   const quillRef = useRef(null); 
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState(annotatedtags);
+  const [annotationtitle, setannotationTitle] = useState(title);
   const dispatch = useDispatch();
 
 
   useEffect(() => {
     setTags(annotatedtags);
-  }, [annotatedtags]);
+    setannotationTitle(title)
+  }, [annotatedtags,title]);
+
   
   const setQuillRef = useCallback((ref) => {
     if (ref) {
@@ -53,8 +56,8 @@ function Annotator({
     }
   }, [initialValue]);
 
-  const handleSave = (bodycontent,anntags) => {
-    onSave(content, bodycontent, anntags);
+  const handleSave = (bodycontent,anntags,anntitle) => {
+    onSave(content, bodycontent, anntags , anntitle);
     onClose();
   };
 
@@ -69,8 +72,12 @@ function Annotator({
       dispatch(showSnackbar('please add atleast one tag','info'))
       return
     }
+    if(!annotationtitle){
+      dispatch(showSnackbar('please give the title for annotation','info'));
+      return
+    }
     console.log(submissionContent)
-      handleSave(submissionContent,tags);
+      handleSave(submissionContent,tags,annotationtitle);
     } else {
       // Quill instance is not available
     }
@@ -129,7 +136,13 @@ function Annotator({
           Add your annotation here
         </Typography>
         <Divider />
-        <Box sx={{ my: 2, maxHeight: '130px', overflow: 'auto' }}>
+        <TextField size='small' value={annotationtitle} onChange={(e)=>setannotationTitle(e.target.value)}
+  label="Annotation Title"
+  variant="outlined"
+  sx={{ mt: 2, mb: 2,width:'50%' }}
+/>
+<Divider />
+        <Box sx={{ my: 2, maxHeight: '150px', overflow: 'auto' }}>
           <HtmlToReact content={content} />
         </Box>
         <Divider sx={{ mb: 2 }} variant="fullWidth" />
