@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
-  AppBar, Box, Button, Card, CardContent, CircularProgress, Toolbar,
+  AppBar, Box, Button, Card, CardContent, CircularProgress, Container, Toolbar,
 } from '@mui/material';
 import { ArrowBack, NavigateNext } from '@mui/icons-material';
 import { extractApi, getBlockById } from '../apis/extractApis';
@@ -119,13 +119,9 @@ console.log(targetNode);
           </Button>
         </Toolbar>
       </AppBar>
-      <Card>
-
-        <CardContent>
-
-          <div dangerouslySetInnerHTML={{ __html: highlightElement(htmlContent, node, annotationNode) }} />
-        </CardContent>
-      </Card>
+      <Container>
+      <div dangerouslySetInnerHTML={{ __html: highlightElement(htmlContent, node, annotationNode) }} />
+      </Container>
     </Box>
 
   );

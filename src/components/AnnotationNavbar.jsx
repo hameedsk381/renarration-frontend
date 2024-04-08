@@ -9,29 +9,21 @@ import UrlInput from './UrlInput/UrlInput';
 import SweetsMenu from './SweetsMenu';
 function AnnotationNavbar({
   annotationMode,
-  handleAnnotationModeChange,
-  handleExit,
-  navigateToRenarrationBlocks,
-  annotatedBlocks,
+  handleAnnotationModeChange
 }) {
   return (
     <AppBar elevation={0} position="sticky">
       <Toolbar component={Container} sx={{ justifyContent: 'space-between', p: 1, flexDirection: { xs: 'column', md: 'row' } }}>
-        <Stack>
-          <FormControlLabel
+       
+      <FormControlLabel
             color="text.secondary"
-            control={<Switch checked={annotationMode} onChange={handleAnnotationModeChange} color="default" />}
+            control={<Switch sx={{
+              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                backgroundColor: 'white',
+              },
+            }} checked={annotationMode} onChange={handleAnnotationModeChange} color="info" />}
             label={annotationMode ? 'Renarration mode is on' : 'Renarration mode  is off'}
           />
-          {annotatedBlocks.length !== 0 && (
-          <Button endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="inherit">
-            View Renarrated blocks
-          </Button>
-          )}
-          <Button endIcon={<ExitToApp />} onClick={handleExit} color="inherit">
-            exit renarration
-          </Button>
-        </Stack>
         <SweetsMenu  />
         <UrlInput annotationNav />
       </Toolbar>

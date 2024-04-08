@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Alert, AlertTitle, Container, Snackbar,
+  Alert, AlertTitle, Button, Container, Paper, Snackbar, Stack,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'; 
@@ -22,6 +22,12 @@ import AnnotationNavbar from './AnnotationNavbar';
 import { showSnackbar } from '../redux/actions/snackbarActions';
 import generateXPath from '../utils/generateXPath';
 import removeOutlineFromElement from '../utils/removeOutline';
+import { ArrowForward, ExitToApp } from '@mui/icons-material';
+import { closeModal, openModal } from '../redux/actions/modalActions';
+import Confirmation from '../utils/Confirmation';
+
+
+
 
 function AnnotationPage() {
   const dispatch = useDispatch();
@@ -31,25 +37,18 @@ function AnnotationPage() {
   const initialHtmlContent = useSelector((state) => state.url.initialHtmlContent);
   const annotationHtmlContent = useSelector((state) => state.annotation.htmlforAnnotation);
   const isFetching = useSelector((state) => state.url.isFetching);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [mutationErrorSnackbarOpen, setMutationErrorSnackbarOpen] = useState(false);
   const annotationMode = useSelector((state) => state.annotation.mode);
   const [openDialog, setOpenDialog] = useState(false);
   const [clickedElementContent, setClickedElementContent] = useState({ html: '' });
   const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
   const [currentXpath, setCurrentXpath] = useState(null); // State to hold the current xpath
   const [initialBodycontent, setInitialBodyContent] = useState();
-
+  const [tags,setTags] = useState([]);
+const [title,setTitle] = useState('')
   const handleAnnotationModeChange = () => {
     dispatch(toggleAnnotationMode()); // Dispatch toggle action
   };
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
+
   const deleteBlock = async () => {
     // Dispatch action to delete the block
     dispatch(removeAnnotatedBlock(currentBlockId));
@@ -57,9 +56,7 @@ function AnnotationPage() {
       const updatedHtmlContent = removeOutlineFromElement(annotationHtmlContent, currentBlockId);
       dispatch(setAnnotatedHtmlContent(updatedHtmlContent));
     }
-
-    setSnackbarMessage('Block deleted successfully');
-    setSnackbarOpen(true);
+    dispatch(showSnackbar('Block deleted successfully', 'success'));
     setOpenDialog(false);
   };
   const handleAnnotationClick = (event) => {
@@ -72,6 +69,9 @@ console.log(elementId);
     const existingBlock = annotatedBlocks.find((block) => block.target.id === elementId);
     if (existingBlock) {
       setInitialBodyContent(existingBlock.body.value);
+      setTags(existingBlock.tags);
+      setTitle(existingBlock.body.title);
+      console.log(existingBlock.tags)
       event.target.classList.remove('hover-effect');
       const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
 
@@ -83,6 +83,8 @@ console.log(elementId);
       event.target.classList.remove('hover-effect');
       const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
       setInitialBodyContent('');
+      setTags([]);
+      setTitle('')
       setClickedElementContent(fullHtmlWithoutOutline);
       setOpenDialog(true);
       setCurrentBlockId(elementId); // Set the current block ID
@@ -130,7 +132,7 @@ console.log(elementId);
     event.stopPropagation();
     event.target.classList.remove('hover-effect');
   };
-  const createAnnotation = (pageContent, htmlContent, annotatedContent, id, url, xpathforblock) => {
+  const createAnnotation = (pageContent, htmlContent, annotatedContent, id, url, xpathforblock,tags,anntitle) => {
     const annotation = {
       '@context': 'http://www.w3.org/ns/anno.jsonld',
       type: 'Annotation',
@@ -147,16 +149,20 @@ console.log(elementId);
       },
       body: {
         type: 'TextualBody',
+        title:anntitle,
         value: annotatedContent,
         format: 'text/html',
       },
       source: url,
+      tags:tags,
       renarrationStatus: true,
+      position: { x: 0, y: 0 }
     };
+    
     // console.log(annotation);
     dispatch(addAnnotatedBlock(annotation));
   };
-  const handleSave = (htmlContent, annotationContent) => {
+  const handleSave = (htmlContent, annotationContent,tags,anntitle) => {
     // console.log(currentBlockId)
     const existingBlockIndex = 
     annotatedBlocks.findIndex((block) => block.target.id === currentBlockId);
@@ -168,8 +174,10 @@ console.log(elementId);
       // Update the body value of the existing block
       const updatedBlock = {
         ...existingBlock,
+        tags:tags,
         body: {
           ...existingBlock.body,
+          title:anntitle,
           value: annotationContent, // Update this with the new body value
         },
       };
@@ -177,7 +185,7 @@ console.log(elementId);
       // Dispatch the action to update the annotated block
       dispatch(updateAnnotatedBlock(existingBlock.target.id, updatedBlock));
     } else {
-      createAnnotation(initialHtmlContent, htmlContent, annotationContent, currentBlockId, currentUrl, currentXpath)
+      createAnnotation(initialHtmlContent, htmlContent, annotationContent, currentBlockId, currentUrl, currentXpath,tags,anntitle)
 
       // Update the htmlContent to include the outline for the annotated element
       const updatedHtmlContent = outlineElement(annotationHtmlContent, currentBlockId);
@@ -187,15 +195,8 @@ console.log(elementId);
   };
 
   const handleExit = () => {
-    if (window.confirm('Are you sure you want to exit Renarration?')) {
-      dispatch(resetState());
-      dispatch(resetAnnotations());
-
-      localStorage.clear(); // Clear local storage
-      sessionStorage.clear(); // Clear session storage (if you use it)
-      navigate('/'); // Navigate to the home page or any other page
-    }
-  };
+      dispatch(openModal(<Confirmation/>));
+    };
   const navigateToRenarrationBlocks = () => {
     navigate('/create-rennaration');
   };
@@ -212,7 +213,7 @@ console.log(elementId);
       />
 
       {!isFetching && annotationMode && (
-        <Container
+        <Container sx={{my:3}}
           dangerouslySetInnerHTML={{ __html: processHtml(annotationHtmlContent) }}
           onClick={handleAnnotationClick}
           onMouseOver={handleMouseOver}
@@ -220,7 +221,7 @@ console.log(elementId);
         />
       )}
       {initialHtmlContent === null && (
-        <Container>
+        <Container sx={{p:3}}>
           <Alert severity="info">
             <AlertTitle>URL</AlertTitle>
             copy the url of any web page and paste it above to renarrate
@@ -232,38 +233,30 @@ console.log(elementId);
         onClick={handleNavigationClick} />
 
       )}
-
+   <Stack direction={'row'} justifyContent={'space-around'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
+         
+ <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{ fontSize: { xs: 8, md: 14 } }}>
+           exit renarration
+         </Button>
+         
+        <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success" sx={{ fontSize: { xs: 8, md: 14 },display:!annotationMode ? 'none' : 'flex' }} disabled={annotatedBlocks.length === 0 }  >
+           View Renarrated blocks
+         </Button>
+      
+         
+         
+       </Stack>
       <Annotator
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         content={clickedElementContent}
         onSave={handleSave}
         initialValue={initialBodycontent}
+        annotatedtags={tags}
         onDelete={deleteBlock}
+        title={title}
       />
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="error"
-         sx={{ width: '100%', whiteSpace: 'pre-line' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={mutationErrorSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setMutationErrorSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-      >
-        <Alert onClose={() => setMutationErrorSnackbarOpen(false)}
-         severity="error" sx={{ width: '100%', whiteSpace: 'pre-line' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+     
 
     </>
   );

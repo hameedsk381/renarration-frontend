@@ -10,6 +10,8 @@ import AnnotationPage from './components/AnnotationPage';
 import CustomSnackbar from './components/CustomSnackbar';
 import Renarration from './components/Renarration';
 import Sweet from './components/Sweet';
+import CommonModal from './components/CommonModal';
+import DraggableList from './components/DraggableList';
 
 function App() {
   // const currentTheme = useSelector((state) => state.theme.currentTheme);
@@ -30,10 +32,12 @@ function App() {
           <Route path="/view-rennaration" element={<RenarrationList />} />
           <Route path="/renarration-details/:id" element={<Renarration />} />
           <Route path="/sweet/:id" element={<Sweet />} />
+          <Route path="drag" element={<DraggableList />} />
         </Routes>
-
+        <CustomSnackbar />
+      <CommonModal/>
       </Router>
-      <CustomSnackbar />
+     
     </>
   );
 }

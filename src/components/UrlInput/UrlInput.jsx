@@ -33,14 +33,15 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
       return; // Exit early if the URL is not valid
     }
 
-    dispatch(fetchStart());
+  
 
     try {
+      dispatch(fetchStart());
       const response = await axios.post(
         extractApi,
-        { url: inputValue },
-        { headers: getDeviceType },
+        { url: inputValue }
       );
+      console.log(response.data);
       dispatch(fetchSuccess(inputValue, response.data));
       dispatch(setAnnotatedHtmlContent(response.data));
       dispatch(showSnackbar('Content fetched successfully', 'success'));
@@ -68,8 +69,8 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
   return (
     <>
       {annotationNav ? (
-        <Box bgcolor="white" px={1.5} py={1} sx={{ my: { xs: 2, md: 0 } }}>
-          <Input
+        <Box  px={1.5} py={1} sx={{ mt: { xs: 2, md: 0 } }}>
+          <Input 
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
@@ -81,24 +82,24 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
               <IconButton
                 onClick={handleNavigate}
                 disabled={isFetching}
+                size='small'
               >
                 {isFetching ? <CircularProgress value={progress} size={24} color="inherit" />
-                 : <ArrowForward />}
+                 : <ArrowForward sx={{color:'white'}} />}
               </IconButton>
 )}
-            placeholder="Enter a URL to renarrate"
+            placeholder="Add a URL you want to renarrate"
             size="small"
-            sx={{ width: '289px' }}
+            disableUnderline
+            sx={{ width: '289px', color: 'white',borderBottom:"1px solid white"  }}
           />
         </Box>
       ) : (
         <Paper
-          elevation={6}
+          
           sx={{
-            width: { lg: '50%', md: '75%' },
-            m: 2,
-            marginTop: homepage ? '-25px' : '-40px',
-            marginInline: { lg: '25%', md: '10%' },
+        width:{xs:'90%',md:'50%'},
+         margin:'auto'
           }}
           style={wrapperStyle}
         >
@@ -106,7 +107,7 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
           <input
             type="url"
             placeholder="Enter a URL, link you want to re-narrate with"
-            style={inputStyle}
+            style={{ ...inputStyle, backgroundColor: '#D9D9D9' }}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => {
@@ -119,14 +120,15 @@ function UrlInput({ navigateTo, homepage, annotationNav }) {
           <Button
             endIcon={isFetching ? <CircularProgress value={progress} size={24} color="inherit" /> : <ArrowForward />}
             onClick={handleNavigate}
+            variant='contained'
             style={buttonStyle}
             sx={{
-              borderTopLeftRadius: 0, borderBottomLeftRadius: 0, bgcolor: 'primary.main', 
-              '&:hover': { backgroundColor: 'primary.dark' },
+              borderTopLeftRadius: 0, borderBottomLeftRadius: 0,textTransform:'initial',fontWeight:'semibold'
             }}
             disabled={isFetching}
+          
           >
-            Renarrate-now
+            Re-narrate now
           </Button>
         </Paper>
       ) }

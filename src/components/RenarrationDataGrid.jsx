@@ -13,11 +13,16 @@ import {
   TableRow,
   Paper,
   Button,
+  Typography,
+  Stack,
 
 } from '@mui/material';
-import {  Visibility } from '@mui/icons-material';
+import {  Share, Visibility } from '@mui/icons-material';
 import axios from 'axios';
 import { getAllRenarrations } from '../apis/extractApis';
+import { useDispatch } from 'react-redux';
+import { openModal } from '../redux/actions/modalActions';
+import ShareRenarration from './Share';
 
 const fetchRenarrations = async () => {
   const response = await axios.get(getAllRenarrations);
@@ -27,6 +32,7 @@ const fetchRenarrations = async () => {
 
 function RenarrationDataGrid() {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const {
     data: renarrations,
     isLoading,
@@ -70,25 +76,22 @@ function RenarrationDataGrid() {
   }
 
   return (
-    <Container sx={{ my: 4 }}>
+    <Container maxWidth="lg" sx={{ my: 4,mb:8 }}>
+
+      <Typography fontWeight={'semibold'} sx={{ color: '#0069D2', mx: 2 ,fontSize:28}}>Latest Re-narrations</Typography>
       {/* <Stack my={3} direction={'row'} justifyContent={'space-between'}>
-        <Typography variant='h5'>Latest Re-narrations</Typography>
-        <TextField size='small' label="Search Renarrations" />
       </Stack> */}
-      <TableContainer component={Paper} variant="outlined">
-        <Table aria-label="responsive renarration table">
+      <TableContainer>
+        <Table  aria-label="responsive renarration table">
           <TableHead>
             <TableRow>
-              <TableCell>Renarration Title</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}}>Renarration Title</TableCell>
+              <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}} align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {renarrations.map((renarration) => (
-              <TableRow
-                key={renarration._id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
+            {renarrations.map((renarration, index) => (
+              <TableRow key={renarration._id} sx={{ height: '62px' }}>
                 <TableCell
                   component="th"
                   scope="row"
@@ -105,24 +108,33 @@ function RenarrationDataGrid() {
                 <TableCell
                   align="right"
                   sx={{
-                    whiteSpace: 'nowrap', // Apply this if you want the content to dictate size without wrapping
+                    whiteSpace: 'nowrap'
                   }}
                 >
                   <Button
-                    sx={{ mr: 3 }}
+                 
                     startIcon={<Visibility />}
                     variant="outlined"
+                    color='success'
                     onClick={() => navigate(`/renarration-details/${renarration._id}`)}
                     size="small"
+                    sx={{ fontSize: { xs: 12, md: 14 },mr:2 }}
                   >
                     View
                   </Button>
-
+                  <Button
+                    startIcon={<Share />}
+                    variant="outlined"
+                    onClick={() => dispatch(openModal(<ShareRenarration id={renarration._id} route={'renarration-details'}/>))}
+                    size="small"
+                    sx={{ fontSize: { xs: 12, md: 14 } }}
+                  >
+                    share
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-
         </Table>
       </TableContainer>
     </Container>

@@ -4,7 +4,7 @@ export const wrapperStyle = {
   display: 'flex',
   alignItems: 'center',
   flexShrink: 0,
-  background: '#ffffff',
+  background: '#D9D9D9',
 };
 
 export const inputStyle = {
