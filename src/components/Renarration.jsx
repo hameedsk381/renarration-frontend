@@ -79,17 +79,16 @@ const dispatch = useDispatch();
       </AppBar>
   <Container sx={{ mt: 14,mb:2, fontSize: { xs: '1.5rem', md: '2rem' } }}>
     <Typography color={'#0069D2'} fontSize={12} >Title</Typography>
-  <Typography textAlign="left" fontStyle={'italic'} fontWeight={'semibold'} fontSize={32} >{renarration.renarrationTitle}</Typography>
+  <Typography textAlign="left" textTransform={'capitalize'} fontWeight={'bold'} fontSize={36} >{renarration.renarrationTitle}</Typography>
   </Container>
         <Divider />
        
-          <Grid container spacing={3} sx={{m:3}}>
-            {renarration && renarration.blocks.map((block,index) => (
-              <Grid item key={block._id}>
-                <RenarrationBlock block={block} view />
-              </Grid>
-            ))}
-          </Grid>
+          <Container sx={{p:2,mb:5,mt:3}}  >
+
+{renarration && renarration.blocks.map((block,index) => (
+<RenarrationBlock block={block} key={block._id} view />
+))}
+</Container>
 <Stack direction={'row'} justifyContent={'flex-end'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={2}>
    
      

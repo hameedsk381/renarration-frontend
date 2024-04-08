@@ -19,6 +19,7 @@
     "@mui/material": "^5.15.15",
     "@mui/x-data-grid": "^6.19.3",
     "axios": "^1.6.5",
+    "flowbite-react": "^0.8.0",
     "framer-motion": "^10.18.0",
     "html-react-parser": "^5.1.9",
     "lodash": "^4.17.21",

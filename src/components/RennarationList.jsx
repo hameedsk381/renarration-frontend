@@ -35,6 +35,7 @@ function RenarrationList() {
  // Submit new renarration
  const submitNewRenarration = async (requestBody) => {
   try {
+    console.log(requestBody)
     const response = await axios.post(submitApi, requestBody, {
       headers: { 'Content-Type': 'application/json' },
     });
@@ -128,12 +129,12 @@ function RenarrationList() {
        width: '100%', p: 4, my: 2,
      }}
    >
-     <Stack direction="row" justifyContent="space-between">
+     <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} justifyContent={'space-between'}>
        <Button variant="contained" sx={{textTransform:'initial'}} startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}> Back to Annotation</Button>
      <SweetSearch/>
      </Stack>
      <Box>
-       <TextField
+       <TextField 
          label="Renarration Title"
          placeholder='Give the title that describes the context of your re-narration. Example: Explaining what fundamental rights are to a 5 year old'
          value={renarrationTitle}

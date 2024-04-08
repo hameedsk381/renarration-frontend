@@ -1,6 +1,6 @@
 import React from 'react';
 import RenarrationBlock from './RenarrationBlock';
-import { Grid, Paper, Stack } from '@mui/material';
+import { Container, Grid, Paper, Stack } from '@mui/material';
 import DraggableList from './DraggableList';
 
 function BlockListing({ blocks }) {
@@ -9,16 +9,13 @@ function BlockListing({ blocks }) {
 
 
   return (
-    <Stack  variant='outlined' my={5} p={2} >
+    <Stack  variant='outlined' my={5}  >
 
-  
-        <Grid container spacing={2}>
+        <Container component={Paper} spacing={2}>
           {renarratedBlocks && renarratedBlocks.map((block,index) => (
-            <Grid item key={index}>
-              <RenarrationBlock block={block} editing />
-            </Grid>
+            <RenarrationBlock block={block} editing key={index}/>
           ))}
-        </Grid>
+        </Container>
     
      {/* <DraggableList/> */}
     </Stack>

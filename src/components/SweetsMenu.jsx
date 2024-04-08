@@ -6,104 +6,65 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { ExpandMore } from '@mui/icons-material';
 import {
-  Box, Chip, Divider, Typography,
+  Box, Button, Chip, Divider, Paper, Stack, Typography,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { sweetsbyurl } from '../apis/extractApis';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
+import { Dropdown } from 'flowbite-react';
 
-function SweetsMenu({ options }) {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [accordionWidth, setAccordionWidth] = useState(null);
-  const [urlsweets, setUrlsweets] = useState(0);
+
+export default function SweetsMenu({ options }) {
+  const [urlsweets, setUrlsweets] = useState([]);
   const currentUrl = useSelector((state) => state.url.currentUrl);
-  const navigate = useNavigate();
+const [showMenu,setShowmenu] = useState(false);
+
   const fetchResponse = async () => {
     try {
       const response = await axios.post(sweetsbyurl, { source: currentUrl });
       setUrlsweets(response.data);
-
-      // Handle the response as needed
     } catch (error) {
       // Handle any errors from the fetch
     }
   };
+
+  const handleSweetChange = () => {
+setShowmenu(!showMenu)
+  };
+
   useEffect(() => {
     fetchResponse();
+    console.log(urlsweets)
   }, [currentUrl]);
- 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMenuItemClick = (sweetid) => {
-    navigate(`/sweet/${sweetid}`);
-    handleMenuClose();
-  };
-
-  const handleAccordionResize = (contentRect) => {
-    // Update accordion width when it's resizedx
-    setAccordionWidth(contentRect.bounds.width);
-  };
   return (
-    <Accordion
-      expanded={Boolean(anchorEl)}
-      onChange={handleMenuOpen}
-      onResize={handleAccordionResize}
-      sx={{ width: '300px' }}
-      
-    >
-      <AccordionSummary expandIcon={<ExpandMore />}>
-        <Typography color="primary">
-          No of SWeEts for this url :
-        </Typography>
-        <Chip sx={{ mx: 2 }} color="info" size="small" label={urlsweets && urlsweets.length} variant="filled" />
-
-      </AccordionSummary>
-      <AccordionDetails>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          getcontentanchorel={null}
-          PaperProps={{
-            elevation: 0,
-            style: {
-              width: accordionWidth, overflow: 'auto', marginTop: '10px',
-            },
-          }}
-        >
-          
-          {urlsweets && urlsweets.map((option, index) => (
-            <Box key={index} sx={{ px: 2 }}>
-              <MenuItem
-                sx={{ width: '268px' }} onClick={() => handleMenuItemClick(option)}
-                style={{ width: accordionWidth }}
-              >
-                sweet
-                {' '}
-                {index + 1 }
-              </MenuItem>
-              <Divider />
-            </Box>
-          ))}
-        </Menu>
-      </AccordionDetails>
-    </Accordion>
+    <div >
+      <Button disableRipple disabled={urlsweets.length === 0} variant='contained' onClick={handleSweetChange} style={{ width: '100%', paddingInline: '10px', borderRadius: '5px', border: '1px solid #ccc',margin:'5px',backgroundColor:"white",color:'black' }}>
+        No of sweets for this url : <Chip label={urlsweets.length} variant="filled" color='info' size='small' sx={{mx:1}}></Chip>
+      </Button>
+     {showMenu && <Paper component={'ul'} style={{ listStyle: 'none', margin: 0, paddingInline: '5px', position: 'absolute', zIndex: 9999, width: '270px' }}>
+            {urlsweets.map((option, index) => (
+               <Stack component={'li'} key={index} style={{ paddingInline: '8px', width: '270px' }}>
+                <Typography component={Link} 
+                  to={`/sweet/${option._id}`}
+                  style={{
+                    padding: '10px',
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    borderBottom: index !== urlsweets.length - 1 ? '1px solid #e0e0e0' : 'none',textAlign:'left'
+                  }}
+                >
+                  {option.body.title} 
+                </Typography>
+               </Stack>
+            ))}
+          </Paper>}
+    </div>
   );
 }
 
-export default SweetsMenu;
+

@@ -27,17 +27,22 @@ const processHtmlString = async (htmlString) => {
   // Process each media tag
   for (const mediaTag of mediaTags) {
     const src = mediaTag.getAttribute('src');
-    if (src && src.startsWith('blob:')) {
-      // Extract blob from src attribute
-      const blobUrl = src;
-      const blob = await fetch(blobUrl).then((response) => response.blob());
-      if (blob) {
-        // Upload blob to API
-        const uploadedUrl = await uploadBlobToApi(blob);
-        if (uploadedUrl) {
-          // Replace src attribute with API response
-          mediaTag.setAttribute('src', uploadedUrl);
-        }
+    if (src && src.startsWith('data:')) {
+      // Convert data URL to file
+      const [, base64Data] = src.split(',');
+      const mimeType = src.match(/data:([^;]+);/)[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const file = new File([byteArray], 'mediafile', { type: mimeType });
+      // Upload file to API
+      const uploadedUrl = await uploadBlobToApi(file);
+      if (uploadedUrl) {
+        // Replace src attribute with API response
+        mediaTag.setAttribute('src', uploadedUrl);
       }
     }
   }
@@ -65,3 +70,4 @@ const processRenarratedBlocks = async (renarratedBlocks) => {
 };
 
 export default processRenarratedBlocks;
+
