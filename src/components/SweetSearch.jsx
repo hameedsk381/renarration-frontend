@@ -32,7 +32,7 @@ const SweetSearch = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:2424/sweets/getBlockByTag', {
+      const response = await axios.post(getSweets, {
         tag: inputValue,
       });
 
