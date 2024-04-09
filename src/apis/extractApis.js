@@ -7,3 +7,4 @@ export const uploadFileApi = `${serverApi}/upload`;
 export const sharingIdApi = `${serverApi}/sweets/verify-sharing`;
 export const sweetsbyurl = `${serverApi}/sweets/url`;
 export const getBlockById = `${serverApi}/sweets`;
+export const getSweets = `${serverApi}/sweets/getBlockByTag`
