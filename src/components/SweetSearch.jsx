@@ -9,6 +9,7 @@ import { addAnnotatedBlock } from '../redux/actions/annotationActions';
 import { useDispatch, useSelector } from 'react-redux';
 import RenarrationBlock from './RenarrationBlock';
 import removeMedia from '../utils/removeMedia';
+import { getSweets } from '../apis/extractApis';
 
 const SweetSearch = () => {
   const [options, setOptions] = useState([]);

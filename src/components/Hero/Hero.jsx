@@ -11,11 +11,11 @@ function Hero() {
           Welcome to Web of Semantic Web Entities
         </Typography>
         <Typography color="text.primary" variant="h4" gutterBottom>
-          Read. Re-narrate. Share.
+          Annotate. Re-narrate. Share.
         </Typography>
-        <Typography color="text.primary" paragraph>
+        {/* <Typography color="text.primary" paragraph>
           A Web framework for contributing alternative narratives to Web content and to compose renarrations based on the user's literacy level or reading-comfort preferences.
-        </Typography>
+        </Typography> */}
 
       </Stack>
   
