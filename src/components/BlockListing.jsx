@@ -9,9 +9,9 @@ function BlockListing({ blocks }) {
 
 
   return (
-    <Stack  variant='outlined' my={5}  >
+    <Stack  variant='outlined' mb={5}  >
 
-        <Container component={Paper} spacing={2}>
+        <Container  maxWidth='md' spacing={2}>
           {renarratedBlocks && renarratedBlocks.map((block,index) => (
             <RenarrationBlock block={block} editing key={index}/>
           ))}

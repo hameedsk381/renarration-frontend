@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, Divider, Paper, Stack, Typography } from "@mui/material";
 import extractMedia from "../utils/extractMedia";
-import { Edit, NearMe } from "@mui/icons-material";
+import { Edit, NearMe, ReadMore, Speaker } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Annotator from "./Annotator";
@@ -59,74 +59,45 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
   };
 
   return (
-    <Box py={4} px={2}>
-    {/* <Card elevation={0} sx={{width:'100%',pb:3,px:0}}>
-      <CardHeader
-   
-        action={
-         editing ?  <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value,block.tags,block.body.title)} size='small' startIcon={<Edit />}>Edit</Button> : <Button variant="outlined" color='success' size="small" endIcon={<NearMe />} sx={{fontSize:{xs:8,md:12,mr:4}}} onClick={()=>{navigate(`/sweet/${block._id}`)}} >read original site</Button>
-
-        }
-        title={
-      
-        <h2>
-  {block.body.title.charAt(0).toUpperCase() + block.body.title.slice(1)} 
-        </h2>
-       
-      
-}
-       
-      />
-      
-                <CardContent component={Stack} direction={{ xs: 'column-reverse', md: 'row' }} justifyContent={'space-between'} sx={{width:'100%',px:4}} gap={6}>
-                <Stack dangerouslySetInnerHTML={{ __html: removeMedia(block.body.value) }} style={{width:'100%',maxHeight: '100%',overflow:'auto'}} />
-                
-              <div style={{width:'50%',alignItems:'center'}}>
-              <CardMedia 
-                    component="img"
-                 sx={{width:'100%' ,objectFit:'contain',m:'auto'}}
-                    image={extractMedia(block.body.value)[0]}
-                    alt={null}
-                  />
-              </div>
-            
-                </CardContent>
-              <Stack mx={4} direction={'row'}>
-              {!noTags && block.tags.map((tag, index) => (
-          <Chip variant='filled' key={index} label={tag} style={{ margin: '0.3rem', fontSize: '0.8rem' }} sx={{fontWeight:'400'}}  />
+    <Box py={4} >
+    <Typography fontSize={{ xs: 26, md: 36 }} fontWeight={'semibold'} style={{ textTransform: 'capitalize' }}>{block.body.title} </Typography>
+    <Typography>
+   {!noTags && block.tags.map((tag, index) => (
+          <Chip variant='filled' key={index} label={tag} size="small" style={{ margin: '0.3rem', fontSize: '0.8rem' }} sx={{fontWeight:'400'}}  />
         ))}
-              </Stack>
-                </Card> */}
-   
-             {editing ? <Stack direction={'row'} justifyContent={'space-between'}  mb={3} >
-             <Typography fontSize={{ xs: 30, md: 36 }} fontWeight={'semibold'} style={{ textTransform: 'capitalize' }}>{block.body.title}</Typography>
-                <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value,block.tags,block.body.title)} size='small' startIcon={<Edit />}>Edit</Button>
-              </Stack> :  <Stack direction={'row'} justifyContent={'space-between'} my={2}>
-              <Typography fontSize={{ xs: 30, md: 36 }} fontWeight={'semibold'} style={{textTransform:'capitalize'}}>{block.body.title}</Typography>
-           <div>
-           <Button variant="outlined" color='success' size="small" endIcon={<NearMe />} sx={{fontSize:{xs:8,md:12}}} onClick={()=>{navigate(`/sweet/${block._id}`)}} >read original site</Button>
-           </div>
-   </Stack>}
+              </Typography>     
   <Stack direction={{ xs: 'column-reverse', md: 'row' }} spacing={3}>
   <Stack
                px={2} width={{ xs: '100%', md: '50%' }}
               >
                  
-                <div dangerouslySetInnerHTML={{ __html: removeMedia(block.body.value) }} />
+                <Stack my={2} width={{xs:'280px',md:'100%',overflow:'auto'}} dangerouslySetInnerHTML={{ __html: removeMedia(block.body.value) }} />
               </Stack>
            
-              <Stack  width={{ xs: '100%', md: '50%' }}  >
+            {extractMedia(block.body.value) !== null &&   <Stack py={4} width={{ xs: '100%', md: '50%' }}  >
              
-              <img 
-                   
-                 style={{objectFit:'contain',m:'auto'}}
-                    src={extractMedia(block.body.value)[0]}
-                    alt={null}
-                  />
-             
-              </Stack>
+             <img 
+                  
+                style={{objectFit:'contain',m:'auto',boxShadow: '8px 8px 8px 8px rgba(0, 0, 0, 0.1)'}}
+                   src={extractMedia(block.body.value)[0]}
+                   alt={null}
+                 />
+            
+             </Stack>}
             
   </Stack>
+  <Divider/>
+
+        <Stack justifyContent={'space-between'} direction={'row'} my={1}>
+      {editing &&   <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value,block.tags,block.body.title)} sx={{fontSize:{xs:8,md:12}}} size='small' startIcon={<Edit />}>Edit</Button>}
+     
+       
+<Stack direction={'row'} justifyContent={'space-between'} width={'100%'}>
+<Button  color='success' size="small" endIcon={<ReadMore />} sx={{fontSize:{xs:8,md:12}}} onClick={()=>{navigate(`/sweet/${block._id}`)}} >read original story</Button>
+<Button color="success" size="small" endIcon={<Speaker/>} sx={{fontSize:{xs:8,md:12}}}>Listen</Button>
+  </Stack>     
+        </Stack>
+              <Divider/>
             <Annotator
         open={openDialog}
         onClose={() => setOpenDialog(false)}

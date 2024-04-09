@@ -77,13 +77,13 @@ const dispatch = useDispatch();
         </Toolbar>
         
       </AppBar>
-  <Container sx={{ mt: 14,mb:2, fontSize: { xs: '1.5rem', md: '2rem' } }}>
+  <Container sx={{ mt: 14,mb:2, fontSize: { xs: '1.5rem', md: '2rem' } }} >
     <Typography color={'#0069D2'} fontSize={12} >Title</Typography>
   <Typography textAlign="left" textTransform={'capitalize'} fontWeight={'bold'} fontSize={36} >{renarration.renarrationTitle}</Typography>
   </Container>
         <Divider />
        
-          <Container sx={{p:2,mb:5,mt:3}}  >
+          <Container sx={{px:4,mb:5,mt:3}} maxWidth='md' >
 
 {renarration && renarration.blocks.map((block,index) => (
 <RenarrationBlock block={block} key={block._id} view />
