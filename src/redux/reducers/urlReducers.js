@@ -35,6 +35,10 @@ const urlReducer = (state = initialState, action) => {
         isFetching: false,
         errorMessage: action.payload,
       };
+    case 'SET_CURRENT_URL':
+      return {
+        ...state,currentUrl: action.payload
+      }
     case 'UPDATE_PROGRESS':
       return {
         ...state,

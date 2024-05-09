@@ -5,7 +5,7 @@ import {
   AppBar, Box, Button, Card, CardContent, CircularProgress, Container, Toolbar,
 } from '@mui/material';
 import { ArrowBack, NavigateNext } from '@mui/icons-material';
-import { extractApi, getBlockById } from '../apis/extractApis';
+import { extractApi, getAnnotationById } from '../apis/extractApis';
 
 const styleHtmlString = (htmlString) => {
   // Wrap the HTML string in a container with the specified style
@@ -27,7 +27,7 @@ function Sweet() {
   const [source, setSource] = useState('/');
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${getBlockById}/${id}`); // Assuming the correct endpoint
+      const res = await axios.post(`${getAnnotationById}`,{id}); // Assuming the correct endpoint
 
       const block = res.data;
       const webpage = await axios.post(

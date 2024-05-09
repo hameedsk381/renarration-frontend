@@ -9,16 +9,11 @@ function BlockListing({ blocks }) {
 
 
   return (
-    <Stack  variant='outlined' mb={5}  >
-
-        <Container  maxWidth='md' spacing={2}>
-          {renarratedBlocks && renarratedBlocks.map((block,index) => (
-            <RenarrationBlock block={block} editing key={index}/>
-          ))}
-        </Container>
-    
-     {/* <DraggableList/> */}
-    </Stack>
+    <Container  maxWidth='md' spacing={2} sx={{mb:5}}>
+    {renarratedBlocks && renarratedBlocks.map((block,index) => (
+      <RenarrationBlock block={block} editing key={index}/>
+    ))}
+  </Container>
   );
 }
 

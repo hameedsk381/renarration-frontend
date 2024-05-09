@@ -6,24 +6,27 @@ import Navbar from '../../components/Navbar/Navbar';
 import RenarrationDataGrid from '../../components/RenarrationDataGrid';
 import Info from '../../components/Info';
 import Footer from '../../components/Footer/Footer';
-import { Box, Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Chip, Container, Divider, Grid, Stack, Typography } from '@mui/material';
+import Compose from '../../components/Compose';
+import HomeTabs from '../../components/HomeTabs';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  
   return (
     <>
+    <Container>
       <Navbar />
-      <Box>
+
     
        
        <Hero />
-        <UrlInput homepage navigateTo="/re-narrate" />
-      
-        <RenarrationDataGrid />
-        <Info />
-      </Box>
-     <Footer/>
+     
+       <Info />
+    
+    </Container>
+ <Footer/>
     </>
-
   );
 }
 

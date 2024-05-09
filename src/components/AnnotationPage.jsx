@@ -155,7 +155,7 @@ console.log(elementId);
       },
       source: url,
       tags:tags,
-      renarrationStatus: true,
+      annotationStatus: true,
       position: { x: 0, y: 0 }
     };
     

@@ -91,7 +91,7 @@ function EditRennarationBlock() {
         aud: updatedFormData.audio,
         vid: updatedFormData.video,
         img: updatedFormData.image,
-        renarrationStatus: true,
+        annotationStatus: true,
       }));
 
       setSnackbarMessage('Renarration block updated successfully!');

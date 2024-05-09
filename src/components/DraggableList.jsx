@@ -6,9 +6,9 @@ import MyComponent from './Mycomponent';
 import RenarrationBlock from './RenarrationBlock';
 import { updateAnnotatedBlock } from '../redux/actions/annotationActions';
 
-function DraggableList() {
+function DraggableList({annotatedBlocks}) {
  const constraintsRef = useRef(null);
- const annotatedBlocks = useSelector((state) => state.annotation.annotatedBlocks);
+//  const annotatedBlocks = useSelector((state) => state.annotation.annotatedBlocks);
  const parentPosition = useSelector((state) => state.drag.parentPosition);
  const dispatch = useDispatch();
 

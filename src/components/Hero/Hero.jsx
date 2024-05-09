@@ -1,24 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import {
-  Container, Typography, Box, Stack,
+  Container, Typography, Box, Stack, Button
 } from '@mui/material';
+import HomeTabs from '../HomeTabs';
 
 function Hero() {
-  return (
+  
 
-      <Stack ml={{xs:2,md:20}} my={2}>
+  return (
+    <Box>
+      <Stack  my={2} spacing={2}>
         <Typography color="text.primary" variant="h6" gutterBottom>
           Welcome to Web of Semantic Web Entities
         </Typography>
         <Typography color="text.primary" variant="h4" gutterBottom>
           Annotate. Re-narrate. Share.
         </Typography>
-        {/* <Typography color="text.primary" paragraph>
-          A Web framework for contributing alternative narratives to Web content and to compose renarrations based on the user's literacy level or reading-comfort preferences.
-        </Typography> */}
-
+        <HomeTabs/>
       </Stack>
-  
+      
+    </Box>
   );
 }
 
