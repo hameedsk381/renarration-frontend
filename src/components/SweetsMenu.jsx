@@ -15,7 +15,7 @@ import { sweetsbyurl } from '../apis/extractApis';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
-import { Dropdown } from 'flowbite-react';
+
 
 
 export default function SweetsMenu({ options }) {
