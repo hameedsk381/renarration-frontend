@@ -10,7 +10,7 @@ import {
 } from '@mui/icons-material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
-import { getAllRenarrations} from '../apis/extractApis';
+import { getAllSweets} from '../apis/extractApis';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
 
 import { showSnackbar } from '../redux/actions/snackbarActions';
@@ -31,9 +31,9 @@ const dispatch = useDispatch();
 
   const getRennaration = async () => {
     try {
-      const res = await axios.get(`${getAllRenarrations}/${renarrationId}`);
+      const res = await axios.get(`${getAllSweets}/${renarrationId}`);
 
-      setRenarration({ ...res.data, blocks: res.data.blocks });
+      setRenarration({ ...res.data, annotations: res.data.annotations });
       // console.log(res.data);
     } catch (error) {
       // console.log(error);
@@ -83,9 +83,9 @@ const dispatch = useDispatch();
   </Container>
         <Divider />
        
-          <Container sx={{px:4,mb:5,mt:3}} maxWidth='md' >
+          <Container sx={{px:4,mb:10,mt:3}} maxWidth='md' >
 
-{renarration && renarration.blocks.map((block,index) => (
+{renarration && renarration.annotations.map((block,index) => (
 <RenarrationBlock block={block} key={block._id} view />
 ))}
 </Container>

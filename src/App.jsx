@@ -12,6 +12,10 @@ import Renarration from './components/Renarration';
 import Sweet from './components/Sweet';
 import CommonModal from './components/CommonModal';
 import DraggableList from './components/DraggableList';
+import ComposePage from './components/ComposePage';
+import Compose from './components/Compose';
+import Composesweet from './components/Composesweet';
+import RenarrationsByUrl from './components/RenarrationsByUrl';
 
 function App() {
   // const currentTheme = useSelector((state) => state.theme.currentTheme);
@@ -23,7 +27,8 @@ function App() {
       <Router>
 
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route exact path="/" element={<Home />} >
+          </Route>
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/re-narrate" element={<AnnotationPage />} />
@@ -33,6 +38,8 @@ function App() {
           <Route path="/renarration-details/:id" element={<Renarration />} />
           <Route path="/sweet/:id" element={<Sweet />} />
           <Route path="drag" element={<DraggableList />} />
+          <Route path="compose" element={<ComposePage />} />
+          <Route path="/view-renarrations/:id" element={<RenarrationsByUrl />} />
         </Routes>
         <CustomSnackbar />
       <CommonModal/>

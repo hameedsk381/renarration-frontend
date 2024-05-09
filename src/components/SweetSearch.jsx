@@ -9,7 +9,7 @@ import { addAnnotatedBlock } from '../redux/actions/annotationActions';
 import { useDispatch, useSelector } from 'react-redux';
 import RenarrationBlock from './RenarrationBlock';
 import removeMedia from '../utils/removeMedia';
-import { getSweets } from '../apis/extractApis';
+import { getAnnotations } from '../apis/extractApis';
 
 const SweetSearch = () => {
   const [options, setOptions] = useState([]);
@@ -33,9 +33,7 @@ const SweetSearch = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(getSweets, {
-        tag: inputValue,
-      });
+      const response = await axios.post(getAnnotations,{tag:inputValue});
 
      
         setOptions(response.data.map((block) => ({ ...block, selected: false })));

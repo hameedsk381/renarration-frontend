@@ -5,6 +5,7 @@ export const wrapperStyle = {
   alignItems: 'center',
   flexShrink: 0,
   background: '#D9D9D9',
+
 };
 
 export const inputStyle = {
@@ -13,6 +14,7 @@ export const inputStyle = {
   padding: '10px',
   outline: 'none',
   fontSize: 'calc(9px + (24 - 12) * ((100vw - 400px) / (1600 - 400)))',
+ width:'100%'
 };
 
 export const buttonStyle = {

@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, {  useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -11,7 +11,7 @@ import axios from 'axios';
 import { ArrowBack, ContentCopy, ExitToApp } from '@mui/icons-material';
 import { resetState } from '../redux/actions/urlActions';
 import { resetAnnotations } from '../redux/actions/annotationActions';
-import { getAllRenarrations, submitApi } from '../apis/extractApis';
+import { getAllSweets, submitApi } from '../apis/extractApis';
 import BlockListing from './BlockListing';
 import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
 import { showSnackbar } from '../redux/actions/snackbarActions.js';
@@ -19,6 +19,8 @@ import processRenarratedBlocks from '../utils/processRenarratedBlocks.js';
 import { openModal } from '../redux/actions/modalActions.js';
 import Confirmation from '../utils/Confirmation.jsx';
 import SweetSearch from './SweetSearch.jsx';
+import ImageUploadComponent from './ImageUploadComponent.jsx';
+import AudioUploadComponent from './AudioUploadComponent.jsx';
 
 function RenarrationList() {
   const navigate = useNavigate();
@@ -29,9 +31,11 @@ function RenarrationList() {
   const dispatch = useDispatch();
   const renarrationTitle = useSelector((state) => state.renarration.renarrationTitle);
   const renarrationId = useSelector((state) => state.renarration.renarrationId);
+ 
   const displaySnackbar = (message, type) => {
     dispatch(showSnackbar(message, type));
   };
+
  // Submit new renarration
  const submitNewRenarration = async (requestBody) => {
   try {
@@ -49,7 +53,7 @@ function RenarrationList() {
   // Update existing renarration
   const updateRenarration = async (requestBody) => {
     try {
-      const response = await axios.put(`${getAllRenarrations}/${renarrationId}`, requestBody, {
+      const response = await axios.put(`${getAllSweets}/${renarrationId}`, requestBody, {
         headers: { 'Content-Type': 'application/json' },
       });
       handlePostSubmission(response.data);
@@ -106,7 +110,7 @@ function RenarrationList() {
     }
     const requestBody = {
       renarrationTitle,
-      blocks: await processRenarratedBlocks(renarratedBlocks),
+      annotations: await processRenarratedBlocks(renarratedBlocks),
     };
     // Submit the data
     renarrationId === '' ? await submitNewRenarration(requestBody) : await updateRenarration(requestBody);
@@ -147,6 +151,7 @@ function RenarrationList() {
        />
 
      </Container>
+    
      <BlockListing blocks={renarratedBlocks} />
 
    

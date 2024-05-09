@@ -38,7 +38,7 @@ function EditRenarration({  renarrationId }) {
     try {
       const response = await axios.post(sharingIdApi, { sharingId, renarrationId });
       if (response.data) {
-        dispatch(addAnnotatedBlocks(response.data.blocks));
+        dispatch(addAnnotatedBlocks(response.data.annotations));
         dispatch(addRennarationTitle(response.data.renarrationTitle));
         dispatch(addRennarationId(renarrationId));
         dispatch(closeModal());
