@@ -9,3 +9,4 @@ export const sweetsbyurl = `${serverApi}/sweets/url`;
 export const getAnnotationById = `${serverApi}/sweets/annotation`;
 export const getAnnotations = `${serverApi}/sweets/tag`
 export const getAllRenarrations = `${serverApi}/renarrations`
+export const createRenarrationPage = `${serverApi}/renarrations/create`

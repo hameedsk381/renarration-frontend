@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import RenarrationBlock from './RenarrationBlock';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
 import { ArrowBack } from '@mui/icons-material';
+import { getAllRenarrations } from '../apis/extractApis';
 
 const RenarrationByUrl = () => {
     const renarrationId = useParams().id;
@@ -12,7 +13,7 @@ const navigate = useNavigate();
   const [renarration, setRenarration] = useState(null);
   const fetchRenarration = async () => {
     try {
-      const response = await axios.get(`http://localhost:2424/renarrations/${renarrationId}` );
+      const response = await axios.get(`${getAllRenarrations}/${renarrationId}` );
       setRenarration(response.data);
       console.log(response.data);
     } catch (error) {

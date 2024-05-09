@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 
-import { sweetsbyurl } from '../apis/extractApis';
+import { createRenarrationPage, sweetsbyurl } from '../apis/extractApis';
 import {
   AppBar,
   Card,
@@ -64,7 +64,7 @@ const ComposePage = () => {
       }
     
       // Example POST request to a backend endpoint
-      const response = await axios.post('http://localhost:2424/renarrations/create',  submitdata);
+      const response = await axios.post(createRenarrationPage,  submitdata);
       console.log('Submission successful:', response.data);
       dispatch(showSnackbar(response.data.message, 'success'));
       navigate('/')
