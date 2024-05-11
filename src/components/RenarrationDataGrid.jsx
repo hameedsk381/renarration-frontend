@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container,Typography, CircularProgress,useMediaQuery, Box, Button, Chip , Skeleton} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Visibility } from '@mui/icons-material';
+import { getAllRenarrations } from '../apis/extractApis';
 
 
 function RenarrationDataGrid() {
@@ -21,7 +22,7 @@ const navigate = useNavigate();
     const fetchRenarrationData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:2424/renarrations');
+        const response = await axios.get(getAllRenarrations);
         setRenarrationData(response.data);
         setLoading(false);
       } catch (error) {
@@ -65,7 +66,7 @@ const navigate = useNavigate();
           <TableHead>
             <TableRow>
               <TableCell>URL</TableCell>
-              <TableCell align="center">Number of Annotations</TableCell>
+              <TableCell align="center">Number of sweets</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -86,7 +87,7 @@ const navigate = useNavigate();
                  {data.renarrationUrl}
                </TableCell>
                <TableCell align="center" sx={{ fontSize: cellFontSize }}>
-                 <Chip label={data.annotations.length} />
+                 <Chip label={data.sweetcount} />
                </TableCell>
                <TableCell align="center" sx={{ fontSize: cellFontSize }}>
                  <Button

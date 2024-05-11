@@ -11,10 +11,8 @@ import {
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { sweetsbyurl } from '../apis/extractApis';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import NativeSelect from '@mui/material/NativeSelect';
+import { annotationsbyurl } from '../apis/extractApis';
+
 
 
 
@@ -25,7 +23,7 @@ const [showMenu,setShowmenu] = useState(false);
 
   const fetchResponse = async () => {
     try {
-      const response = await axios.post(sweetsbyurl, { source: currentUrl });
+      const response = await axios.post(annotationsbyurl, { source: currentUrl });
       setUrlsweets(response.data);
     } catch (error) {
       // Handle any errors from the fetch
