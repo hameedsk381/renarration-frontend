@@ -238,7 +238,7 @@ function Annotator({
             {initialValue === '' ? <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="outlined" color="error" onClick={onClose}>cancel</Button>
               : <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="outlined" color="error" onClick={onDelete}>delete</Button>}
             <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="contained" color="success" onClick={handleSubmit} >
-              {initialValue === '' ? 'Publish sweet' : 'Update Sweet'}
+              {initialValue === '' ? 'Add Annotation' : 'Update Annotation'}
             </Button>
           </Stack>
         </Stack>

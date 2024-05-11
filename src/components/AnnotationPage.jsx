@@ -236,11 +236,11 @@ console.log(elementId);
    <Stack direction={'row'} justifyContent={'space-around'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
          
  <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{ fontSize: { xs: 8, md: 14 } }}>
-           exit renarration
+           Exit 
          </Button>
          
         <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success" sx={{ fontSize: { xs: 8, md: 14 },display:!annotationMode ? 'none' : 'flex' }} disabled={annotatedBlocks.length === 0 }  >
-           View Renarrated blocks
+           View annotated blocks
          </Button>
       
          
