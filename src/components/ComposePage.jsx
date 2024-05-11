@@ -22,31 +22,40 @@ import {
   Box,
   TextField,
   Alert,
+  Skeleton,
+  Grid,
 } from '@mui/material';
 import RenarrationBlock from './RenarrationBlock';
 
 import { showSnackbar } from '../redux/actions/snackbarActions';
 import { useNavigate } from 'react-router-dom';
+import { ArrowBack } from '@mui/icons-material';
 
 
 const ComposePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUrl = useSelector((state) => state.url.currentUrl);
-  const [annotations, setAnnotations] = useState([]);
-  const [filteredAnnotations, setFilteredAnnotations] = useState([]);
+  const [sweets, setsweets] = useState([]);
+  const [filteredsweets, setFilteredsweets] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [pageBlocks, setPageBlocks] = useState([]);
   const [activeStep, setActiveStep] = useState(0);
-  const steps = ['Add Annotations', 'Review Page'];
- 
-
+  const steps = ['Add sweets', 'Review Page'];
+ const [loading,setLoading] = useState(false);
+const [sweetcount,setSweetCount] = useState(0);
   const handleApiCall = async () => {
     try {
-      const response = await axios.post(sweetsbyurl, { source: currentUrl });
-      setAnnotations(response.data);
-      setFilteredAnnotations(response.data);
+      setLoading(true)
+      const response = await axios.post(sweetsbyurl, { url: currentUrl });
+      setsweets(response.data);
+      setFilteredsweets(response.data);
+      console.log(response.data);
+      dispatch(showSnackbar(' fetched sweets successfully','success'))
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      dispatch(showSnackbar('error fetching sweets','error'))
       // Handle any errors from the fetch
     }
   };
@@ -58,6 +67,7 @@ const ComposePage = () => {
   const handleSubmitRenarration = async () => {
     try {
       const submitdata = {
+        sweetcount,
        annotations : pageBlocks.map(block => block._id),
        renarrationUrl:currentUrl,
        sharingId: uuidv4()
@@ -78,19 +88,21 @@ const ComposePage = () => {
     const value = event.target.value;
     setSearchQuery(value);
     if (value) {
-      const filteredData = annotations.filter(annotation =>
-        annotation.body.title.toLowerCase().includes(value.toLowerCase()) ||
-        extractText(annotation.body.value).toLowerCase().includes(value.toLowerCase())
+      const filteredData = sweets.filter(annotation =>
+        annotation.renarrationTitle.toLowerCase().includes(value.toLowerCase()) 
       );
-      setFilteredAnnotations(filteredData);
+      setFilteredsweets(filteredData);
     } else {
-      setFilteredAnnotations(annotations);
+      setFilteredsweets(sweets);
     }
   };
 
   const handleAddToPage = (block) => {
-    setPageBlocks([...pageBlocks, block]);
-    setFilteredAnnotations(prev => prev.filter(annotation => annotation._id !== block._id));
+    setPageBlocks(current => [...current, ...block]);
+    setSweetCount(prevcount => prevcount + 1);
+    console.log(sweetcount);
+    console.log(block)
+    setFilteredsweets(prev => prev.filter(annotation => annotation._id !== block._id));
   };
 
   const handleNext = () => {
@@ -101,20 +113,23 @@ const ComposePage = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-
+  
   useEffect(() => {
     handleApiCall();
   }, [currentUrl]);
+  useEffect(() => {
+   console.log(pageBlocks)
+  }, [pageBlocks]);
 
   const getStepContent = (stepIndex) => {
     switch (stepIndex) {
       case 0:
         return (
           <>
-            {filteredAnnotations.length === 0 ? <Alert severity='info'>No more annotations found for this url</Alert> : <Box>
+            {filteredsweets.length === 0 ? <Alert severity='info'>No more sweets found for this url</Alert> : <Box>
               <TextField
                 variant="outlined"
-                placeholder="Search Annotations..."
+                placeholder="Search sweets..."
                 fullWidth
                 value={searchQuery}
                 onChange={handleSearchChange}
@@ -122,17 +137,17 @@ const ComposePage = () => {
               />
               <Typography color={'#1565c0'} ml={4} my={2}>Showing results for <span style={{color:'black'}}>"{currentUrl}"</span></Typography>
               <Box sx={{ overflowX: 'auto', whiteSpace: 'nowrap', px: 4, py: 2 }}>
-                {filteredAnnotations.map((block) => (
+                {filteredsweets.map((block) => (
                   <Box key={block._id} sx={{ display: 'inline-block', width: 300, marginRight: 2, verticalAlign: 'top' }}>
                     <Card>
                       <CardContent>
                         <Typography variant='h4' textTransform={'capitalize'}>
-                          {block.body.title}
+                          {block.renarrationTitle}
                         </Typography>
                         <Typography my={3}>
-                          {extractText(block.body.value).substring(0,50)}
+                         No of annotations :  {block.annotations.length}
                         </Typography>
-                        <Button variant="contained" onClick={() => handleAddToPage(block)}>
+                        <Button variant="contained" onClick={() => handleAddToPage(block.annotations)}>
                           Add to Page
                         </Button>
                       </CardContent>
@@ -161,7 +176,46 @@ const ComposePage = () => {
     }
   };
   
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ my: 3 }}>
+        {/* Adjust the number and sizes of skeletons based on your table layout */}
+        <Button sx={{my:3}} variant='contained' onClick={() => { navigate(-1); }} color="inherit" startIcon={<ArrowBack />} aria-label="settings">
+            Go back
+          </Button>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <Skeleton variant="rectangular" animation="wave" height={190} width="100%" />
+            </Grid>
 
+        </Grid>
+      </Container>
+    );
+  }
 
 
   return (
@@ -181,7 +235,7 @@ const ComposePage = () => {
         <Stack my={3}>
        
         </Stack>
-        {annotations.length === 0 ? <Alert>No annotations found for this url create now </Alert> : <>
+        {sweets.length === 0 ? <Alert>No sweets found for this url create now </Alert> : <>
           <Stepper activeStep={activeStep} alternativeLabel sx={{ my: 5 }}>
             {steps.map((label) => (
               <Step key={label}>
@@ -213,7 +267,7 @@ const ComposePage = () => {
                 onClick={handleSubmitRenarration}  // This should be defined to handle submit logic
                 disabled={pageBlocks.length === 0}
               >
-                Submit
+                Create Renarration
               </Button>
               :
               <Button

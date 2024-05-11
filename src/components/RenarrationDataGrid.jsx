@@ -66,7 +66,7 @@ const navigate = useNavigate();
           <TableHead>
             <TableRow>
               <TableCell>URL</TableCell>
-              <TableCell align="center">Number of Annotations</TableCell>
+              <TableCell align="center">Number of sweets</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -87,7 +87,7 @@ const navigate = useNavigate();
                  {data.renarrationUrl}
                </TableCell>
                <TableCell align="center" sx={{ fontSize: cellFontSize }}>
-                 <Chip label={data.annotations.length} />
+                 <Chip label={data.sweetcount} />
                </TableCell>
                <TableCell align="center" sx={{ fontSize: cellFontSize }}>
                  <Button
