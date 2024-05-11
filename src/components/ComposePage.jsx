@@ -30,6 +30,7 @@ import RenarrationBlock from './RenarrationBlock';
 import { showSnackbar } from '../redux/actions/snackbarActions';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+import { resetState } from '../redux/actions/urlActions';
 
 
 const ComposePage = () => {
@@ -77,6 +78,7 @@ const [sweetcount,setSweetCount] = useState(0);
       const response = await axios.post(createRenarrationPage,  submitdata);
       console.log('Submission successful:', response.data);
       dispatch(showSnackbar(response.data.message, 'success'));
+      dispatch(resetState());
       navigate('/')
       // Optionally reset state or redirect user
     } catch (error) {
