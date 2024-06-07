@@ -1,7 +1,8 @@
 import {
-  AppBar, Toolbar,  Typography,  List, ListItem, Container, Stack} from '@mui/material';
+  AppBar, Toolbar,  Typography,  List, ListItem, Container, Stack,
+  Avatar} from '@mui/material';
 import { Link } from 'react-router-dom';
-
+import logo from '/logo.png'
 // import ThemeSelector from '../ThemeSelector.jsx';
 
 function Navbar() {
@@ -16,10 +17,8 @@ function Navbar() {
     <AppBar sx={{ backgroundColor: 'transparent', border: 'none', backgroundImage: 'none' }} elevation={0} position="static">
       <Toolbar component={Container} sx={{justifyContent:'space-between',my:2}}>
       <Stack color={'black'}>
-          <Typography sx={{fontWeight:'bold',fontSize:{xs:24, md:32}}}  >
-            SWeEts
-         </Typography>
-          <Typography sx={{fontWeight:'semibold',fontSize:{xs:8, md:12}}}>Semantic Web Entities</Typography>
+          <Avatar variant='square' src={logo} alt="SWeEts Logo" sx={{ height: '62px', width: '62px' }} />
+          {/* <Typography sx={{fontWeight:'semibold',fontSize:{xs:8, md:12}}}>Semantic Web Entities</Typography> */}
           </Stack>
         {/* <ThemeSelector /> */}
         <List sx={{ display: { xs: 'none', md: 'flex' } }}>

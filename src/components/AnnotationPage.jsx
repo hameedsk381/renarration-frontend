@@ -44,7 +44,7 @@ function AnnotationPage() {
   const [currentXpath, setCurrentXpath] = useState(null); // State to hold the current xpath
   const [initialBodycontent, setInitialBodyContent] = useState();
   const [tags,setTags] = useState([]);
-const [title,setTitle] = useState('')
+// const [title,setTitle] = useState('')
   const handleAnnotationModeChange = () => {
     dispatch(toggleAnnotationMode()); // Dispatch toggle action
   };
@@ -70,7 +70,7 @@ console.log(elementId);
     if (existingBlock) {
       setInitialBodyContent(existingBlock.body.value);
       setTags(existingBlock.tags);
-      setTitle(existingBlock.body.title);
+      // setTitle(existingBlock.body.title);
       console.log(existingBlock.tags)
       event.target.classList.remove('hover-effect');
       const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
@@ -84,7 +84,7 @@ console.log(elementId);
       const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
       setInitialBodyContent('');
       setTags([]);
-      setTitle('')
+      // setTitle('')
       setClickedElementContent(fullHtmlWithoutOutline);
       setOpenDialog(true);
       setCurrentBlockId(elementId); // Set the current block ID
@@ -132,7 +132,7 @@ console.log(elementId);
     event.stopPropagation();
     event.target.classList.remove('hover-effect');
   };
-  const createAnnotation = (pageContent, htmlContent, annotatedContent, id, url, xpathforblock,tags,anntitle) => {
+  const createAnnotation = (pageContent, htmlContent, annotatedContent, id, url, xpathforblock,tags) => {
     const annotation = {
       '@context': 'http://www.w3.org/ns/anno.jsonld',
       type: 'Annotation',
@@ -149,7 +149,7 @@ console.log(elementId);
       },
       body: {
         type: 'TextualBody',
-        title:anntitle,
+        // title:anntitle,
         value: annotatedContent,
         format: 'text/html',
       },
@@ -162,7 +162,7 @@ console.log(elementId);
     // console.log(annotation);
     dispatch(addAnnotatedBlock(annotation));
   };
-  const handleSave = (htmlContent, annotationContent,tags,anntitle) => {
+  const handleSave = (htmlContent, annotationContent,tags) => {
     // console.log(currentBlockId)
     const existingBlockIndex = 
     annotatedBlocks.findIndex((block) => block.target.id === currentBlockId);
@@ -177,7 +177,7 @@ console.log(elementId);
         tags:tags,
         body: {
           ...existingBlock.body,
-          title:anntitle,
+          // title:anntitle,
           value: annotationContent, // Update this with the new body value
         },
       };
@@ -185,7 +185,7 @@ console.log(elementId);
       // Dispatch the action to update the annotated block
       dispatch(updateAnnotatedBlock(existingBlock.target.id, updatedBlock));
     } else {
-      createAnnotation(initialHtmlContent, htmlContent, annotationContent, currentBlockId, currentUrl, currentXpath,tags,anntitle)
+      createAnnotation(initialHtmlContent, htmlContent, annotationContent, currentBlockId, currentUrl, currentXpath,tags)
 
       // Update the htmlContent to include the outline for the annotated element
       const updatedHtmlContent = outlineElement(annotationHtmlContent, currentBlockId);
@@ -233,14 +233,22 @@ console.log(elementId);
         onClick={handleNavigationClick} />
 
       )}
-   <Stack direction={'row'} justifyContent={'space-around'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
+   <Stack direction={'row'} justifyContent={'space-around'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5} sx={{ zIndex: 'tooltip' }}>
          
  <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{ fontSize: { xs: 8, md: 14 } }}>
+<<<<<<< HEAD
            Exit 
          </Button>
          
         <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success" sx={{ fontSize: { xs: 8, md: 14 },display:!annotationMode ? 'none' : 'flex' }} disabled={annotatedBlocks.length === 0 }  >
            View annotated blocks
+=======
+           exit Sweet creation
+         </Button>
+         
+        <Button variant='contained'  endIcon={<ArrowForward />} onClick={navigateToRenarrationBlocks} color="success" sx={{ fontSize: { xs: 8, md: 14 },display:!annotationMode ? 'none' : 'flex' }} disabled={annotatedBlocks.length === 0 }  >
+           View Annotated blocks
+>>>>>>> main
          </Button>
       
          
@@ -254,7 +262,7 @@ console.log(elementId);
         initialValue={initialBodycontent}
         annotatedtags={tags}
         onDelete={deleteBlock}
-        title={title}
+        // title={title}
       />
      
 

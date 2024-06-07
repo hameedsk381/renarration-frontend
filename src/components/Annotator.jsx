@@ -26,20 +26,20 @@ function Annotator({
   initialValue,
   onDelete,
   annotatedtags,
-  title,
+ 
 }) {
   const [quill, setQuill] = useState(null);
   const quillRef = useRef(null);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState(annotatedtags);
-  const [annotationtitle, setannotationTitle] = useState(title);
+  // const [annotationtitle, setannotationTitle] = useState(title);
   const dispatch = useDispatch();
   const isDesktop = useMediaQuery('(min-width:600px)');
 
   useEffect(() => {
     setTags(annotatedtags);
-    setannotationTitle(title);
-  }, [annotatedtags, title]);
+    // setannotationTitle(title);
+  }, [annotatedtags]);
 
   const setQuillRef = useCallback((ref) => {
     if (ref) {
@@ -63,8 +63,8 @@ function Annotator({
     }
   }, [initialValue]);
 
-  const handleSave = (bodycontent, anntags, anntitle) => {
-    onSave(content, bodycontent, anntags, anntitle);
+  const handleSave = (bodycontent, anntags) => {
+    onSave(content, bodycontent, anntags);
     onClose();
   };
 
@@ -79,11 +79,8 @@ function Annotator({
         dispatch(showSnackbar('please add atleast one tag', 'info'));
         return;
       }
-      if (!annotationtitle) {
-        dispatch(showSnackbar('please give the title for annotation', 'info'));
-        return;
-      }
-      handleSave(submissionContent, tags, annotationtitle);
+     
+      handleSave(submissionContent, tags);
     } else {
       // Quill instance is not available
     }
@@ -137,11 +134,11 @@ function Annotator({
           Add your annotation here
         </Typography>
         <Divider />
-        <TextField size='small' value={annotationtitle} onChange={(e)=>setannotationTitle(e.target.value)}
+        {/* <TextField size='small' value={annotationtitle} onChange={(e)=>setannotationTitle(e.target.value)}
   label="Annotation Title"
   variant="outlined"
   sx={{ mt: 2, mb: 2,width:'50%' }}
-/>
+/> */}
 <Divider />
         <Box sx={{ my: 2, maxHeight: '150px', overflow: 'auto' }}>
           <HtmlToReact content={content} />
@@ -172,7 +169,7 @@ function Annotator({
             {initialValue === '' ? <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="outlined" color="error" onClick={onClose}>cancel</Button>
               : <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="outlined" color="error" onClick={onDelete}>delete</Button>}
             <Button sx={{ fontSize: { xs: 10, md: 14 } }} variant="contained" color="success" onClick={handleSubmit} >
-              {initialValue === '' ? 'Publish sweet' : 'Update Sweet'}
+              {initialValue === '' ? 'Add Annotation' : 'Update Annotation'}
             </Button>
           </Stack>
         </Stack>
@@ -203,11 +200,11 @@ function Annotator({
           Add your annotation here
         </Typography>
         <Divider />
-        <TextField size='small' value={annotationtitle} onChange={(e)=>setannotationTitle(e.target.value)}
+        {/* <TextField size='small' value={annotationtitle} onChange={(e)=>setannotationTitle(e.target.value)}
   label="Annotation Title"
   variant="outlined"
   sx={{ mt: 2, mb: 2,width:'50%' }}
-/>
+/> */}
 <Divider />
         <Box sx={{ my: 2, maxHeight: '150px', overflow: 'auto' }}>
           <HtmlToReact content={content} />

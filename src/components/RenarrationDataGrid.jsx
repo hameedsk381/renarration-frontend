@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { useNavigate } from 'react-router-dom';
 import { Visibility } from '@mui/icons-material';
 import { getAllRenarrations } from '../apis/extractApis';
+import RenarrationInfo from './RenarrationInfo';
 
 
 function RenarrationDataGrid() {
@@ -106,6 +107,7 @@ const navigate = useNavigate();
           </TableBody>
         </Table>
       </TableContainer>
+      <RenarrationInfo />
     </Box>
    
   );

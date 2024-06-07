@@ -19,17 +19,17 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
   const [clickedElementContent, setClickedElementContent] = useState('');
   const [initialBodycontent, setInitialBodyContent] = useState('');
   const [tags, setTags] = useState([]);
-  const [annotationtitle, setannotationTitle] = useState('');
-  const handleEdit = (id, elementcontent, bodycontent,tags,title) => {
+  // const [annotationtitle, setannotationTitle] = useState('');
+  const handleEdit = (id, elementcontent, bodycontent,tags) => {
     console.log(elementcontent,bodycontent);
     setCurrentBlockId(id);
     setOpenDialog(true);
     setClickedElementContent(elementcontent);
     setInitialBodyContent(bodycontent);
     setTags(tags);
-    setannotationTitle(title);
+    // setannotationTitle(title);
   };
-  const handleSave = (htmlContent, annotationContent,tags,anntitle) => {
+  const handleSave = (htmlContent, annotationContent,tags) => {
     const existingBlockIndex = annotatedBlocks.findIndex((block) => block.target.id === currentBlockId);
 
     const existingBlock = annotatedBlocks[existingBlockIndex];
@@ -40,7 +40,7 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
       tags:tags,
       body: {
         ...existingBlock.body,
-        title:anntitle,
+        // title:anntitle,
         value: annotationContent, // Update this with the new body value
       },
     };
@@ -60,7 +60,7 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
 
   return (
     <Box py={4} >
-    <Typography fontSize={{ xs: 26, md: 36 }} fontWeight={'semibold'} style={{ textTransform: 'capitalize' }}>{block.body.title} </Typography>
+    {/* <Typography fontSize={{ xs: 26, md: 36 }} fontWeight={'semibold'} style={{ textTransform: 'capitalize' }}>{block.body.title} </Typography> */}
     <Typography>
    {!noTags && block.tags.map((tag, index) => (
           <Chip variant='filled' key={index} label={tag} size="small" style={{ margin: '0.3rem', fontSize: '0.8rem' }} sx={{fontWeight:'400'}}  />
@@ -89,7 +89,7 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
   <Divider/>
 
         <Stack justifyContent={'space-between'} direction={'row'} my={1}>
-      {editing &&   <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value,block.tags,block.body.title)} sx={{fontSize:{xs:8,md:12}}} size='small' startIcon={<Edit />}>Edit</Button>}
+      {editing &&   <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value,block.tags)} sx={{fontSize:{xs:8,md:12}}} size='small' startIcon={<Edit />}>Edit</Button>}
      
        
 <Stack direction={'row'} justifyContent={'space-between'} width={'100%'}>
@@ -106,7 +106,7 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
         onDelete={deleteBlock}
         initialValue={initialBodycontent}
         annotatedtags={tags}
-        title={annotationtitle}
+        // title={annotationtitle}
       />
     </Box>
   );

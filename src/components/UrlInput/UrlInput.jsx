@@ -109,7 +109,7 @@ sx={{ width: { xs: '320px', sm: '600px', md: '800px' } }}
 
         <input
           type="url"
-          placeholder="Enter a URL to annotate now"
+          placeholder="Enter a URL to create a sweet now"
           style={{ ...inputStyle, backgroundColor: '#D9D9D9' }}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -131,7 +131,7 @@ sx={{ width: { xs: '320px', sm: '600px', md: '800px' } }}
           disabled={isFetching}
         
         >
-          Annotate now
+          Sweet now
         </Button>
       </Paper>}
        {renarration && <Paper
