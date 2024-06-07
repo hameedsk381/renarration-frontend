@@ -8,7 +8,7 @@ import {
     Stack,
 } from '@mui/material';
 import axios from 'axios';
-import { ArrowBack, ContentCopy, ExitToApp } from '@mui/icons-material';
+import { Add, ArrowBack, ContentCopy, ExitToApp } from '@mui/icons-material';
 import { resetState } from '../redux/actions/urlActions';
 import { resetAnnotations } from '../redux/actions/annotationActions';
 import { getAllSweets, submitApi } from '../apis/extractApis';
@@ -136,12 +136,12 @@ function RenarrationList() {
    
      <Container maxWidth='md'>
      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} justifyContent={'space-between'}>
-       <Button variant="contained" sx={{textTransform:'initial'}} startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}> Back to Annotation</Button>
+       <Button variant="contained" sx={{textTransform:'initial'}} startIcon={<Add />} onClick={() => { navigate('/re-narrate'); }}> Add more annotations</Button>
      <SweetSearch/>
      </Stack>
        <TextField 
-         label="Renarration Title"
-         placeholder='Give the title that describes the context of your re-narration. Example: Explaining what fundamental rights are to a 5 year old'
+         label="Sweet Title"
+         placeholder='Give the title that describes the context of your sweet. '
          value={renarrationTitle}
          onChange={(e) => dispatch(addRennarationTitle(e.target.value))}
          margin="normal"
@@ -178,9 +178,9 @@ function RenarrationList() {
    </Container>
    <Stack direction={'row'} justifyContent={'space-between'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
    <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{mx:{xs:3,md:'8%'},fontSize:{xs:8,md:14}}}>
-              exit renarration
+              exit sweet creation
             </Button>
-            <Button sx={{mx:{xs:3,md:'8%'},fontSize:{xs:8,md:14}}} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">Publish Re-narration</Button>
+            <Button sx={{mx:{xs:3,md:'8%'},fontSize:{xs:8,md:14}}} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">Publish Sweet</Button>
    </Stack>
    </>
   );

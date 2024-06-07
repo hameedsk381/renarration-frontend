@@ -1,23 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import parse from 'html-react-parser';
 import { Box, Paper } from '@mui/material';
+import Root from 'react-shadow/emotion'; // Import Root from react-shadow for Shadow DOM support
 
 function HtmlToReact({ content }) {
-
-
-  // Apply background color by wrapping content in a div with styles
+  // Function to prepare HTML content by wrapping it in a div with a background color
   const prepareContentWithStyles = (htmlContent) => `<div style="background-color: white;">${htmlContent}</div>`;
 
-  // Parse with optional transformations
-
-
   return (
-    <Paper elevation={0} sx={{ px: 2 }}>
-      <Box sx={{ height: '100%', overflow: 'auto' }}>
-        {parse(prepareContentWithStyles(content))}
-      </Box>
+    <Paper elevation={0} sx={{ padding: 2 }}>
+      <Root.div> 
+        <Box sx={{ height: '100%', overflow: 'auto' }}>
+          {parse(prepareContentWithStyles(content))}  
+        </Box>
+      </Root.div>
     </Paper>
-  ); ß;
+  );
 }
 
 export default HtmlToReact;

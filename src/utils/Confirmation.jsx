@@ -27,7 +27,7 @@ const Confirmation = () => {
   
     return (
       <>
-       <Alert severity="warning">Are you sure you want to exit Renarration?
+       <Alert severity="warning">Are you sure you want to exit Sweet creation?
   This will delete all the edits you made so far!
   </Alert>
         <Stack direction="row" justifyContent="flex-end" mt={2}>

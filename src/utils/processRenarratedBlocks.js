@@ -50,32 +50,20 @@ const processHtmlString = async (htmlString) => {
   // Return modified HTML string
   return doc.documentElement.outerHTML;
 };
-const generateFileObject = async ({ path, preview }) => {
-  const blob = await fetch(preview).then((r) => r.blob());
-  const result = await uploadBlobToApi(blob);
-  return result;
-};
 
 // Function to process all renarrated blocks
 const processRenarratedBlocks = async (renarratedBlocks) => {
   // Iterate through each block
   for (const block of renarratedBlocks) {
     const { body } = block;
-    const { value, img, aud } = body; // Destructure img and aud from body
+    const { value} = body; // Destructure img and aud from body
 
     // Process HTML string
     const modifiedHtmlString = await processHtmlString(value);
-    const imgFile = await generateFileObject(img);
-    const audFile = await generateFileObject(aud);
+   
     // Update block body with modified HTML string and img, aud files
     body.value = modifiedHtmlString;
-    body.img = imgFile; // Add img to response
-    body.aud = audFile; // Add aud to response
-
-    // Check if img and aud are strings
-    if (typeof body.img === 'string' && typeof body.aud === 'string') {
-      console.log('img and aud are strings:', body.img, body.aud);
-    }
+   
   }
 
   // Return modified renarrated blocks

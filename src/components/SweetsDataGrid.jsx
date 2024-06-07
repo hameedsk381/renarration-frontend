@@ -24,6 +24,7 @@ import { getAllSweets } from '../apis/extractApis';
 import { useDispatch } from 'react-redux';
 import { openModal } from '../redux/actions/modalActions';
 import ShareRenarration from './Share';
+import SweetInfo from './SweetInfo';
 
 const fetchRenarrations = async () => {
   const response = await axios.get(getAllSweets);
@@ -138,6 +139,7 @@ function SweetsDataGrid() {
           </TableBody>
         </Table>
       </TableContainer>
+      <SweetInfo/>
     </Box>
   );
 }

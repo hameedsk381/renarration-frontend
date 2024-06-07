@@ -3,10 +3,10 @@ import {
   Box, Container, Typography, Link, Grid,
 } from '@mui/material';
 
-function Info() {
+function RenarrationInfo() {
   return (
    
-     <Container sx={{justifyContent:'center',alignItems:'center'}}>
+     <Container sx={{justifyContent:'center',alignItems:'center',mt:4}}>
        <Grid   sx={{maxWidth:'1152px'}} container spacing={2}>
         <Grid item xs={12} lg={5} alignContent={'center'} justifyItems={'center'}>
           <Typography fontSize={'26px'} fontWeight={'semibold'} color={'#0069D2'}  maxHeight={112} align="center" gutterBottom>
@@ -26,4 +26,4 @@ function Info() {
   );
 }
 
-export default Info;
+export default RenarrationInfo;
