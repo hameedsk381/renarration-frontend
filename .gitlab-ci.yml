@@ -11,4 +11,4 @@ build_project:
     paths:
       - dist/
   only:
-    - main
+    - v2.1
