@@ -43,7 +43,7 @@ const RenarrationByUrl = () => {
     <>
       <AppBar>
         <Toolbar>
-          <Container sx={{ my: 2, justifyContent: 'space-between', flexDirection: 'row', display: 'flex' }} maxWidth='lg'>
+          <Container sx={{ my: 2, justifyContent: 'space-between', flexDirection: 'row', display: 'flex' }}>
             <Stack>
               <Typography sx={{ fontWeight: 'bold', fontSize: { xs: 24, md: 32 } }} color='white'>
                 Re-narration
@@ -56,10 +56,12 @@ const RenarrationByUrl = () => {
         </Toolbar>
       </AppBar>
       <Container sx={{ px: 4, my: 16 }} maxWidth='md'>
-        <Container>
-          <Container>
+    
             {renarration.map((block, index) => (
-              <Badge color="secondary" badgeContent={block.renarrationTitle} key={index}>
+              <Badge  anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }} color="secondary" badgeContent={block.renarrationTitle} key={index}>
                 <Paper
                   elevation={6}
                   sx={{ my: 4, p: 3 }}
@@ -78,8 +80,8 @@ const RenarrationByUrl = () => {
               </Badge>
             ))}
             <Stack spacing={3} sx={{ mt: 4 }} />
-          </Container>
-        </Container>
+          
+       
       </Container>
     </>
   ) : (
