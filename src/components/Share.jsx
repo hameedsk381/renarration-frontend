@@ -45,7 +45,7 @@ const currentUrl = `${window.location.href}${id}`;
         try {
           await navigator.share({ url });
         } catch (error) {
-          console.error('Error sharing:', error);
+          // console.error('Error sharing:', error);
           // Fallback for browsers that don't support the Web Share API
           window.open(url, '_blank');
           handleClose();

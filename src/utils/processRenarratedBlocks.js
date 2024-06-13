@@ -8,10 +8,10 @@ const uploadBlobToApi = async (blob) => {
     formData.append('file', blob, 'mediafile');
     const response = await axios.post(uploadFileApi, formData);
     const { data } = response;
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
-    console.error('Error uploading blob to API:', error.message);
+    // console.error('Error uploading blob to API:', error.message);
     return null;
   }
 };

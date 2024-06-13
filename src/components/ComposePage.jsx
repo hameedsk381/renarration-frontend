@@ -51,7 +51,7 @@ const [sweetcount,setSweetCount] = useState(0);
       const response = await axios.post(sweetsbyurl, { url: currentUrl });
       setsweets(response.data);
       setFilteredsweets(response.data);
-      console.log(response.data);
+      // console.log(response.data);
       dispatch(showSnackbar(' fetched sweets successfully','success'))
       setLoading(false);
     } catch (error) {
@@ -76,12 +76,12 @@ const [sweetcount,setSweetCount] = useState(0);
     
       // Example POST request to a backend endpoint
       const response = await axios.post(createRenarrationPage,  submitdata);
-      console.log('Submission successful:', response.data);
+      // console.log('Submission successful:', response.data);
       dispatch(showSnackbar(response.data.message, 'success'));
       navigate('/')
       // Optionally reset state or redirect user
     } catch (error) {
-      console.error('Failed to submit renarration:', error);
+      // console.error('Failed to submit renarration:', error);
     }
   };
   
@@ -101,8 +101,8 @@ const [sweetcount,setSweetCount] = useState(0);
   const handleAddToPage = (block) => {
     setPageBlocks(current => [...current, block]);
     setSweetCount(prevcount => prevcount + 1);
-    console.log(sweetcount);
-    console.log(block)
+    // console.log(sweetcount);
+    // console.log(block)
   };
   const isBlockInFilteredSweets = (blockId) => {
     return pageBlocks.some((annotation) => annotation._id === blockId);
@@ -120,7 +120,7 @@ const [sweetcount,setSweetCount] = useState(0);
     handleApiCall();
   }, [currentUrl]);
   useEffect(() => {
-   console.log(pageBlocks)
+  //  console.log(pageBlocks)
   }, [pageBlocks]);
 
   const getStepContent = (stepIndex) => {

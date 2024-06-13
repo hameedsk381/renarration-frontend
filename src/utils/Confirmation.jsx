@@ -14,7 +14,7 @@ const Confirmation = ({ type, onConfirm }) => {
   const [sweetType, setSweetType] = useState('public');
 
   const handleAccept = () => {
-    console.log('Accepted');
+    // console.log('Accepted');
 
     if (type === 'exit') {
       dispatch(resetState());
@@ -31,7 +31,7 @@ const Confirmation = ({ type, onConfirm }) => {
   };
 
   const handleDecline = () => {
-    console.log('Declined');
+    // console.log('Declined');
     dispatch(closeModal());
   };
 

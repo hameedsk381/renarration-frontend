@@ -19,7 +19,7 @@ function RenarrationBlock({ block , editing ,noTags,searchmode,page}) {
   const [initialBodycontent, setInitialBodyContent] = useState('');
   const [tags, setTags] = useState([]);
   const handleEdit = (id, elementcontent, bodycontent,tags) => {
-    console.log(elementcontent,bodycontent);
+    // console.log(elementcontent,bodycontent);
     setCurrentBlockId(id);
     setOpenDialog(true);
     setClickedElementContent(elementcontent);

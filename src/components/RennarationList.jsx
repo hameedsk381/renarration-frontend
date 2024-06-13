@@ -38,14 +38,14 @@ const [loading,setLoading] = useState(false);
 
   const submitNewRenarration = async (requestBody) => {
     try {
-      console.log(requestBody)
+      // console.log(requestBody)
       const response = await axios.post(submitApi, requestBody, {
         headers: { 'Content-Type': 'application/json' },
       });
       handlePostSubmission(response.data);
     } catch (error) {
       displaySnackbar('Error submitting renarration', 'error');
-      console.error(error.message);
+      // console.error(error.message);
     }
   };
 

@@ -27,7 +27,7 @@ const navigate = useNavigate();
         setRenarrationData(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Failed to fetch renarration data:', error);
+        // console.error('Failed to fetch renarration data:', error);
         
         setLoading(false);
       }

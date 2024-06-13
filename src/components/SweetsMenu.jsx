@@ -36,7 +36,7 @@ setShowmenu(!showMenu)
 
   useEffect(() => {
     fetchResponse();
-    console.log(urlsweets)
+    // console.log(urlsweets)
   }, [currentUrl]);
 
   return (

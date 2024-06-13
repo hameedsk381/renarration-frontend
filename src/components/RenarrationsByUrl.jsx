@@ -19,9 +19,9 @@ const RenarrationByUrl = () => {
     try {
       const response = await axios.get(`${getAllRenarrations}/${renarrationId}`);
       setRenarration(response.data.sweets);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
-      console.error('Failed to fetch renarration:', error);
+      // console.error('Failed to fetch renarration:', error);
     }
   };
 

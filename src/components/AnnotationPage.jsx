@@ -62,7 +62,6 @@ function AnnotationPage() {
   const handleAnnotationClick = (event) => {
     event.preventDefault();
     const elementId = event.target.dataset.id;
-console.log(elementId);
 
     const xpath = generateXPath(event.target);
     // Check if a block with this ID already exists
@@ -71,7 +70,6 @@ console.log(elementId);
       setInitialBodyContent(existingBlock.body.value);
       setTags(existingBlock.tags);
       // setTitle(existingBlock.body.title);
-      console.log(existingBlock.tags)
       event.target.classList.remove('hover-effect');
       const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
 

@@ -41,7 +41,7 @@ function UrlInput({ navigateTo, homepage, annotationNav ,renarration}) {
         extractApi,
         { url: inputValue }
       );
-      console.log(response.data);
+      // console.log(response.data);
       dispatch(fetchSuccess(inputValue, response.data));
       dispatch(setAnnotatedHtmlContent(response.data));
       dispatch(showSnackbar('Content fetched successfully', 'success'));

@@ -39,7 +39,7 @@ const SweetSearch = () => {
         setOptions(response.data.map((block) => ({ ...block, selected: false })));
     
     } catch (error) {
-      console.error('Error fetching options:', error);
+      // console.error('Error fetching options:', error);
       setOptions([])
     } finally {
       setLoading(false);
@@ -57,7 +57,7 @@ const SweetSearch = () => {
 
     setSelectedItems([...selectedItems, selectedOption]);
     dispatch(addAnnotatedBlock(selectedOption));
-    console.log('Item added to selected items:', selectedOption);
+    // console.log('Item added to selected items:', selectedOption);
     setOptions(updatedOptions);
   };
 

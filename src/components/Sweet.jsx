@@ -51,7 +51,7 @@ function Sweet() {
       const nodes = doc.querySelectorAll(`[data-id="${node}"]`);
       if (nodes.length > 0) {
         const targetNode = nodes[0];
-console.log(targetNode);
+// console.log(targetNode);
         // Create a wrapper div for both the original node and the annotation
         const wrapperDiv = doc.createElement('div');
         wrapperDiv.style.backgroundColor = '#C9E3FE';
