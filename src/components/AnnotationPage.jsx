@@ -195,7 +195,7 @@ console.log(elementId);
   };
 
   const handleExit = () => {
-      dispatch(openModal(<Confirmation/>));
+      dispatch(openModal(<Confirmation type="exit" />));
     };
   const navigateToRenarrationBlocks = () => {
     navigate('/create-rennaration');
