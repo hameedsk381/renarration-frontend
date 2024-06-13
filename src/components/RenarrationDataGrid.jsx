@@ -28,6 +28,7 @@ const navigate = useNavigate();
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch renarration data:', error);
+        
         setLoading(false);
       }
     };

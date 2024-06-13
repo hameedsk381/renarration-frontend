@@ -13,7 +13,7 @@ function SweetInfo() {
           </Typography>
         </Grid>
         <Grid item xs={12} lg={7}>
-          <Typography textAlign={'justify'} my={2} fontSize={16} align="center" gutterBig>
+          <Typography textAlign={'justify'} my={2} fontSize={16} align="center" >
             A Semantic Web Entity, or SWeeT, is a set of annotations made on a web resource that are contextually bound to a meaningful topic. These annotations help impart a semantic meaning to the content, making it more accessible and understandable for users across different linguistic and formal backgrounds.
           </Typography>
           <Typography textAlign={'justify'} my={2} fontSize={16}>

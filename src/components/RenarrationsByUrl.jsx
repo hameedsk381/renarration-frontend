@@ -1,71 +1,101 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, CardContent, Typography, Grid, Container, AppBar, Toolbar, Stack, Button } from '@mui/material';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  Typography, Grid, Container, AppBar, Toolbar, Stack, Button, Badge, Paper
+} from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
 import RenarrationBlock from './RenarrationBlock';
 import RenarrationBlockSkeleton from './RenarrationBlockSkeleton';
 import { ArrowBack } from '@mui/icons-material';
 import { getAllRenarrations } from '../apis/extractApis';
 
 const RenarrationByUrl = () => {
-    const renarrationId = useParams().id;
-const navigate = useNavigate();
-  const [renarration, setRenarration] = useState(null);
+  const { id: renarrationId } = useParams();
+  const navigate = useNavigate();
+  const [renarration, setRenarration] = useState([]);
+  const [hoveredBlockId, setHoveredBlockId] = useState(null);
+
   const fetchRenarration = async () => {
     try {
-      const response = await axios.get(`${getAllRenarrations}/${renarrationId}` );
-      setRenarration(response.data);
+      const response = await axios.get(`${getAllRenarrations}/${renarrationId}`);
+      setRenarration(response.data.sweets);
       console.log(response.data);
     } catch (error) {
       console.error('Failed to fetch renarration:', error);
     }
   };
-  useEffect(() => {
- 
 
+  useEffect(() => {
     fetchRenarration();
   }, []);
+
+  const handleMouseEnter = (blockId) => {
+    setHoveredBlockId(blockId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredBlockId(null);
+  };
+
   const skeletons = Array.from({ length: 6 }, (_, index) => index);
-  return renarration ?  (
 
-   <>
-    <AppBar >
+  return renarration.length > 0 ? (
+    <>
+      <AppBar>
         <Toolbar>
-        <Container sx={{my:2,justifyContent:'space-between' ,flexDirection:'row',display:'flex'}}  maxWidth='lg'>
-          <Stack>
-          <Typography sx={{fontWeight:'bold',fontSize:{xs:24, md:32}}} color={'white'}>
-            Re-narration
-         </Typography>
-          </Stack>
-          <Button  onClick={() => { navigate('/'); }} color='inherit' sx={{fontSize:{xs:12, md:14}}}>start a new re-narration</Button>
-          
-        </Container>
+          <Container sx={{ my: 2, justifyContent: 'space-between', flexDirection: 'row', display: 'flex' }} maxWidth='lg'>
+            <Stack>
+              <Typography sx={{ fontWeight: 'bold', fontSize: { xs: 24, md: 32 } }} color='white'>
+                Re-narration
+              </Typography>
+            </Stack>
+            <Button onClick={() => navigate('/')} color='inherit' sx={{ fontSize: { xs: 12, md: 14 } }}>
+              Start a new re-narration
+            </Button>
+          </Container>
         </Toolbar>
-        
       </AppBar>
-<Container sx={{px:4,my:10}} maxWidth='md' >
-
-
-
-{renarration && renarration.annotations.map((block,index) => (
-<RenarrationBlock block={block} key={block._id} view />
-))}
- 
-</Container>
-   </>
-  ) : ( <Container>
-    <Button startIcon={<ArrowBack />} sx={{ m: 4 }} onClick={() => { navigate('/'); }} variant="contained">Go Back</Button>
-    <Grid container spacing={2} p={3}>
-
-      {skeletons.map((_, index) => (
-        <Grid key={index} item   xs={12}>
-          <RenarrationBlockSkeleton key={index} />
-        </Grid>
-      ))}
-
-    </Grid>
-
-  </Container>)
+      <Container sx={{ px: 4, my: 16 }} maxWidth='md'>
+        <Container>
+          <Container>
+            {renarration.map((block, index) => (
+              <Badge color="secondary" badgeContent={block.renarrationTitle} key={index}>
+                <Paper
+                  elevation={6}
+                  sx={{ my: 4, p: 3 }}
+                  onMouseEnter={() => handleMouseEnter(block._id)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {block.annotations.map((annotation) => (
+                    <RenarrationBlock
+                      key={annotation._id}
+                      block={annotation}
+                      noTags
+                      {...(hoveredBlockId !== block._id && { page: true })}
+                    />
+                  ))}
+                </Paper>
+              </Badge>
+            ))}
+            <Stack spacing={3} sx={{ mt: 4 }} />
+          </Container>
+        </Container>
+      </Container>
+    </>
+  ) : (
+    <Container>
+      <Button startIcon={<ArrowBack />} sx={{ m: 4 }} onClick={() => navigate('/')} variant="contained">
+        Go Back
+      </Button>
+      <Grid container spacing={2} p={3}>
+        {skeletons.map((_, index) => (
+          <Grid key={index} item xs={12}>
+            <RenarrationBlockSkeleton key={index} />
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
 }
 
 export default RenarrationByUrl;

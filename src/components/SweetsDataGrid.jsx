@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { openModal } from '../redux/actions/modalActions';
 import ShareRenarration from './Share';
 import SweetInfo from './SweetInfo';
+import SweetsTable from './SweetsTable';
 
 const fetchRenarrations = async () => {
   const response = await axios.get(getAllSweets);
@@ -60,11 +61,12 @@ function SweetsDataGrid() {
   if (isError) {
     return (
       <Container maxWidth="lg" sx={{ my: 3 }}>
-        <Alert severity="error">
+        {error.code === 'ERR_NETWORK' ? <Alert severity='error'>please check your internet connection and try again</Alert>: <Alert severity="error">
           Error loading renarrations:
           {' '}
           {error.message}
-        </Alert>
+        </Alert> }
+        
       </Container>
     );
   }
@@ -83,62 +85,7 @@ function SweetsDataGrid() {
       <Typography fontWeight={'semibold'} sx={{ color: '#0069D2', mx: 2 ,fontSize:28}}>Latest sweets</Typography>
       {/* <Stack my={3} direction={'row'} justifyContent={'space-between'}>
       </Stack> */}
-      <TableContainer>
-        <Table  aria-label="responsive renarration table">
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}}>Sweet Title</TableCell>
-              <TableCell sx={{fontSize:'1rem',fontWeight:'bold'}} align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renarrations.map((renarration, index) => (
-              <TableRow key={renarration._id} sx={{ height: '62px' }}>
-                <TableCell
-                  component="th"
-                  scope="row"
-                  sx={{
-                    fontSize: 'calc(12px + 0.5vw)',
-                    whiteSpace: 'nowrap',
-                    maxWidth: '100px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {renarration.renarrationTitle}
-                </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  <Button
-                 
-                    startIcon={<Visibility />}
-                    variant="outlined"
-                    color='success'
-                    onClick={() => navigate(`/renarration-details/${renarration._id}`)}
-                    size="small"
-                    sx={{ fontSize: { xs: 12, md: 14 },mr:2 }}
-                  >
-                    View
-                  </Button>
-                  <Button
-                    startIcon={<Share />}
-                    variant="outlined"
-                    onClick={() => dispatch(openModal(<ShareRenarration id={renarration._id} route={'renarration-details'}/>))}
-                    size="small"
-                    sx={{ fontSize: { xs: 12, md: 14 } }}
-                  >
-                    share
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+     <SweetsTable renarrations={renarrations}/>
       <SweetInfo/>
     </Box>
   );

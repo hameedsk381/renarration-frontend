@@ -1,14 +1,15 @@
-import React, {  useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box, Button,  TextField,  Container, 
+  Box, Button, TextField, Container,
   Paper, Dialog, DialogContentText,
-   DialogContent, DialogTitle, DialogActions,
-    Stack,
+  DialogContent, DialogTitle, DialogActions,
+  Stack,
+  CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
-import { ArrowBack, ContentCopy, ExitToApp } from '@mui/icons-material';
+import { Add, ArrowBack, ContentCopy, ExitToApp } from '@mui/icons-material';
 import { resetState } from '../redux/actions/urlActions';
 import { resetAnnotations } from '../redux/actions/annotationActions';
 import { getAllSweets, submitApi } from '../apis/extractApis';
@@ -16,41 +17,38 @@ import BlockListing from './BlockListing';
 import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
 import { showSnackbar } from '../redux/actions/snackbarActions.js';
 import processRenarratedBlocks from '../utils/processRenarratedBlocks.js';
-import { openModal } from '../redux/actions/modalActions.js';
+import { closeModal, openModal } from '../redux/actions/modalActions.js';
 import Confirmation from '../utils/Confirmation.jsx';
 import SweetSearch from './SweetSearch.jsx';
-import ImageUploadComponent from './ImageUploadComponent.jsx';
-import AudioUploadComponent from './AudioUploadComponent.jsx';
 
 function RenarrationList() {
   const navigate = useNavigate();
 
   const renarratedBlocks = useSelector((state) => state.annotation.annotatedBlocks);
-  const [modalOpen, setModalOpen] = useState(false); // State for controlling modal open/close
+  const [modalOpen, setModalOpen] = useState(false);
   const [sharingIdText, setSharingId] = useState('');
+  const [type, setType] = useState('');
   const dispatch = useDispatch();
   const renarrationTitle = useSelector((state) => state.renarration.renarrationTitle);
   const renarrationId = useSelector((state) => state.renarration.renarrationId);
- 
+const [loading,setLoading] = useState(false);
   const displaySnackbar = (message, type) => {
     dispatch(showSnackbar(message, type));
   };
 
- // Submit new renarration
- const submitNewRenarration = async (requestBody) => {
-  try {
-    console.log(requestBody)
-    const response = await axios.post(submitApi, requestBody, {
-      headers: { 'Content-Type': 'application/json' },
-    });
-    handlePostSubmission(response.data);
-    // console.log(response.data)
-  } catch (error) {
-    displaySnackbar('Error submitting renarration', 'error');
-    console.error(error.message);
-  }
-};
-  // Update existing renarration
+  const submitNewRenarration = async (requestBody) => {
+    try {
+      console.log(requestBody)
+      const response = await axios.post(submitApi, requestBody, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      handlePostSubmission(response.data);
+    } catch (error) {
+      displaySnackbar('Error submitting renarration', 'error');
+      console.error(error.message);
+    }
+  };
+
   const updateRenarration = async (requestBody) => {
     try {
       const response = await axios.put(`${getAllSweets}/${renarrationId}`, requestBody, {
@@ -64,31 +62,32 @@ function RenarrationList() {
     }
   };
 
-
-  // State for storing sharing ID
-
   const handlePostSubmission = (data) => {
     displaySnackbar(data.message, 'success');
 
     if (data.sharingId) {
-      setModalOpen(true); // Open the modal
-      setSharingId(data.sharingId); // Set the sharing ID for download
-      // console.log('model opned')
+      setModalOpen(true);
+      setSharingId(data.sharingId);
     }
   };
+
   const handleModalClose = () => {
-    setModalOpen(false); // Close the modal
-    downloadSharingId(sharingIdText); // Download the sharing ID
+    setModalOpen(false);
+    downloadSharingId(sharingIdText);
     dispatch(resetState());
     dispatch(resetAnnotations());
     dispatch(addRennarationTitle(''));
     dispatch(addRennarationId(''));
-    localStorage.clear(); // Clear local storage
+    localStorage.clear();
     navigate('/');
   };
-  const handleCopy = () => { navigator.clipboard.writeText(sharingIdText); displaySnackbar('sharing ID copied succesfully', 'success'); handleModalClose(); };
 
-  // Download Sharing ID
+  const handleCopy = () => {
+    navigator.clipboard.writeText(sharingIdText);
+    displaySnackbar('sharing ID copied successfully', 'success');
+    handleModalClose();
+  };
+
   const downloadSharingId = (sharingId) => {
     const element = document.createElement('a');
     const file = new Blob([sharingId], { type: 'text/plain' });
@@ -100,89 +99,96 @@ function RenarrationList() {
   };
 
   const handleExit = () => {
-    dispatch(openModal(<Confirmation/>));
+    dispatch(openModal(<Confirmation type="exit" />));
   };
+
   const handleNext = async () => {
-    // Validation checks
+    setLoading(true);
     if (!renarrationTitle.trim()) {
       displaySnackbar('Please give the title to renarration', 'info');
+      setLoading(false);
       return;
     }
-    const requestBody = {
-      renarrationTitle,
-      annotations: await processRenarratedBlocks(renarratedBlocks),
-    };
-    // Submit the data
-    renarrationId === '' ? await submitNewRenarration(requestBody) : await updateRenarration(requestBody);
 
-    // Move to the next step if not the final logic
+    if (renarrationId === '') {
+      dispatch(openModal(
+        <Confirmation
+          type="sweetType"
+          onConfirm={async (selectedType) => {
+            setType(selectedType);
+            dispatch(closeModal());
+
+            const requestBody = {
+              renarrationTitle,
+              type: selectedType,
+              annotations: await processRenarratedBlocks(renarratedBlocks),
+            };
+
+            await submitNewRenarration(requestBody);
+            setLoading(false);
+          }}
+        />
+      ));
+    } else {
+      const requestBody = {
+        renarrationTitle,
+        annotations: await processRenarratedBlocks(renarratedBlocks),
+      };
+
+      await updateRenarration(requestBody);
+      setLoading(false);
+    }
   };
 
- 
-
-
-
-
   return (
-   <>
-    <Container
-     
+    <>
+      <Container maxWidth="lg" sx={{ width: '100%', p: 4, my: 2 }}>
+        <Container maxWidth='md'>
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} justifyContent={'space-between'}>
+            <Button variant="contained" sx={{ textTransform: 'initial' }} startIcon={<Add />} onClick={() => { navigate('/re-narrate'); }}> Add more annotations</Button>
+            <SweetSearch />
+          </Stack>
+          <TextField
+            label="Sweet Title"
+            placeholder='Give the title that describes the context of your sweet. Example: Explaining what fundamental rights are to a 5 year old'
+            value={renarrationTitle}
+            onChange={(e) => dispatch(addRennarationTitle(e.target.value))}
+            margin="normal"
+            required
+            fullWidth
+            sx={{ mt: 4 }}
+          />
+        </Container>
 
-     maxWidth="lg"
-     sx={{
-       width: '100%', p: 4, my: 2,
-     }}
-   >
-   
-     <Container maxWidth='md'>
-     <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} justifyContent={'space-between'}>
-       <Button variant="contained" sx={{textTransform:'initial'}} startIcon={<ArrowBack />} onClick={() => { navigate('/re-narrate'); }}> Back to Annotation</Button>
-     <SweetSearch/>
-     </Stack>
-       <TextField 
-         label="Renarration Title"
-         placeholder='Give the title that describes the context of your re-narration. Example: Explaining what fundamental rights are to a 5 year old'
-         value={renarrationTitle}
-         onChange={(e) => dispatch(addRennarationTitle(e.target.value))}
-         margin="normal"
-         required
-         fullWidth
-         sx={{mt:4}}
-       />
+        <BlockListing blocks={renarratedBlocks} />
 
-     </Container>
-    
-     <BlockListing blocks={renarratedBlocks} />
-
-   
-    
-     <Dialog
-       open={modalOpen}
-       keepMounted
-       onClose={handleModalClose}
-       aria-describedby="alert-dialog-slide-description"
-     >
-       <DialogTitle>Sharing ID</DialogTitle>
-       <DialogContent>
-         <DialogContentText id="alert-dialog-slide-description">
-           {sharingIdText}
-         </DialogContentText>
-       </DialogContent>
-       <DialogActions>
-         <Button onClick={handleCopy} startIcon={<ContentCopy />}>
-           Copy
-         </Button>
-       </DialogActions>
-     </Dialog>
-   
-   </Container>
-   <Stack direction={'row'} justifyContent={'space-between'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
-   <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{mx:{xs:3,md:'8%'},fontSize:{xs:8,md:14}}}>
-              exit 
+        <Dialog
+          open={modalOpen}
+          keepMounted
+          onClose={handleModalClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>Sharing ID</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              {sharingIdText}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCopy} startIcon={<ContentCopy />}>
+              Copy
             </Button>
-            <Button sx={{mx:{xs:3,md:'8%'},fontSize:{xs:8,md:14}}} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">Publish sweet</Button>
-   </Stack>
-   </>
+          </DialogActions>
+        </Dialog>
+      </Container>
+
+      <Stack direction={'row'} justifyContent={'space-between'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={5}>
+        <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{ mx: { xs: 3, md: '8%' }, fontSize: { xs: 8, md: 14 } }}>
+          exit sweet creation
+        </Button>
+        <Button sx={{ mx: { xs: 3, md: '8%' }, fontSize: { xs: 8, md: 14 } }} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">{loading ? <CircularProgress/> : 'Publish sweet'}</Button>
+      </Stack>
+    </>
   );
 }
 

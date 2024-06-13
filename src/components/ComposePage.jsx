@@ -24,13 +24,13 @@ import {
   Alert,
   Skeleton,
   Grid,
+  Badge,
 } from '@mui/material';
 import RenarrationBlock from './RenarrationBlock';
 
 import { showSnackbar } from '../redux/actions/snackbarActions';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
-import { resetState } from '../redux/actions/urlActions';
 
 
 const ComposePage = () => {
@@ -69,7 +69,7 @@ const [sweetcount,setSweetCount] = useState(0);
     try {
       const submitdata = {
         sweetcount,
-       annotations : pageBlocks.map(block => block._id),
+       sweets : pageBlocks.map(block => block._id),
        renarrationUrl:currentUrl,
        sharingId: uuidv4()
       }
@@ -78,7 +78,6 @@ const [sweetcount,setSweetCount] = useState(0);
       const response = await axios.post(createRenarrationPage,  submitdata);
       console.log('Submission successful:', response.data);
       dispatch(showSnackbar(response.data.message, 'success'));
-      dispatch(resetState());
       navigate('/')
       // Optionally reset state or redirect user
     } catch (error) {
@@ -100,13 +99,14 @@ const [sweetcount,setSweetCount] = useState(0);
   };
 
   const handleAddToPage = (block) => {
-    setPageBlocks(current => [...current, ...block]);
+    setPageBlocks(current => [...current, block]);
     setSweetCount(prevcount => prevcount + 1);
     console.log(sweetcount);
     console.log(block)
-    setFilteredsweets(prev => prev.filter(annotation => annotation._id !== block._id));
   };
-
+  const isBlockInFilteredSweets = (blockId) => {
+    return pageBlocks.some((annotation) => annotation._id === blockId);
+  };
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -128,8 +128,7 @@ const [sweetcount,setSweetCount] = useState(0);
       case 0:
         return (
           <>
-            {filteredsweets.length === 0 ? <Alert severity='info'>No more sweets found for this url</Alert> : <Box>
-              <TextField
+          <TextField
                 variant="outlined"
                 placeholder="Search sweets..."
                 fullWidth
@@ -138,6 +137,8 @@ const [sweetcount,setSweetCount] = useState(0);
                 sx={{ mb: 2, mx: 4 }}
               />
               <Typography color={'#1565c0'} ml={4} my={2}>Showing results for <span style={{color:'black'}}>"{currentUrl}"</span></Typography>
+            {filteredsweets.length === 0 ? <Alert severity='info'>No  sweets found for "{searchQuery}"</Alert> : <Box>
+              
               <Box sx={{ overflowX: 'auto', whiteSpace: 'nowrap', px: 4, py: 2 }}>
                 {filteredsweets.map((block) => (
                   <Box key={block._id} sx={{ display: 'inline-block', width: 300, marginRight: 2, verticalAlign: 'top' }}>
@@ -149,7 +150,7 @@ const [sweetcount,setSweetCount] = useState(0);
                         <Typography my={3}>
                          No of annotations :  {block.annotations.length}
                         </Typography>
-                        <Button variant="contained" onClick={() => handleAddToPage(block.annotations)}>
+                        <Button variant="contained" onClick={() => handleAddToPage(block)}   disabled={isBlockInFilteredSweets(block._id)}>
                           Add to Page
                         </Button>
                       </CardContent>
@@ -164,13 +165,19 @@ const [sweetcount,setSweetCount] = useState(0);
       case 1:
         return (
           <Container>
-            <Container>
-              {pageBlocks.sort((a, b) => a.body.title.localeCompare(b.body.title)).map((block, index) => (
-                <RenarrationBlock key={block._id} block={block} />
-              ))}
-              <Stack spacing={3} sx={{ mt: 4 }} />
-            </Container>
+          <Container>
+            {pageBlocks.sort((a, b) => a.renarrationTitle.localeCompare(b.renarrationTitle)).map((block, index) => (
+              <Badge color="secondary" badgeContent={block.renarrationTitle}>
+              <Paper elevation={6} key={index} sx={{my:4,p:3}}>
+                {block.annotations.map((annotation) => (
+                  <RenarrationBlock key={annotation._id} block={annotation} page noTags />
+                ))}
+              </Paper>
+              </Badge>
+            ))}
+            <Stack spacing={3} sx={{ mt: 4 }} />
           </Container>
+        </Container>
         );
   
       default:
@@ -289,4 +296,3 @@ const [sweetcount,setSweetCount] = useState(0);
 };
 
 export default ComposePage;
-

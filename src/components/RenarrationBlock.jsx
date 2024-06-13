@@ -1,25 +1,23 @@
 import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, Divider, Paper, Stack, Typography } from "@mui/material";
 import extractMedia from "../utils/extractMedia";
-import { Edit, NearMe, ReadMore, Speaker } from "@mui/icons-material";
+import { Edit,  ReadMore, Speaker } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Annotator from "./Annotator";
 import { removeAnnotatedBlock, updateAnnotatedBlock } from "../redux/actions/annotationActions";
 import { useNavigate } from "react-router-dom";
 import removeMedia from "../utils/removeMedia";
-import { red } from "@mui/material/colors";
 
 
-function RenarrationBlock({ block , editing ,noTags,searchmode}) {
+function RenarrationBlock({ block , editing ,noTags,searchmode,page}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const annotatedBlocks = useSelector((state) => state.annotation.annotatedBlocks);
-  const [currentBlockId, setCurrentBlockId] = useState(null); // State to hold the current block ID
+  const [currentBlockId, setCurrentBlockId] = useState(null); 
   const [clickedElementContent, setClickedElementContent] = useState('');
   const [initialBodycontent, setInitialBodyContent] = useState('');
   const [tags, setTags] = useState([]);
-  // const [annotationtitle, setannotationTitle] = useState('');
   const handleEdit = (id, elementcontent, bodycontent,tags) => {
     console.log(elementcontent,bodycontent);
     setCurrentBlockId(id);
@@ -27,7 +25,6 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
     setClickedElementContent(elementcontent);
     setInitialBodyContent(bodycontent);
     setTags(tags);
-    // setannotationTitle(title);
   };
   const handleSave = (htmlContent, annotationContent,tags) => {
     const existingBlockIndex = annotatedBlocks.findIndex((block) => block.target.id === currentBlockId);
@@ -40,7 +37,6 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
       tags:tags,
       body: {
         ...existingBlock.body,
-        // title:anntitle,
         value: annotationContent, // Update this with the new body value
       },
     };
@@ -59,9 +55,8 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
   };
 
   return (
-    <Box py={4} >
-    {/* <Typography fontSize={{ xs: 26, md: 36 }} fontWeight={'semibold'} style={{ textTransform: 'capitalize' }}>{block.body.title} </Typography> */}
-    <Typography>
+    <Box py={4} minWidth={400}  >
+          <Typography>
    {!noTags && block.tags.map((tag, index) => (
           <Chip variant='filled' key={index} label={tag} size="small" style={{ margin: '0.3rem', fontSize: '0.8rem' }} sx={{fontWeight:'400'}}  />
         ))}
@@ -86,18 +81,20 @@ function RenarrationBlock({ block , editing ,noTags,searchmode}) {
              </Stack>}
             
   </Stack>
-  <Divider/>
+  {!page && <>
+    <Divider/>
 
-        <Stack justifyContent={'space-between'} direction={'row'} my={1}>
-      {editing &&   <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value,block.tags)} sx={{fontSize:{xs:8,md:12}}} size='small' startIcon={<Edit />}>Edit</Button>}
-     
-       
+<Stack justifyContent={'space-between'} direction={'row'} my={1}>
+{editing &&   <Button onClick={() => handleEdit(block.target.id, block.target.value, block.body.value,block.tags)} sx={{fontSize:{xs:8,md:12}}} size='small' startIcon={<Edit />}>Edit</Button>}
+
+
 <Stack direction={'row'} justifyContent={'space-between'} width={'100%'}>
 <Button  color='success' size="small" endIcon={<ReadMore />} sx={{fontSize:{xs:8,md:12}}} onClick={()=>{navigate(`/sweet/${block._id}`)}} >read original story</Button>
 <Button color="success" size="small" endIcon={<Speaker/>} sx={{fontSize:{xs:8,md:12}}}>Listen</Button>
-  </Stack>     
-        </Stack>
-              <Divider/>
+</Stack>     
+</Stack>
+      <Divider/>
+  </> }
             <Annotator
         open={openDialog}
         onClose={() => setOpenDialog(false)}
