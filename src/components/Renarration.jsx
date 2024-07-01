@@ -6,7 +6,8 @@ import {
  Box, Button, Container,  Divider,  Drawer,  Grid, IconButton, Paper, Stack, Toolbar, Typography,
 } from '@mui/material';
 import {
-  ArrowBack,  CopyAll,  Edit,  Facebook,  NearMe, Share, Speaker, Twitter, WhatsApp,
+  Add,
+  ArrowBack,  ArrowForward,  CopyAll,  Edit,  Facebook,  NearMe, Share, Speaker, Twitter, WhatsApp,
 } from '@mui/icons-material';
 import extractMedia from '../utils/extractMedia';
 import removeMedia from '../utils/removeMedia';
@@ -71,7 +72,7 @@ const dispatch = useDispatch();
          </Typography>
           <Typography sx={{fontWeight:'semibold',fontSize:{xs:8, md:12}}}>Semantic Web Entities</Typography>
           </Stack>
-          <Button  onClick={() => { navigate('/'); }} color='inherit' sx={{fontSize:{xs:12, md:14}}}>start a new re-narration</Button>
+          <Button  onClick={() => { navigate('/'); }} endIcon={<ArrowForward/>} color='inherit' size='small'  sx={{fontSize:{xs:12, md:14}}}>Create a new sweet</Button>
           
         </Container>
         </Toolbar>
@@ -92,7 +93,7 @@ const dispatch = useDispatch();
 <Stack direction={'row'} justifyContent={'flex-end'} position={'fixed'} bottom={0} width={'100%'} bgcolor={'white'} py={2} component={Paper} elevation={2}>
    
      
-      <Button sx={{mr:12}} variant="contained" color='success' startIcon={<Edit />} onClick={handleEdit} >Edit Renarration </Button>
+      <Button sx={{mr:12}} variant="contained" color='success' startIcon={<Edit />} onClick={handleEdit} >Edit Sweet </Button>
 
    </Stack>
          

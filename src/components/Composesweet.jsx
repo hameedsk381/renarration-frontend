@@ -1,8 +1,7 @@
 import { Stack } from '@mui/material'
 import React from 'react'
 import UrlInput from './UrlInput/UrlInput'
-import HomeTabs from './HomeTabs'
-import Info from './RenarrationInfo'
+
 import SweetsDataGrid from './SweetsDataGrid'
 
 const Composesweet = () => {

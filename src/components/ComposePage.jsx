@@ -43,8 +43,10 @@ const ComposePage = () => {
   const [pageBlocks, setPageBlocks] = useState([]);
   const [activeStep, setActiveStep] = useState(0);
   const steps = ['Add sweets', 'Review Page'];
- const [loading,setLoading] = useState(false);
-const [sweetcount,setSweetCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [sweetcount, setSweetCount] = useState(0);
+  const [renarrationTitle, setRenarrationTitle] = useState('');
+
   const handleApiCall = async () => {
     try {
       setLoading(true)
@@ -69,13 +71,14 @@ const [sweetcount,setSweetCount] = useState(0);
     try {
       const submitdata = {
         sweetcount,
-       sweets : pageBlocks.map(block => block._id),
-       renarrationUrl:currentUrl,
-       sharingId: uuidv4()
+        sweets: pageBlocks.map(block => block._id),
+        renarrationUrl: currentUrl,
+        renarrationTitle,
+        sharingId: uuidv4()
       }
     
       // Example POST request to a backend endpoint
-      const response = await axios.post(createRenarrationPage,  submitdata);
+      const response = await axios.post(createRenarrationPage, submitdata);
       // console.log('Submission successful:', response.data);
       dispatch(showSnackbar(response.data.message, 'success'));
       navigate('/')
@@ -164,20 +167,32 @@ const [sweetcount,setSweetCount] = useState(0);
   
       case 1:
         return (
-          <Container>
-          <Container>
-            {pageBlocks.sort((a, b) => a.renarrationTitle.localeCompare(b.renarrationTitle)).map((block, index) => (
-              <Badge color="secondary" badgeContent={block.renarrationTitle}>
-              <Paper elevation={6} key={index} sx={{my:4,p:3}}>
-                {block.annotations.map((annotation) => (
-                  <RenarrationBlock key={annotation._id} block={annotation} page noTags />
-                ))}
-              </Paper>
-              </Badge>
-            ))}
-            <Stack spacing={3} sx={{ mt: 4 }} />
+          <Container maxWidth="lg" sx={{ my: 3 }}>
+            <TextField
+              variant="outlined"
+              placeholder="Enter Renarration Title..."
+              fullWidth
+              value={renarrationTitle}
+              onChange={(e) => setRenarrationTitle(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Grid container spacing={2} sx={{my:3,justifyContent:'center'}} >
+              {pageBlocks.sort((a, b) => a.renarrationTitle.localeCompare(b.renarrationTitle)).map((block, index) => (
+                <Grid item key={index} xs={12} md={6} lg={4} xl={3} >
+                  <Badge color="secondary" badgeContent={block.renarrationTitle}>
+                    <Box sx={{ my: 4, p: 3 }}>
+                      {block.annotations.map((annotation) => (
+                        <RenarrationBlock key={annotation._id} block={annotation} page noTags />
+                      ))}
+                    </Box>
+                  </Badge>
+                </Grid>
+              ))}
+              <Grid item xs={12} sx={{ mt: 4 }}>
+                <Stack spacing={3} />
+              </Grid>
+            </Grid>
           </Container>
-        </Container>
         );
   
       default:
@@ -241,9 +256,7 @@ const [sweetcount,setSweetCount] = useState(0);
             </Container>
           </Toolbar>
         </AppBar>
-        <Stack my={3}>
-       
-        </Stack>
+     
         {sweets.length === 0 ? <Alert>No sweets found for this url create now </Alert> : <>
           <Stepper activeStep={activeStep} alternativeLabel sx={{ my: 5 }}>
             {steps.map((label) => (
@@ -274,7 +287,7 @@ const [sweetcount,setSweetCount] = useState(0);
               <Button
                 variant="contained"
                 onClick={handleSubmitRenarration}  // This should be defined to handle submit logic
-                disabled={pageBlocks.length === 0}
+                disabled={pageBlocks.length === 0 || !renarrationTitle}
               >
                 Create Renarration
               </Button>

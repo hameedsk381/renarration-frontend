@@ -4,8 +4,6 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Close from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
@@ -15,7 +13,8 @@ import Quill from 'quill'; // Import Quill
 import 'quill/dist/quill.snow.css'; // Import Quill's Snow theme CSS
 import { showSnackbar } from '../redux/actions/snackbarActions';
 import HtmlToReact from './HtmlToReact'
-import { Alert, Modal, TextField, useMediaQuery } from '@mui/material';
+import { Alert, IconButton, Modal, TextField, useMediaQuery } from '@mui/material';
+import { Upload, Delete } from '@mui/icons-material';
 
 
 function Annotator({
@@ -26,21 +25,24 @@ function Annotator({
   initialValue,
   onDelete,
   annotatedtags,
- 
+ mediafiles
 }) {
   const [quill, setQuill] = useState(null);
   const quillRef = useRef(null);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState(annotatedtags);
-  // const [annotationtitle, setannotationTitle] = useState(title);
+  const [file, setFile] = useState(mediafiles.fileData); // Adjusted to handle null mediafiles initially
+  const [fileType, setFileType] = useState( mediafiles.fileType); // Adjusted to handle null mediafiles initially
   const dispatch = useDispatch();
   const isDesktop = useMediaQuery('(min-width:600px)');
 
   useEffect(() => {
     setTags(annotatedtags);
-    // setannotationTitle(title);
   }, [annotatedtags]);
-
+  useEffect(() => {
+    setFile( mediafiles.fileData); // Adjusted to handle null mediafiles initially
+  }, [mediafiles]);
+ 
   const setQuillRef = useCallback((ref) => {
     if (ref) {
       const q = new Quill(ref, {
@@ -63,8 +65,12 @@ function Annotator({
     }
   }, [initialValue]);
 
-  const handleSave = (bodycontent, anntags) => {
-    onSave(content, bodycontent, anntags);
+  const handleSave = (bodycontent, anntags, file,fileType) => {
+    const mediadata = {
+      fileData:file,fileType
+    }
+    onSave(content, bodycontent, anntags, mediadata);
+    // console.log(mediadata)
     onClose();
   };
 
@@ -80,7 +86,7 @@ function Annotator({
         return;
       }
      
-      handleSave(submissionContent, tags);
+      handleSave(submissionContent, tags, file,fileType);
     } else {
       // Quill instance is not available
     }
@@ -105,6 +111,16 @@ function Annotator({
     if (e.key === 'Enter') {
       handleTagAdd();
     }
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFileType(e.target.files[0].type);
+  
+  };
+
+  const handleFileDelete = () => {
+    setFile(null);
   };
 
   return isDesktop ? (
@@ -134,17 +150,35 @@ function Annotator({
           Add your annotation here
         </Typography>
         <Divider />
-        {/* <TextField size='small' value={annotationtitle} onChange={(e)=>setannotationTitle(e.target.value)}
-  label="Annotation Title"
-  variant="outlined"
-  sx={{ mt: 2, mb: 2,width:'50%' }}
-/> */}
+     
 <Divider />
         <Box sx={{ my: 2, maxHeight: '150px', overflow: 'auto' }}>
           <HtmlToReact content={content} />
         </Box>
         <Divider sx={{ mb: 2 }} variant="fullWidth" />
         <div ref={setQuillRef} style={{ height: '200px', marginBottom: '20px',overflow:'auto' }} />
+     
+      <Stack direction={'row'} spacing={3}>
+    
+        {file !== null ? (
+          <Stack direction="row" alignItems="center" spacing={1} mt={2}>
+            <Typography variant="body2">{file.name}</Typography>
+            <IconButton onClick={handleFileDelete} color="error">
+              <Delete />
+            </IconButton>
+          </Stack>
+        ) : (  <Button variant="outlined" startIcon={ <Upload />} color="primary" component="label">
+ <input type="file" hidden accept="*" onChange={(e) => {
+      if (e.target.files[0].size <= 20 * 1024 * 1024) {
+        handleFileChange(e);
+      } else {
+        alert("File size more than 20MB is not allowed");
+      }
+    }} />
+       Upload media
+      </Button>) }
+      </Stack>
+        
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} my={2} justifyContent={'space-between'}>
       
           <Stack direction={'row'} sx={{ display: tags.length >= 3 ? 'none' : 'block',border:'1px solid rgba(0, 0, 0, 0.12)' }} px={1}>
@@ -174,10 +208,7 @@ function Annotator({
           </Stack>
         </Stack>
        
-      
-       
       </Container>
-     
     </Modal>
   ) : (
     <Drawer
@@ -200,17 +231,35 @@ function Annotator({
           Add your annotation here
         </Typography>
         <Divider />
-        {/* <TextField size='small' value={annotationtitle} onChange={(e)=>setannotationTitle(e.target.value)}
-  label="Annotation Title"
-  variant="outlined"
-  sx={{ mt: 2, mb: 2,width:'50%' }}
-/> */}
+     
 <Divider />
         <Box sx={{ my: 2, maxHeight: '150px', overflow: 'auto' }}>
           <HtmlToReact content={content} />
         </Box>
         <Divider sx={{ mb: 2 }} variant="fullWidth" />
         <div ref={setQuillRef} style={{ height: '200px', marginBottom: '20px',overflow:'auto' }} />
+        <Divider sx={{ mb: 2 }} variant="fullWidth" />
+        <Stack direction={'row'} spacing={3}>
+    
+    {file !== null ? (
+      <Stack direction="row" alignItems="center" spacing={1} mt={2}>
+        <Typography variant="body2">{file.name}</Typography>
+        <IconButton onClick={handleFileDelete} color="error">
+          <Delete />
+        </IconButton>
+      </Stack>
+    ) : (  <Button variant="outlined" startIcon={ <Upload />} color="primary" component="label">
+    <input type="file" hidden accept="*" onChange={(e) => {
+      if (e.target.files[0].size <= 20 * 1024 * 1024) {
+        handleFileChange(e);
+      } else {
+        alert("File size more than 20MB is not allowed");
+      }
+    }} />
+   Upload media
+  </Button>) }
+  </Stack>
+        
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} my={2} justifyContent={'space-between'}>
       
           <Stack direction={'row'} sx={{ display: tags.length >= 3 ? 'none' : 'block',border:'1px solid rgba(0, 0, 0, 0.12)' }} px={1}>
@@ -239,8 +288,6 @@ function Annotator({
             </Button>
           </Stack>
         </Stack>
-       
-      
        
       </Container>
     </Drawer>

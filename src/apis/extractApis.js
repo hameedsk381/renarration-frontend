@@ -11,3 +11,5 @@ export const getAnnotationById = `${serverApi}/sweets/annotation`;
 export const getAnnotations = `${serverApi}/sweets/tag`
 export const getAllRenarrations = `${serverApi}/renarrations`
 export const createRenarrationPage = `${serverApi}/renarrations/create`
+export const verifyRenarration = `${getAllRenarrations}/verifyRenarration`
+export const updateRenarration = `${serverApi}/renarrations/update`

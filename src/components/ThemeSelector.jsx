@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Select, MenuItem } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { setTheme } from '../redux/actions/themeActions.js';
 import themes from '../themes/themes';
 
@@ -12,13 +12,16 @@ function ThemeSelector() {
   };
 
   return (
-    <Select variant="standard" disableUnderline onChange={handleChange} value={currentTheme} defaultValue={currentTheme}>
-      {themes.map((theme) => (
-        <MenuItem key={theme.name} value={theme.name}>
-          {theme.name.charAt(0).toUpperCase() + theme.name.slice(1)}
-        </MenuItem>
-      ))}
-    </Select>
+    <FormControl variant="standard">
+      <InputLabel id="theme-select-label">Choose Theme</InputLabel>
+      <Select labelId="theme-select-label" id="theme-select" value={currentTheme} onChange={handleChange} disableUnderline>
+        {themes.map((theme) => (
+          <MenuItem key={theme.name} value={theme.name}>
+            {theme.name.charAt(0).toUpperCase() + theme.name.slice(1)}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }
 

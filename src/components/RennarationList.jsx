@@ -9,17 +9,18 @@ import {
   CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
-import { Add, ArrowBack, ContentCopy, ExitToApp } from '@mui/icons-material';
+import { Add, ContentCopy, ExitToApp } from '@mui/icons-material';
 import { resetState } from '../redux/actions/urlActions';
 import { resetAnnotations } from '../redux/actions/annotationActions';
 import { getAllSweets, submitApi } from '../apis/extractApis';
 import BlockListing from './BlockListing';
 import { addRennarationId, addRennarationTitle } from '../redux/actions/rennarationActions';
 import { showSnackbar } from '../redux/actions/snackbarActions.js';
-import processRenarratedBlocks from '../utils/processRenarratedBlocks.js';
+
 import { closeModal, openModal } from '../redux/actions/modalActions.js';
 import Confirmation from '../utils/Confirmation.jsx';
 import SweetSearch from './SweetSearch.jsx';
+import processAnnotatedBlocks from '../utils/processAnnotatedBlocks.js';
 
 function RenarrationList() {
   const navigate = useNavigate();
@@ -69,6 +70,11 @@ const [loading,setLoading] = useState(false);
       setModalOpen(true);
       setSharingId(data.sharingId);
     }
+    dispatch(resetState());
+    dispatch(resetAnnotations());
+    dispatch(addRennarationTitle(''));
+    dispatch(addRennarationId(''));
+    localStorage.clear();
   };
 
   const handleModalClose = () => {
@@ -121,7 +127,7 @@ const [loading,setLoading] = useState(false);
             const requestBody = {
               renarrationTitle,
               type: selectedType,
-              annotations: await processRenarratedBlocks(renarratedBlocks),
+              annotations: await processAnnotatedBlocks(renarratedBlocks),
             };
 
             await submitNewRenarration(requestBody);
@@ -132,7 +138,7 @@ const [loading,setLoading] = useState(false);
     } else {
       const requestBody = {
         renarrationTitle,
-        annotations: await processRenarratedBlocks(renarratedBlocks),
+        annotations: await processAnnotatedBlocks(renarratedBlocks),
       };
 
       await updateRenarration(requestBody);
@@ -186,7 +192,7 @@ const [loading,setLoading] = useState(false);
         <Button variant='outlined' endIcon={<ExitToApp />} onClick={handleExit} color="error" sx={{ mx: { xs: 3, md: '8%' }, fontSize: { xs: 8, md: 14 } }}>
           exit sweet creation
         </Button>
-        <Button sx={{ mx: { xs: 3, md: '8%' }, fontSize: { xs: 8, md: 14 } }} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">{loading ? <CircularProgress/> : 'Publish sweet'}</Button>
+        <Button sx={{ mx: { xs: 3, md: '8%' }, fontSize: { xs: 8, md: 14 } }} variant="contained" onClick={handleNext} disabled={renarratedBlocks.length === 0} color="success">{loading ? <CircularProgress color='inherit'/> : 'Publish sweet'}</Button>
       </Stack>
     </>
   );

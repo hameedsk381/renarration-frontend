@@ -15,7 +15,7 @@ function Hero() {
           Welcome to Web of Semantic Web Entities
         </Typography>
         <Typography color="text.primary" variant="h4" gutterBottom>
-          Annotate. Re-narrate. Share.
+          Annotate. Sweet. Re-narrate.
         </Typography>
         <HomeTabs/>
       </Stack>

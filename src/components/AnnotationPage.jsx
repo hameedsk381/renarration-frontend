@@ -44,7 +44,7 @@ function AnnotationPage() {
   const [currentXpath, setCurrentXpath] = useState(null); // State to hold the current xpath
   const [initialBodycontent, setInitialBodyContent] = useState();
   const [tags,setTags] = useState([]);
-// const [title,setTitle] = useState('')
+const [mediafiles,setMediafiles] = useState({fileData:null,fileType:null})
   const handleAnnotationModeChange = () => {
     dispatch(toggleAnnotationMode()); // Dispatch toggle action
   };
@@ -69,7 +69,7 @@ function AnnotationPage() {
     if (existingBlock) {
       setInitialBodyContent(existingBlock.body.value);
       setTags(existingBlock.tags);
-      // setTitle(existingBlock.body.title);
+      setMediafiles(existingBlock.body.media);
       event.target.classList.remove('hover-effect');
       const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
 
@@ -82,7 +82,7 @@ function AnnotationPage() {
       const fullHtmlWithoutOutline = removeOutlineFromOuterHtml(event.target.outerHTML);
       setInitialBodyContent('');
       setTags([]);
-      // setTitle('')
+      setMediafiles({fileData:null,fileType:null})
       setClickedElementContent(fullHtmlWithoutOutline);
       setOpenDialog(true);
       setCurrentBlockId(elementId); // Set the current block ID
@@ -130,7 +130,7 @@ function AnnotationPage() {
     event.stopPropagation();
     event.target.classList.remove('hover-effect');
   };
-  const createAnnotation = (pageContent, htmlContent, annotatedContent, id, url, xpathforblock,tags) => {
+  const createAnnotation = (pageContent, htmlContent, annotatedContent, id, url, xpathforblock,tags,media) => {
     const annotation = {
       '@context': 'http://www.w3.org/ns/anno.jsonld',
       type: 'Annotation',
@@ -147,7 +147,7 @@ function AnnotationPage() {
       },
       body: {
         type: 'TextualBody',
-        // title:anntitle,
+       media,
         value: annotatedContent,
         format: 'text/html',
       },
@@ -160,7 +160,7 @@ function AnnotationPage() {
     // console.log(annotation);
     dispatch(addAnnotatedBlock(annotation));
   };
-  const handleSave = (htmlContent, annotationContent,tags) => {
+  const handleSave = (htmlContent, annotationContent,tags,media) => {
     // console.log(currentBlockId)
     const existingBlockIndex = 
     annotatedBlocks.findIndex((block) => block.target.id === currentBlockId);
@@ -175,7 +175,7 @@ function AnnotationPage() {
         tags:tags,
         body: {
           ...existingBlock.body,
-          // title:anntitle,
+         media,
           value: annotationContent, // Update this with the new body value
         },
       };
@@ -183,7 +183,7 @@ function AnnotationPage() {
       // Dispatch the action to update the annotated block
       dispatch(updateAnnotatedBlock(existingBlock.target.id, updatedBlock));
     } else {
-      createAnnotation(initialHtmlContent, htmlContent, annotationContent, currentBlockId, currentUrl, currentXpath,tags)
+      createAnnotation(initialHtmlContent, htmlContent, annotationContent, currentBlockId, currentUrl, currentXpath,tags,media)
 
       // Update the htmlContent to include the outline for the annotated element
       const updatedHtmlContent = outlineElement(annotationHtmlContent, currentBlockId);
@@ -251,6 +251,7 @@ function AnnotationPage() {
         onSave={handleSave}
         initialValue={initialBodycontent}
         annotatedtags={tags}
+        mediafiles = {mediafiles}
         onDelete={deleteBlock}
         // title={title}
       />
