@@ -14,7 +14,7 @@ function Home() {
   
   return (
     <>
-    <Container>
+    <Container >
       <Navbar />
 
     

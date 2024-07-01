@@ -51,7 +51,7 @@ function Sweet() {
       const nodes = doc.querySelectorAll(`[data-id="${node}"]`);
       if (nodes.length > 0) {
         const targetNode = nodes[0];
-// console.log(targetNode);
+        // console.log(targetNode);
         // Create a wrapper div for both the original node and the annotation
         const wrapperDiv = doc.createElement('div');
         wrapperDiv.style.backgroundColor = '#C9E3FE';
@@ -60,10 +60,12 @@ function Sweet() {
         wrapperDiv.style.marginBlock = '10px';
 
         const details = doc.createElement('details');
+        details.style.padding = '10px';
         const summary = doc.createElement('summary');
         summary.textContent = 'View original story';
         details.appendChild(summary);
         const originalNode = targetNode.cloneNode(true);
+        
         details.appendChild(originalNode);
         // Add a divider between the original node and the annotation
         const divider = doc.createElement('hr');
@@ -73,7 +75,16 @@ function Sweet() {
 
         // Create a div for the annotation content and append it to the wrapper
         const annotationDiv = doc.createElement('div');
+        annotationDiv.style.margin = "30px"
         annotationDiv.innerHTML = annotationNode;
+
+        // Set width of images in the annotation to 200px
+        const images = annotationDiv.querySelectorAll('img');
+        images.forEach((img) => {
+          img.style.width = '200px';
+      
+        });
+
         wrapperDiv.appendChild(annotationDiv);
 
         // Replace the original node with the wrapper in the DOM structure

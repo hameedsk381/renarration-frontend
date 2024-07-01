@@ -12,7 +12,6 @@ import { wrapperStyle, inputStyle, buttonStyle } from './UrlInputStyles';
 import { fetchFailure, fetchStart, fetchSuccess, setCurrentUrl } from '../../redux/actions/urlActions';
 import { extractApi } from '../../apis/extractApis';
 import { setAnnotatedHtmlContent } from '../../redux/actions/annotationActions';
-import getDeviceType from '../../utils/getDeviceType';
 import { showSnackbar } from '../../redux/actions/snackbarActions';
 
 function UrlInput({ navigateTo, homepage, annotationNav ,renarration}) {
@@ -131,7 +130,7 @@ sx={{ width: { xs: '320px', sm: '600px', md: '800px' } }}
           disabled={isFetching}
         
         >
-          Sweet now
+          Create a sweet
         </Button>
       </Paper>}
        {renarration && <Paper

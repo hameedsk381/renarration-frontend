@@ -29,9 +29,9 @@ export default function HomeTabs({ sweets, renarrations }) {
   return (
     <Container sx={{ width: '100%', my: 5 }}>
       <Box>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-        <Tab label="Renarrations" />
-          <Tab label="Sweets" />
+        <Tabs value={value} onChange={handleChange}  textColor='inherit' indicatorColor='primary' centered>
+        <Tab  label="Renarrations"  />
+          <Tab label="Sweets"  />
         </Tabs>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

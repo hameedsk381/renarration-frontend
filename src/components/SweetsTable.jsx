@@ -12,9 +12,6 @@ const SweetsTable = ({ renarrations }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  useEffect(() => {
-    console.log(renarrations);
-  }, [renarrations]);
 
   return (
     <TableContainer>
@@ -60,13 +57,13 @@ const SweetsTable = ({ renarrations }) => {
                   startIcon={<Visibility />}
                   variant="outlined"
                   color="success"
-                  onClick={() => navigate(`/renarration-details/${renarration._id}`)}
+                  onClick={() => navigate(`/sweet-details/${renarration._id}`)}
                   size="small"
                   sx={{ fontSize: { xs: 12, md: 14 } }}
                 >
                   View
                 </Button>
-                <Button
+                <Button color='warning'
                   startIcon={<Share />}
                   variant="outlined"
                   onClick={() => dispatch(openModal(<ShareRenarration id={renarration._id} route={'renarration-details'} />))}
