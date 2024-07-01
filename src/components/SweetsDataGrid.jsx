@@ -54,6 +54,7 @@ function SweetsDataGrid() {
         <Skeleton animation="wave" height={30} />
         <Skeleton animation="wave" height={30} />
         <Skeleton animation="wave" height={30} />
+        <SweetInfo/>
       </Container>
     );
   }
@@ -75,6 +76,7 @@ function SweetsDataGrid() {
     return (
       <Container maxWidth="lg" sx={{ my: 3 }}>
         <Alert severity="info">No sweets available.</Alert>
+        <SweetInfo/>
       </Container>
     );
   }
