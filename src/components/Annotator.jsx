@@ -223,6 +223,7 @@ function Annotator({
           alignItems: 'center',
           borderTopRightRadius: '20px',
           borderTopLeftRadius: '20px',
+          height: '100%', // Changed to occupy whole available height
         },
       }}
     >
