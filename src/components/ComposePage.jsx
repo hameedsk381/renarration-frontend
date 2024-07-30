@@ -176,10 +176,10 @@ const ComposePage = () => {
               onChange={(e) => setRenarrationTitle(e.target.value)}
               sx={{ mb: 2 }}
             />
-            <Grid container spacing={2} sx={{my:3,justifyContent:'center'}} >
+            <Grid container spacing={2} sx={{my:3}} >
               {pageBlocks.sort((a, b) => a.renarrationTitle.localeCompare(b.renarrationTitle)).map((block, index) => (
-                <Grid item key={index} xs={12} md={6} lg={4} xl={3} >
-                  <Badge color="secondary" badgeContent={block.renarrationTitle}>
+                <Grid item key={index}  >
+                  <Badge color="info" sx={{p:2}} badgeContent={block.renarrationTitle}>
                     <Box sx={{ my: 4, p: 3 }}>
                       {block.annotations.map((annotation) => (
                         <RenarrationBlock key={annotation._id} block={annotation} page noTags />
