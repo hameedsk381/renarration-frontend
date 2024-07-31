@@ -26,15 +26,19 @@ function Navbar() {
           <Typography fontStyle={'italic'} fontSize={'large'} fontWeight={'bold'}>Re-narration</Typography>
           {/* <Typography sx={{fontWeight:'semibold',fontSize:{xs:8, md:12}}}>Semantic Web Entities</Typography> */}
           </Stack>
+        <Stack direction={'row'} spacing={5}> 
+        <Link to="/about" style={{ textDecoration: 'none', color: 'black', fontFamily: 'Roboto',margin:"10px" }}>Documentation</Link>
         <ThemeSelector />
-        <List sx={{ display: { xs: 'none', md: 'flex' } }}>
+        </Stack>
+      
+        {/* <List sx={{ display: { xs: 'none', md: 'flex' } }}>
           {menuItems.map((item, index) => (
             <ListItem key={index}>
               <Link style={{ textDecoration: 'none', color: 'black',fontFamily:'Roboto' }} to={item.href}>{item.text}</Link>
             </ListItem>
           ))}
-        </List>
-        <Link to="/about" style={{ textDecoration: 'none', color: 'black', fontFamily: 'Roboto' }}>Documentation</Link>
+        </List> */}
+    
       </Toolbar>
     </AppBar>
   );
