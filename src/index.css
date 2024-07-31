@@ -1,0 +1,26 @@
+.hover-effect{
+    outline: green;
+    background-color: red;
+}
+input[type='checkbox'] {
+    display: none;
+}
+label:before {
+    background: rgb(30, 150, 235);
+    border-radius: 3px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    cursor: pointer;
+}
+input[type='checkbox'] + label:before {
+    content: '';
+    background: rgb(30, 150, 235);
+    color: #fff;
+    font-size: 16px;
+    line-height: 16px;
+    text-align: center;
+}
+input[type='checkbox']:checked + label:before {
+    content: '✓';
+}

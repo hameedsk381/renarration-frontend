@@ -22,7 +22,7 @@ function AnnotationNavbar({
                 backgroundColor: 'white',
               },
             }} checked={annotationMode} onChange={handleAnnotationModeChange} color="info" />}
-            label={annotationMode ? 'Renarration mode is on' : 'Renarration mode  is off'}
+            label={annotationMode ? 'Annotation mode is on' : 'Annotation mode  is off'}
           />
         <SweetsMenu  />
         <UrlInput annotationNav />

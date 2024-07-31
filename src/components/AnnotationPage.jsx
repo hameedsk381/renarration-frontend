@@ -121,14 +121,14 @@ const [mediafiles,setMediafiles] = useState({fileData:null,fileType:null})
   };
 
   const handleMouseOver = (event) => {
-  // Prevent event from affecting parent elements
+    // Prevent event from affecting parent elements
     event.stopPropagation();
-    event.target.classList.add('hover-effect');
+    event.target.style.outline = 'green';
   };
 
   const handleMouseOut = (event) => {
     event.stopPropagation();
-    event.target.classList.remove('hover-effect');
+    event.target.style.outline = '';
   };
   const createAnnotation = (pageContent, htmlContent, annotatedContent, id, url, xpathforblock,tags,media) => {
     const annotation = {
